@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Mi primer post"
+title: "Como hacer un post"
 date: 2025-02-06
 ---
 
