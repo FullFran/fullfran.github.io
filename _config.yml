@@ -1,7 +1,7 @@
 title: "Mi Sitio Web"
 description: "Bienvenido a mi sitio con Jekyll en GitHub Pages"
 baseurl: ""  # Déjalo vacío si el sitio está en la raíz del repo
-url: "https://tuusuario.github.io"  # Cambia 'tuusuario' por tu usuario de GitHub
+url: "https://fullfran.github.io"  
 
 # Configuración de GitHub Pages
 theme: minima  # Puedes cambiarlo si usas otro tema o diseño personalizado
