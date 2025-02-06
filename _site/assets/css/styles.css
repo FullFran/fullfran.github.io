@@ -46,7 +46,7 @@ section {
 #chat-widget {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    right: calc((100% - 800px) / 2); /* Ajuste dinámico según el ancho del contenido */
 }
 
 #chat-button {
