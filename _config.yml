@@ -1,0 +1,39 @@
+title: "Mi Sitio Web"
+description: "Bienvenido a mi sitio con Jekyll en GitHub Pages"
+baseurl: ""  # Déjalo vacío si el sitio está en la raíz del repo
+url: "https://tuusuario.github.io"  # Cambia 'tuusuario' por tu usuario de GitHub
+
+# Configuración de GitHub Pages
+theme: minima  # Puedes cambiarlo si usas otro tema o diseño personalizado
+plugins:
+  - jekyll-feed  # RSS para el blog
+  - jekyll-seo-tag  # Mejora el SEO
+
+# Configuración del blog
+permalink: /blog/:title/  # Estructura de URL para los posts
+paginate: 5  # Número de posts por página en el blog
+paginate_path: "/blog/page:num/"
+
+# Configuración de colecciones (si tienes más secciones)
+collections:
+  proyectos:
+    output: true
+    permalink: /proyectos/:title/
+
+# Configuración de Markdown
+markdown: kramdown
+highlighter: rouge  # Para resaltar código en los posts
+
+# Incluir archivos en la compilación
+include:
+  - _pages
+  - _posts
+
+# Excluir archivos innecesarios del build
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .jekyll-cache

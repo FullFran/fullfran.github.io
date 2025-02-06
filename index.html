@@ -1,72 +1,20 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Francisco Manuel Olmedo Cortés | Portfolio</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <h1>Francisco Manuel Olmedo Cortés</h1>
-        <p>Físico | IA | Optimización | Soluciones Tecnológicas</p>
-    </header>
-    
-    <nav>
-        <ul>
-            <li><a href="#sobre-mi">Sobre Mí</a></li>
-            <li><a href="#proyectos">Proyectos</a></li>
-            <li><a href="#habilidades">Habilidades</a></li>
-            <li><a href="#publicaciones">Publicaciones</a></li>
-            <li><a href="#contacto">Contacto</a></li>
-        </ul>
-    </nav>
-    
-    <section id="sobre-mi">
-        <h2>Sobre Mí</h2>
-        <p>Físico con experiencia en inteligencia artificial, modelos de lenguaje y optimización de procesos. Desarrollo soluciones innovadoras utilizando Python, Docker, Git, LangChain, n8n y Make.</p>
-    </section>
-    
-    <section id="proyectos">
-        <h2>Proyectos Destacados</h2>
-        <ul>
-            <li>🔹 <strong>Chatbot RAG</strong>: Implementación de un chatbot con recuperación aumentada de generación (RAG).</li>
-            <li>🔹 <strong>Optimización de trazado de rayos</strong>: Simulación de propagación de luz en medios desordenados.</li>
-            <li>🔹 <strong>Automatización con IA</strong>: Integración de modelos LLM en workflows empresariales.</li>
-        </ul>
-    </section>
-    
-    <section id="habilidades">
-        <h2>Habilidades</h2>
-        <ul>
-            <li>💡 IA y Machine Learning</li>
-            <li>🔧 Desarrollo con Python y Docker</li>
-            <li>📊 Análisis de datos y optimización</li>
-            <li>🛠️ Despliegue en Railway y GitHub Pages</li>
-        </ul>
-    </section>
-    
-    <section id="publicaciones">
-        <h2>Publicaciones</h2>
-        <p>📖 <strong>Radiation Physics and Chemistry</strong>: Evaluación de parámetros cinéticos utilizando redes neuronales.</p>
-    </section>
-    
-    <section id="contacto">
-        <h2>Contacto</h2>
-        <p>📩 Email: <a href="mailto:franciscomanuelolmedocortes@gmail.com">franciscomanuelolmedocortes@gmail.com</a></p>
-        <p>🔗 LinkedIn: <a href="https://linkedin.com/in/francisco-manuel-olmedo-cort%C3%A9s-551023283/">Perfil Profesional</a></p>
-    </section>
-    
-    <div id="chat-widget">
-        <button id="chat-button">💬 Chat</button>
-        <div id="chat-box" class="hidden">
-            <div id="chat-header">Chat con Francisco</div>
-            <div id="chat-messages"></div>
-            <input type="text" id="chat-input" placeholder="Escribe un mensaje..." />
-            <button id="send-button">Enviar</button>
-        </div>
-    </div>
-    
-    <script src="script.js"></script>
-</body>
-</html>
+---
+layout: default
+title: "Mi Sitio Web"
+---
+
+<header>
+    <h1>Bienvenido a mi web</h1>
+    <p>Descubre mis proyectos y artículos.</p>
+</header>
+
+<section>
+    <h2>Últimos posts</h2>
+    <ul>
+        {% for post in site.posts limit:3 %}
+        <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+        {% endfor %}
+    </ul>
+</section>
+
+<script src="assets/js/main.js"></script>

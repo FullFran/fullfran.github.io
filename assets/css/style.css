@@ -1,0 +1,10 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+header {
+    background: #0078D7;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
