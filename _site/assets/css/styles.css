@@ -1,19 +1,48 @@
+
+/* 🌞 Modo Claro (Por Defecto) */
+:root {
+    --bg-color: #f5f5f5;
+    --text-color: #222;
+    --header-bg: linear-gradient(90deg, #007bff, #00c6ff);
+    --nav-bg: #222;
+    --nav-text: white;
+    --card-bg: white;
+    --chat-bg: #007bff;
+}
+
+/* 🌙 Modo Oscuro */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1e1e1e;
+        --text-color: #ddd;
+        --header-bg: linear-gradient(90deg, #0056b3, #003d7a);
+        --nav-bg: #111;
+        --nav-text: #bbb;
+        --card-bg: #222;
+        --chat-bg: #0056b3;
+    }
+}
+
+/* Aplica las variables en toda la web */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
+/* Header */
 header {
-    background: linear-gradient(90deg, #007bff, #00c6ff);
+    background: var(--header-bg);
     color: white;
     text-align: center;
     padding: 20px;
 }
 
+/* Menú de navegación */
 nav {
-    background: #222;
+    background: var(--nav-bg);
     text-align: center;
     padding: 10px;
 }
@@ -29,28 +58,46 @@ nav ul li {
 }
 
 nav ul li a {
-    color: white;
+    color: var(--nav-text);
     text-decoration: none;
     font-weight: bold;
 }
 
+/* Secciones */
 section {
     max-width: 800px;
     margin: 40px auto;
-    background: white;
+    background: var(--card-bg);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Botón de Cambio de Modo */
+#theme-toggle {
+    background: var(--chat-bg);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+#theme-toggle:hover {
+    background: #0056b3;
+}
+
+/* Botón de chat */
 #chat-widget {
     position: fixed;
     bottom: 20px;
-    right: calc((100% - 800px) / 2); /* Ajuste dinámico según el ancho del contenido */
+    right: calc((100% - 800px) / 2);
 }
 
 #chat-button {
-    background: #007bff;
+    background: var(--chat-bg);
     color: white;
     border: none;
     padding: 10px 15px;
@@ -58,13 +105,14 @@ section {
     cursor: pointer;
 }
 
+/* Chat */
 #chat-box {
     display: none;
     position: absolute;
     bottom: 50px;
     right: 0;
     width: 300px;
-    background: white;
+    background: var(--card-bg);
     border: 1px solid #ccc;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
@@ -72,7 +120,7 @@ section {
 }
 
 #chat-header {
-    background: #007bff;
+    background: var(--chat-bg);
     color: white;
     padding: 10px;
     text-align: center;
@@ -93,20 +141,20 @@ section {
 
 #send-button {
     width: 20%;
-    background: #007bff;
+    background: var(--chat-bg);
     color: white;
     border: none;
     cursor: pointer;
 }
 
-
+/* Listas */
 section ul {
     padding: 0;
     list-style: none;
 }
 
 section ul li {
-    background: white;
+    background: var(--card-bg);
     padding: 15px;
     margin: 10px 0;
     border-radius: 10px;
