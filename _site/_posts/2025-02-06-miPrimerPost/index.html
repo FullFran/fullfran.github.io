@@ -2,8 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi primer post</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
 </head>
 <body>
 
@@ -20,7 +21,7 @@
         <li><a href="/contacto/">Contacto</a></li>
     </ul>
 </nav>
-
+  <!-- Incluir el header con navegación -->
 
     <main>
         <h1 id="hola">Hola!</h1>
@@ -30,11 +31,21 @@
 <p>Es muy comodo de hacer hehe</p>
 
 <p>esto es contenteo</p>
-
+  <!-- Aquí se inyectará el contenido de cada página -->
     </main>
 
+    <div id="chat-widget">
+    <button id="chat-button">💬 Chat</button>
+    <div id="chat-box" class="hidden">
+        <div id="chat-header">Chat con Francisco</div>
+        <div id="chat-messages"></div>
+        <input type="text" id="chat-input" placeholder="Escribe un mensaje..." />
+        <button id="send-button">Enviar</button>
+    </div>
+</div>
+  <!-- Incluir el chat -->
     
-
-    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/script.js"></script>
 </body>
 </html>
+

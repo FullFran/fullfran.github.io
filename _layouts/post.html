@@ -2,19 +2,21 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }}</title>
     <link rel="stylesheet" href="{{ '/assets/css/styles.css' | relative_url }}">
 </head>
 <body>
 
-    {% include header.html %}
+    {% include header.html %}  <!-- Incluir el header con navegación -->
 
     <main>
-        {{ content }}
+        {{ content }}  <!-- Aquí se inyectará el contenido de cada página -->
     </main>
 
-    {% include footer.html %}
-
-    <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+    {% include chat.html %}  <!-- Incluir el chat -->
+    
+    <script src="{{ '/assets/js/script.js' | relative_url }}"></script>
 </body>
 </html>
+
