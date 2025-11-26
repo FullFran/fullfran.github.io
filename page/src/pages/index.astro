@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
-import Portfolio from '../components/Portfolio';
+import '../styles/premium.css';
+import App from '../components/App';
 ---
 
 <!DOCTYPE html>
@@ -10,19 +11,30 @@ import Portfolio from '../components/Portfolio';
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>FullFran - Terminal Portfolio</title>
+		<meta name="description" content="Francisco Olmedo Cortés - AI Solutions Architect & Physicist. Building intelligent systems that solve real business problems." />
+		<meta name="keywords" content="AI, Machine Learning, Physics, Solutions Architect, BlakIA, LLMs, RAG" />
+		
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="FullFran - AI Solutions Architect" />
+		<meta property="og:description" content="Building intelligent systems that solve real business problems." />
+		
+		<!-- Twitter -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="FullFran - AI Solutions Architect" />
+		<meta name="twitter:description" content="Building intelligent systems that solve real business problems." />
+		
+		<title>FullFran - AI Solutions Architect & Physicist</title>
 	</head>
 	<body>
-		<div id="root"></div>
-		<Portfolio client:only="react" />
+		<App client:only="react" />
 	</body>
 </html>
 
 <style is:global>
-	/* You can add global styles here, but the Portfolio component handles most styling */
 	html, body {
 		margin: 0;
 		padding: 0;
-		overflow: hidden; /* Hide scrollbars as the terminal is full-screen */
+		background: #0a0a0f;
 	}
 </style>
