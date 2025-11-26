@@ -1,19 +1,18 @@
-import * as React from 'react';
-import { createRoot } from 'react-dom/client';
 import {
-  Terminal,
-  Cpu,
-  User,
-  GitBranch,
-  Wifi,
-  Lock,
-  Unlock,
-  Keyboard,
-  FileText,
-  Folder,
-  Trash2,
-  HelpCircle,
+    Cpu,
+    FileText,
+    Folder,
+    GitBranch,
+    HelpCircle,
+    Keyboard,
+    Lock,
+    Terminal,
+    Trash2,
+    Unlock,
+    User,
+    Wifi,
 } from 'lucide-react';
+import * as React from 'react';
 
 // --- TYPES ---
 type BlogPost = { id: string; title: string; date: string; content: string; };
@@ -415,5 +414,4 @@ const App: React.FC = () => {
   );
 };
 // --- ROOT ---
-const container = document.getElementById('root');
-if (container) { const root = createRoot(container); root.render(<App />); }
+export default App;
