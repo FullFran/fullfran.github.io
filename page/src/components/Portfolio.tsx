@@ -118,7 +118,11 @@ const findPrevWord = (lines: string[], cursor: [number, number]): [number, numbe
 };
 
 // --- APP PRINCIPAL ---
-const App: React.FC = () => {
+interface PortfolioProps {
+  onExitTerminal?: () => void;
+}
+
+const App: React.FC<PortfolioProps> = ({ onExitTerminal }) => {
   const [data, setData] = React.useState<PortfolioData>(DEFAULT_DATA);
   const [loading, setLoading] = React.useState(true);
   const [activeTab, setActiveTab] = React.useState<'about'|'experience'|'skills'|'contact'|'blog'|'help'>('about');
@@ -222,7 +226,11 @@ const App: React.FC = () => {
     switch(command) {
         case 'login': setShowAdminLogin(true); break;
         case 'w': case 'write': handleSave(); break;
-        case 'q': case 'quit': if (activeTab === 'blog' && activeBlogPostId) setActiveBlogPostId(null); else if (isAdmin) { setIsAdmin(false); alert('Admin logged out.'); } break;
+        case 'q': case 'quit': 
+          if (activeTab === 'blog' && activeBlogPostId) setActiveBlogPostId(null); 
+          else if (isAdmin) { setIsAdmin(false); alert('Admin logged out.'); }
+          else if (onExitTerminal) onExitTerminal();
+          break;
         case 'touch': if (activeTab === 'blog') handleCreatePost(args.join(' ')); else alert('Can only create in ~/blog'); break;
         case 'help': setActiveTab('help'); break;
     }
@@ -251,7 +259,8 @@ const App: React.FC = () => {
   };
 
   return (
-     <div className={`w-full h-screen ${THEME.bg} ${THEME.fg} flex flex-col font-mono overflow-hidden selection:bg-[#515c7e] selection:text-white`}>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 md:p-8">
+      <div className={`w-full h-full max-w-7xl max-h-[85vh] ${THEME.bg} ${THEME.fg} flex flex-col font-mono overflow-hidden selection:bg-[#515c7e] selection:text-white rounded-xl shadow-2xl border border-[#414868] terminal-view`}>
       <div className={`w-full ${THEME.bgDark} border-b ${THEME.border} flex items-center text-sm overflow-x-auto no-scrollbar`}>
         {tabs.map((t, i) => <button key={t.id} onClick={() => { setActiveTab(t.id); setActiveBlogPostId(null);}} className={`flex items-center px-4 py-2 border-r ${THEME.border} transition-colors whitespace-nowrap ${activeTab === t.id ? `${THEME.bg} ${THEME.purple}` : 'opacity-60 hover:opacity-80 hover:bg-[#24283b]'}`}><span className="mr-2 text-xs opacity-50">[{i + 1}]</span><t.icon size={14} className="mr-2" />{t.label}</button>)}
         <div className="flex-grow" />
@@ -272,6 +281,7 @@ const App: React.FC = () => {
         <div className="px-3 h-full flex items-center bg-[#3b4261] text-[#a9b1d6] hidden md:flex"><div className="flex items-center">{isAdmin ? <Unlock size={12} className="text-[#9ece6a]" /> : <Lock size={12} />}</div></div>
       </div>
        {mode === 'COMMAND' && <div className="absolute left-0 bottom-8 w-full bg-[#16161e] p-2 border-t border-[#414868] text-[#a9b1d6] shadow-lg">{commandBuffer}<span className="animate-pulse block w-2 h-4 bg-white inline-block ml-1 align-middle" /></div>}
+      </div>
     </div>
   );
 };

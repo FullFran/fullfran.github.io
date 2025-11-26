@@ -8,7 +8,7 @@ const App: React.FC = () => {
 
   return (
     <Layout currentView={currentView} onViewChange={setCurrentView}>
-      {currentView === 'landing' ? <LandingPage /> : <Portfolio />}
+      {currentView === 'landing' ? <LandingPage /> : <Portfolio onExitTerminal={() => setCurrentView('landing')} />}
     </Layout>
   );
 };
