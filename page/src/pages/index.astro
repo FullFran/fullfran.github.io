@@ -1,0 +1,28 @@
+---
+import '../styles/global.css';
+import Portfolio from '../components/Portfolio';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>FullFran - Terminal Portfolio</title>
+	</head>
+	<body>
+		<div id="root"></div>
+		<Portfolio client:only="react" />
+	</body>
+</html>
+
+<style is:global>
+	/* You can add global styles here, but the Portfolio component handles most styling */
+	html, body {
+		margin: 0;
+		padding: 0;
+		overflow: hidden; /* Hide scrollbars as the terminal is full-screen */
+	}
+</style>
