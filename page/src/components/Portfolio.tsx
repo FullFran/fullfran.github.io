@@ -79,42 +79,61 @@ const isWordChar = (char: string) => char && /\w/.test(char);
 
 const findNextWord = (lines: string[], cursor: [number, number]): [number, number] => {
     let [line, char] = cursor;
-    let foundNonWhitespace = false;
     if (line >= lines.length) return cursor;
     
-    while (line < lines.length) {
-        char++;
-        if (char >= lines[line].length) {
-            line++;
-            char = 0;
-            if (line >= lines.length) return cursor;
+    const currentLine = lines[line];
+    
+    // If we're on a word char, skip to end of current word
+    if (char < currentLine.length && isWordChar(currentLine[char])) {
+        while (char < currentLine.length && isWordChar(currentLine[char])) {
+            char++;
         }
-
-        const charIsWord = isWordChar(lines[line][char]);
-        if (charIsWord && !foundNonWhitespace) {
-            return [line, char];
-        }
-        foundNonWhitespace = charIsWord;
     }
-    return cursor;
+    
+    // Skip non-word characters (whitespace, punctuation)
+    while (line < lines.length) {
+        while (char < lines[line].length) {
+            if (isWordChar(lines[line][char])) {
+                return [line, char]; // Found start of next word
+            }
+            char++;
+        }
+        // Move to next line
+        line++;
+        char = 0;
+    }
+    
+    // If we reached the end, return last valid position
+    return [Math.max(0, lines.length - 1), 0];
 };
 
 const findPrevWord = (lines: string[], cursor: [number, number]): [number, number] => {
     let [line, char] = cursor;
     
-    char--; 
-
+    // Move back one to start searching
+    char--;
+    
     while (line >= 0) {
-        while (char >= 0) {
-            if (isWordChar(lines[line][char]) && (char === 0 || !isWordChar(lines[line][char - 1]))) {
-                return [line, char];
-            }
+        // Skip non-word characters backwards
+        while (char >= 0 && !isWordChar(lines[line][char])) {
             char--;
         }
-        line--;
-        if (line >= 0) char = lines[line].length - 1;
+        
+        if (char < 0) {
+            line--;
+            if (line >= 0) char = lines[line].length - 1;
+            continue;
+        }
+        
+        // Now we're on a word char, find the start of this word
+        while (char > 0 && isWordChar(lines[line][char - 1])) {
+            char--;
+        }
+        
+        return [line, char];
     }
-    return [0,0];
+    
+    return [0, 0];
 };
 
 // --- APP PRINCIPAL ---
@@ -134,6 +153,8 @@ const App: React.FC<PortfolioProps> = ({ onExitTerminal }) => {
   const [visual, setVisual] = React.useState<[[number,number],[number,number]] | null>(null);
   const [activeBlogPostId, setActiveBlogPostId] = React.useState<string | null>(null);
   const [count, setCount] = React.useState('');
+  const [gBuffer, setGBuffer] = React.useState(false); // Separate buffer for 'gg' command
+  const contentRef = React.useRef<HTMLDivElement>(null); // For typewriter mode scrolling
 const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_STRAPI_URL) || '';
 
   React.useEffect(() => {
@@ -237,8 +258,10 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
         return;
       }
 
-      if (count.length === 0 && e.key === '0' && commandBuffer !== 'g') { e.preventDefault(); return; }
-      if (/[0-9]/.test(e.key)) { setCount(c => c + e.key); return; }
+      // Handle count prefix for multipliers (1-9 start counts, 0 only adds to existing count)
+      if (/[1-9]/.test(e.key)) { setCount(c => c + e.key); return; }
+      if (e.key === '0' && count.length > 0) { setCount(c => c + e.key); return; }
+      // If '0' with no count prefix, it falls through to the switch statement (go to line start)
       e.preventDefault();
       
       const lines = getCurrentContent().split('\n');
@@ -259,8 +282,20 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
       };
 
       const motionKey = e.key;
-      if (motionKey === 'g' && commandBuffer === 'g') { updateCursor(() => [0,0]); return; }
-      if (motionKey === 'g') { setCommandBuffer('g'); return; }
+      
+      // Handle 'gg' command with separate gBuffer
+      if (motionKey === 'g') {
+        if (gBuffer) {
+          updateCursor(() => [0, 0]);
+          setGBuffer(false);
+        } else {
+          setGBuffer(true);
+        }
+        return;
+      }
+      
+      // Clear gBuffer if any other key is pressed
+      if (gBuffer) setGBuffer(false);
       
       switch (motionKey) {
         case 'j': case 'ArrowDown': updateCursor(c => [c[0] + 1, c[1]]); break;
@@ -270,6 +305,8 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
         case 'w': updateCursor(c => findNextWord(lines, c)); break;
         case 'b': updateCursor(c => findPrevWord(lines, c)); break;
         case 'G': updateCursor(() => [maxLines, 0]); break;
+        case '0': updateCursor(c => [c[0], 0]); break; // Go to beginning of line
+        case '$': updateCursor(c => [c[0], lines[c[0]]?.length || 0]); break; // Go to end of line
         case 'v': if (mode === 'NORMAL') { setMode('VISUAL'); setVisual([cursor, cursor]); } else { setMode('NORMAL'); setVisual(null); } break;
         case 'i': if (isAdmin) setMode('INSERT'); break;
         case ':': setMode('COMMAND'); setCommandBuffer(':'); break;
@@ -277,7 +314,7 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [mode, commandBuffer, showAdminLogin, isAdmin, activeTab, activeBlogPostId, data, cursor, count]);
+  }, [mode, commandBuffer, showAdminLogin, isAdmin, activeTab, activeBlogPostId, data, cursor, count, gBuffer]);
   
   const executeCommand = (cmd: string) => {
     const [command, ...args] = cmd.replace(':', '').trim().split(' ');
@@ -294,7 +331,29 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
     }
   };
 
-  React.useEffect(()=> { setCursor([0,0]); setVisual(null); setMode('NORMAL'); setCount('') }, [activeTab, activeBlogPostId]);
+  React.useEffect(()=> { setCursor([0,0]); setVisual(null); setMode('NORMAL'); setCount(''); setGBuffer(false); }, [activeTab, activeBlogPostId]);
+
+  // Typewriter mode: Keep cursor line centered in viewport
+  React.useEffect(() => {
+    if (!contentRef.current || mode === 'INSERT') return;
+    
+    // Use requestAnimationFrame for smooth scrolling
+    requestAnimationFrame(() => {
+      const container = contentRef.current;
+      if (!container) return;
+      
+      const lineHeight = 24; // leading-6 = 1.5rem = 24px
+      const paddingTop = 32; // p-4 = 1rem = 16px, md:p-8 = 2rem = 32px
+      const cursorLinePosition = paddingTop + (cursor[0] * lineHeight);
+      const containerHeight = container.clientHeight;
+      const targetScroll = cursorLinePosition - (containerHeight / 2) + (lineHeight / 2);
+      
+      container.scrollTo({
+        top: Math.max(0, targetScroll),
+        behavior: 'smooth'
+      });
+    });
+  }, [cursor, mode]);
 
   const tabs = [
     { id: 'about', label: 'about.md', icon: User },
@@ -326,7 +385,7 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
       </div>
       <div className="flex-grow flex relative overflow-hidden">
         <div className={`hidden md:block py-4 ${THEME.bgDark} border-r ${THEME.border}`}><LineNumbers count={getCurrentContent().split('\n').length} cursorLine={cursor[0]} /></div>
-        <div className="flex-grow overflow-y-auto p-4 md:p-8 outline-none scroll-smooth">{loading ? <div>Loading...</div> : renderContent()}</div>
+        <div ref={contentRef} className="flex-grow overflow-y-auto p-4 md:p-8 outline-none scroll-smooth">{loading ? <div>Loading...</div> : renderContent()}</div>
         {showAdminLogin && <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm"><div className={`${THEME.bg} border ${THEME.border} p-6 w-96 shadow-2xl rounded-sm`}><div className={`${THEME.purple} mb-4 font-bold flex items-center`}><Lock size={16} className="mr-2" /> SUDO ACCESS</div><input type="password" autoFocus placeholder="Password..." className={`w-full bg-[#16161e] border ${THEME.border} p-2 text-white focus:outline-none focus:border-[#7aa2f7] mb-4`} onKeyDown={(e) => {if (e.key === 'Enter') {if ((e.target as HTMLInputElement).value === 'tokyo') { setIsAdmin(true); setShowAdminLogin(false); setMode('NORMAL'); } else { alert('Access Denied'); setShowAdminLogin(false); }}}} /><div className="text-xs text-right opacity-50">Hint: tokyo</div></div></div>}
       </div>
       <div className={`w-full h-8 ${THEME.bgDark} border-t ${THEME.border} flex items-center text-xs md:text-sm select-none z-10`}>
