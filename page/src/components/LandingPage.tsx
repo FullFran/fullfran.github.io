@@ -1,24 +1,165 @@
-import { Briefcase, ChevronRight, Code, FileText, Github, Linkedin, Mail, User } from 'lucide-react';
-import React from 'react';
-import portfolioData from '../data/portfolio.json';
+import { Briefcase, ChevronRight, Code, FileText, Mail, User } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import portfolioDataJson from '../data/portfolio.json';
+
+// Types for portfolio data
+interface BlogPost {
+  id: string;
+  title: string;
+  date: string;
+  content: string;
+}
+
+interface PortfolioData {
+  about: string;
+  experience: string;
+  skills: string;
+  contact: string;
+  blog: BlogPost[];
+  help: string;
+}
+
+// Strapi URL from environment or default to localhost
+const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_STRAPI_URL) || '';
 
 const LandingPage: React.FC = () => {
-  const { about, experience, skills, contact, blog } = portfolioData;
+  const [portfolioData, setPortfolioData] = useState<PortfolioData>(portfolioDataJson as PortfolioData);
+  const [isLoading, setIsLoading] = useState(!!STRAPI_URL);
 
-  // Helper to parse markdown-like string to simple HTML (very basic for now)
-  // In a real app, use a proper markdown parser like react-markdown
+  useEffect(() => {
+    if (!STRAPI_URL) return;
+
+    const fetchFromStrapi = async () => {
+      try {
+        // Fetch portfolio data
+        const portfolioRes = await fetch(`${STRAPI_URL}/api/portfolio`);
+        if (!portfolioRes.ok) throw new Error('Failed to fetch portfolio');
+        const portfolioJson = await portfolioRes.json();
+
+        // Fetch blog posts
+        const blogRes = await fetch(`${STRAPI_URL}/api/blog-posts?sort=date:desc`);
+        if (!blogRes.ok) throw new Error('Failed to fetch blog posts');
+        const blogJson = await blogRes.json();
+
+        const blogPosts: BlogPost[] = blogJson.data.map((post: { postId: string; title: string; date: string; content: string }) => ({
+          id: post.postId,
+          title: post.title,
+          date: post.date,
+          content: post.content,
+        }));
+
+        // Normalize text: convert escaped sequences from Strapi to actual characters
+        const normalizeText = (text: string) => 
+          text?.replace(/\\n/g, '\n')
+               .replace(/\\"/g, '"')
+               .replace(/\\\\/g, '\\')
+               .replace(/^["']|["']$/g, '')
+               .trim() || '';
+
+        setPortfolioData({
+          about: normalizeText(portfolioJson.data.about),
+          experience: normalizeText(portfolioJson.data.experience),
+          skills: normalizeText(portfolioJson.data.skills),
+          contact: normalizeText(portfolioJson.data.contact),
+          help: normalizeText(portfolioJson.data.help),
+          blog: blogPosts.map(p => ({ ...p, content: normalizeText(p.content) })),
+        });
+      } catch (error) {
+        console.warn('Using fallback JSON data:', error);
+        // Keep using the default JSON data
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFromStrapi();
+  }, []);
+
+  const { about, experience, skills, blog } = portfolioData;
+
+  // Helper to parse markdown-like string to simple HTML
   const renderMarkdown = (text: string) => {
+    // Parse inline markdown (bold, italic, code, links)
+    const parseInline = (line: string): React.ReactNode => {
+      const parts: React.ReactNode[] = [];
+      let remaining = line;
+      let key = 0;
+      
+      while (remaining.length > 0) {
+        // Bold: **text**
+        const boldMatch = remaining.match(/\*\*(.+?)\*\*/);
+        // Italic: *text* (but not **)
+        const italicMatch = remaining.match(/(?<!\*)\*([^*]+)\*(?!\*)/);
+        // Inline code: `code`
+        const codeMatch = remaining.match(/`([^`]+)`/);
+        // Link: [text](url)
+        const linkMatch = remaining.match(/\[([^\]]+)\]\(([^)]+)\)/);
+        
+        // Find the earliest match
+        const matches = [
+          boldMatch ? { type: 'bold', match: boldMatch, index: boldMatch.index! } : null,
+          italicMatch ? { type: 'italic', match: italicMatch, index: italicMatch.index! } : null,
+          codeMatch ? { type: 'code', match: codeMatch, index: codeMatch.index! } : null,
+          linkMatch ? { type: 'link', match: linkMatch, index: linkMatch.index! } : null,
+        ].filter(Boolean).sort((a, b) => a!.index - b!.index);
+        
+        if (matches.length === 0) {
+          parts.push(remaining);
+          break;
+        }
+        
+        const first = matches[0]!;
+        
+        // Add text before match
+        if (first.index > 0) {
+          parts.push(remaining.substring(0, first.index));
+        }
+        
+        // Add formatted element
+        if (first.type === 'bold') {
+          parts.push(<strong key={key++} className="font-bold text-white">{first.match[1]}</strong>);
+        } else if (first.type === 'italic') {
+          parts.push(<em key={key++} className="italic">{first.match[1]}</em>);
+        } else if (first.type === 'code') {
+          parts.push(<code key={key++} className="bg-gray-800 px-1 rounded text-cyan-300 font-mono text-sm">{first.match[1]}</code>);
+        } else if (first.type === 'link') {
+          parts.push(<a key={key++} href={first.match[2]} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">{first.match[1]}</a>);
+        }
+        
+        remaining = remaining.substring(first.index + first.match[0].length);
+      }
+      
+      return parts.length === 1 ? parts[0] : <>{parts}</>;
+    };
+
     return text.split('\n').map((line, i) => {
-      if (line.startsWith('# ')) return <h1 key={i} className="text-4xl font-bold mb-6 text-white">{line.replace('# ', '')}</h1>;
-      if (line.startsWith('## ')) return <h2 key={i} className="text-2xl font-bold mt-8 mb-4 text-blue-400">{line.replace('## ', '')}</h2>;
-      if (line.startsWith('### ')) return <h3 key={i} className="text-xl font-semibold mt-6 mb-2 text-cyan-300">{line.replace('### ', '')}</h3>;
-      if (line.startsWith('> ')) return <blockquote key={i} className="border-l-4 border-blue-500 pl-4 italic text-gray-400 my-4">{line.replace('> ', '')}</blockquote>;
-      if (line.startsWith('- ')) return <li key={i} className="ml-4 list-disc text-gray-300">{line.replace('- ', '')}</li>;
-      if (line.startsWith('* ')) return <li key={i} className="ml-4 list-disc text-gray-300">{line.replace('* ', '')}</li>;
+      // Horizontal rule
+      if (line.trim() === '---' || line.trim() === '***') {
+        return <hr key={i} className="border-gray-700 my-6" />;
+      }
+      // Headers
+      if (line.startsWith('# ')) return <h1 key={i} className="text-4xl font-bold mb-6 text-white">{parseInline(line.replace('# ', ''))}</h1>;
+      if (line.startsWith('## ')) return <h2 key={i} className="text-2xl font-bold mt-8 mb-4 text-blue-400">{parseInline(line.replace('## ', ''))}</h2>;
+      if (line.startsWith('### ')) return <h3 key={i} className="text-xl font-semibold mt-6 mb-2 text-cyan-300">{parseInline(line.replace('### ', ''))}</h3>;
+      // Blockquote
+      if (line.startsWith('> ')) return <blockquote key={i} className="border-l-4 border-blue-500 pl-4 italic text-gray-400 my-4">{parseInline(line.replace('> ', ''))}</blockquote>;
+      // List items
+      if (line.startsWith('- ')) return <li key={i} className="ml-4 list-disc text-gray-300">{parseInline(line.replace('- ', ''))}</li>;
+      if (line.startsWith('* ')) return <li key={i} className="ml-4 list-disc text-gray-300">{parseInline(line.replace('* ', ''))}</li>;
+      // Empty line
       if (line.trim() === '') return <br key={i} />;
-      return <p key={i} className="text-gray-300 leading-relaxed mb-2">{line}</p>;
+      // Regular paragraph
+      return <p key={i} className="text-gray-300 leading-relaxed mb-2">{parseInline(line)}</p>;
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-transparent flex items-center justify-center">
+        <div className="text-blue-400 animate-pulse">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-transparent text-white font-sans selection:bg-blue-500 selection:text-white pb-20">
@@ -126,25 +267,15 @@ const LandingPage: React.FC = () => {
 
       {/* Contact Section */}
       <section id="contact" className="py-20 px-6 md:px-20 max-w-7xl mx-auto mb-20">
-         <div className="bg-gradient-to-br from-blue-900/20 to-black border border-blue-500/30 rounded-2xl p-12 text-center relative overflow-hidden">
+         <div className="bg-gradient-to-br from-blue-900/20 to-black border border-blue-500/30 rounded-2xl p-12 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px]" />
             
-            <Mail className="mx-auto text-blue-400 mb-6" size={48} />
-            <h2 className="text-4xl font-bold mb-6">Let's Build Something Amazing</h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-                Whether you need a complex AI architecture or just want to discuss physics, I'm always open to new ideas.
-            </p>
-            
-            <div className="flex justify-center gap-6">
-                <a href="mailto:fran@blakia.es" className="px-8 py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors">
-                    Email Me
-                </a>
-                <a href="https://linkedin.com/in/francisco-olmedo-cortes/" target="_blank" rel="noreferrer" className="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 transition-colors flex items-center">
-                    <Linkedin className="mr-2" size={20} /> LinkedIn
-                </a>
-                <a href="https://github.com/FullFran" target="_blank" rel="noreferrer" className="px-8 py-3 bg-gray-800 text-white font-bold rounded-lg hover:bg-gray-700 transition-colors flex items-center">
-                    <Github className="mr-2" size={20} /> GitHub
-                </a>
+            <div className="flex items-center mb-8">
+                <Mail className="text-blue-400 mr-4" size={32} />
+                <h2 className="text-3xl font-bold">Contacto</h2>
+            </div>
+            <div className="prose prose-invert max-w-none">
+                {renderMarkdown(portfolioData.contact)}
             </div>
          </div>
       </section>

@@ -1,0 +1,30 @@
+{
+  "kind": "singleType",
+  "collectionName": "portfolios",
+  "info": {
+    "singularName": "portfolio",
+    "pluralName": "portfolios",
+    "displayName": "Portfolio"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "about": {
+      "type": "richtext"
+    },
+    "experience": {
+      "type": "richtext"
+    },
+    "skills": {
+      "type": "richtext"
+    },
+    "contact": {
+      "type": "richtext"
+    },
+    "help": {
+      "type": "richtext"
+    }
+  }
+}

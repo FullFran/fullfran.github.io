@@ -134,8 +134,66 @@ const App: React.FC<PortfolioProps> = ({ onExitTerminal }) => {
   const [visual, setVisual] = React.useState<[[number,number],[number,number]] | null>(null);
   const [activeBlogPostId, setActiveBlogPostId] = React.useState<string | null>(null);
   const [count, setCount] = React.useState('');
+const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_STRAPI_URL) || '';
 
-  React.useEffect(() => { try { const raw = window.localStorage.getItem(STORAGE_KEY); if (raw) { const p = JSON.parse(raw); setData({ ...DEFAULT_DATA, ...p, blog: p.blog ?? DEFAULT_DATA.blog, help: p.help ?? DEFAULT_DATA.help }); }} catch {} setLoading(false); }, []);
+  React.useEffect(() => {
+    const loadData = async () => {
+      // Try to fetch from Strapi first
+      if (STRAPI_URL) {
+        try {
+          const [portfolioRes, blogRes] = await Promise.all([
+            fetch(`${STRAPI_URL}/api/portfolio`),
+            fetch(`${STRAPI_URL}/api/blog-posts?sort=date:desc`)
+          ]);
+          
+          if (portfolioRes.ok && blogRes.ok) {
+            const portfolioJson = await portfolioRes.json();
+            const blogJson = await blogRes.json();
+            
+            const blogPosts: BlogPost[] = blogJson.data.map((post: { postId: string; title: string; date: string; content: string }) => ({
+              id: post.postId,
+              title: post.title,
+              date: post.date,
+              content: post.content,
+            }));
+
+            // Normalize text: convert escaped sequences from Strapi to actual characters
+            const normalizeText = (text: string) => 
+              text?.replace(/\\n/g, '\n')
+                   .replace(/\\"/g, '"')
+                   .replace(/\\\\/g, '\\')
+                   .replace(/^["']|["']$/g, '')
+                   .trim() || '';
+
+            setData({
+              about: normalizeText(portfolioJson.data.about) || DEFAULT_DATA.about,
+              experience: normalizeText(portfolioJson.data.experience) || DEFAULT_DATA.experience,
+              skills: normalizeText(portfolioJson.data.skills) || DEFAULT_DATA.skills,
+              contact: normalizeText(portfolioJson.data.contact) || DEFAULT_DATA.contact,
+              help: normalizeText(portfolioJson.data.help) || DEFAULT_DATA.help,
+              blog: blogPosts.length > 0 ? blogPosts.map(p => ({ ...p, content: normalizeText(p.content) })) : DEFAULT_DATA.blog,
+            });
+            setLoading(false);
+            return;
+          }
+        } catch (error) {
+          console.warn('Failed to fetch from Strapi, falling back to localStorage:', error);
+        }
+      }
+      
+      // Fallback to localStorage
+      try {
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const p = JSON.parse(raw);
+          setData({ ...DEFAULT_DATA, ...p, blog: p.blog ?? DEFAULT_DATA.blog, help: p.help ?? DEFAULT_DATA.help });
+        }
+      } catch {}
+      setLoading(false);
+    };
+    
+    loadData();
+  }, []);
 
   const persist = (newData: PortfolioData) => { setData(newData); try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(newData)); } catch {} };
   const getCurrentContent = () => {
