@@ -1,16 +1,16 @@
 import {
-    Cpu,
-    FileText,
-    Folder,
-    GitBranch,
-    HelpCircle,
-    Keyboard,
-    Lock,
-    Terminal,
-    Trash2,
-    Unlock,
-    User,
-    Wifi,
+  Cpu,
+  FileText,
+  Folder,
+  GitBranch,
+  HelpCircle,
+  Keyboard,
+  Lock,
+  Terminal,
+  Trash2,
+  Unlock,
+  User,
+  Wifi,
 } from 'lucide-react';
 import * as React from 'react';
 
@@ -35,10 +35,11 @@ const LineNumbers = ({ count, cursorLine }: { count: number, cursorLine: number 
 );
 
 const MarkdownRenderer = ({ content, cursor, visual, mode }: { content: string; cursor: [number, number]; visual: [[number, number], [number, number]] | null; mode: string; }) => {
+  if (!content) return null;
   const lines = content.trim().split('\n');
   const isSelected = (line: number, char: number) => {
     if (mode !== 'VISUAL' || !visual) return false;
-    const [start, end] = [visual[0], visual[1]].sort((a,b) => a[0] - b[0] || a[1] - b[1]);
+    const [start, end] = [visual[0], visual[1]].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
     if (line < start[0] || line > end[0]) return false;
     if (line > start[0] && line < end[0]) return true;
     if (start[0] === end[0]) return line === start[0] && char >= start[1] && char < end[1];
@@ -60,16 +61,16 @@ const MarkdownRenderer = ({ content, cursor, visual, mode }: { content: string; 
   return (
     <div className={`font-mono text-sm md:text-base leading-6 whitespace-pre-wrap ${THEME.fg}`}>
       {lines.map((line, i) => {
-          if (line.startsWith('# ')) return <div key={i} className={`${THEME.purple} font-bold text-xl mt-4 mb-2`}>{renderLineContent(line, i)}</div>;
-          if (line.startsWith('## ')) return <div key={i} className={`${THEME.blue} font-bold text-lg mt-3 mb-1`}>{renderLineContent(line, i)}</div>;
-          if (line.startsWith('### ')) return <div key={i} className={`${THEME.cyan} font-bold mt-2`}>{renderLineContent(line, i)}</div>;
-          if (line.startsWith('> ')) return <div key={i} className={`${THEME.green} italic pl-4 border-l-2 border-[#9ece6a] my-2`}>{renderLineContent(line, i)}</div>;
-          if (line.trim().startsWith('- ')) return <div key={i} className="pl-4"><span className={THEME.orange}>•</span> {renderLineContent(line.substring(2), i)}</div>;
-          if (line.trim().startsWith('* ')) return <div key={i} className="pl-4"><span className={THEME.yellow}>*</span> {renderLineContent(line.substring(2), i)}</div>;
-          
-          return <div key={i} className="min-h-[1.5rem]">{renderLineContent(line, i)}</div>;
+        if (line.startsWith('# ')) return <div key={i} className={`${THEME.purple} font-bold text-xl mt-4 mb-2`}>{renderLineContent(line, i)}</div>;
+        if (line.startsWith('## ')) return <div key={i} className={`${THEME.blue} font-bold text-lg mt-3 mb-1`}>{renderLineContent(line, i)}</div>;
+        if (line.startsWith('### ')) return <div key={i} className={`${THEME.cyan} font-bold mt-2`}>{renderLineContent(line, i)}</div>;
+        if (line.startsWith('> ')) return <div key={i} className={`${THEME.green} italic pl-4 border-l-2 border-[#9ece6a] my-2`}>{renderLineContent(line, i)}</div>;
+        if (line.trim().startsWith('- ')) return <div key={i} className="pl-4"><span className={THEME.orange}>•</span> {renderLineContent(line.substring(2), i)}</div>;
+        if (line.trim().startsWith('* ')) return <div key={i} className="pl-4"><span className={THEME.yellow}>*</span> {renderLineContent(line.substring(2), i)}</div>;
+
+        return <div key={i} className="min-h-[1.5rem]">{renderLineContent(line, i)}</div>;
       })}
-      {mode === 'NORMAL' && lines.length -1 === cursor[0] && <span className="inline-block w-2.5 h-5 bg-[#a9b1d6] animate-pulse align-middle ml-1" />}
+      {mode === 'NORMAL' && lines.length - 1 === cursor[0] && <span className="inline-block w-2.5 h-5 bg-[#a9b1d6] animate-pulse align-middle ml-1" />}
     </div>
   );
 };
@@ -78,84 +79,85 @@ const MarkdownRenderer = ({ content, cursor, visual, mode }: { content: string; 
 const isWordChar = (char: string) => char && /\w/.test(char);
 
 const findNextWord = (lines: string[], cursor: [number, number]): [number, number] => {
-    let [line, char] = cursor;
-    if (line >= lines.length) return cursor;
-    
-    const currentLine = lines[line];
-    
-    // If we're on a word char, skip to end of current word
-    if (char < currentLine.length && isWordChar(currentLine[char])) {
-        while (char < currentLine.length && isWordChar(currentLine[char])) {
-            char++;
-        }
+  let [line, char] = cursor;
+  if (line >= lines.length) return cursor;
+
+  const currentLine = lines[line];
+
+  // If we're on a word char, skip to end of current word
+  if (char < currentLine.length && isWordChar(currentLine[char])) {
+    while (char < currentLine.length && isWordChar(currentLine[char])) {
+      char++;
     }
-    
-    // Skip non-word characters (whitespace, punctuation)
-    while (line < lines.length) {
-        while (char < lines[line].length) {
-            if (isWordChar(lines[line][char])) {
-                return [line, char]; // Found start of next word
-            }
-            char++;
-        }
-        // Move to next line
-        line++;
-        char = 0;
+  }
+
+  // Skip non-word characters (whitespace, punctuation)
+  while (line < lines.length) {
+    while (char < lines[line].length) {
+      if (isWordChar(lines[line][char])) {
+        return [line, char]; // Found start of next word
+      }
+      char++;
     }
-    
-    // If we reached the end, return last valid position
-    return [Math.max(0, lines.length - 1), 0];
+    // Move to next line
+    line++;
+    char = 0;
+  }
+
+  // If we reached the end, return last valid position
+  return [Math.max(0, lines.length - 1), 0];
 };
 
 const findPrevWord = (lines: string[], cursor: [number, number]): [number, number] => {
-    let [line, char] = cursor;
-    
-    // Move back one to start searching
-    char--;
-    
-    while (line >= 0) {
-        // Skip non-word characters backwards
-        while (char >= 0 && !isWordChar(lines[line][char])) {
-            char--;
-        }
-        
-        if (char < 0) {
-            line--;
-            if (line >= 0) char = lines[line].length - 1;
-            continue;
-        }
-        
-        // Now we're on a word char, find the start of this word
-        while (char > 0 && isWordChar(lines[line][char - 1])) {
-            char--;
-        }
-        
-        return [line, char];
+  let [line, char] = cursor;
+
+  // Move back one to start searching
+  char--;
+
+  while (line >= 0) {
+    // Skip non-word characters backwards
+    while (char >= 0 && !isWordChar(lines[line][char])) {
+      char--;
     }
-    
-    return [0, 0];
+
+    if (char < 0) {
+      line--;
+      if (line >= 0) char = lines[line].length - 1;
+      continue;
+    }
+
+    // Now we're on a word char, find the start of this word
+    while (char > 0 && isWordChar(lines[line][char - 1])) {
+      char--;
+    }
+
+    return [line, char];
+  }
+
+  return [0, 0];
 };
 
 // --- APP PRINCIPAL ---
 interface PortfolioProps {
   onExitTerminal?: () => void;
+  initialData?: PortfolioData;
 }
 
-const App: React.FC<PortfolioProps> = ({ onExitTerminal }) => {
-  const [data, setData] = React.useState<PortfolioData>(DEFAULT_DATA);
-  const [loading, setLoading] = React.useState(true);
-  const [activeTab, setActiveTab] = React.useState<'about'|'experience'|'skills'|'contact'|'blog'|'help'>('about');
-  const [mode, setMode] = React.useState<'NORMAL'|'INSERT'|'VISUAL'|'COMMAND'>('NORMAL');
+const App: React.FC<PortfolioProps> = ({ onExitTerminal, initialData }) => {
+  const [data, setData] = React.useState<PortfolioData>(initialData || DEFAULT_DATA);
+  const [loading, setLoading] = React.useState(!initialData);
+  const [activeTab, setActiveTab] = React.useState<'about' | 'experience' | 'skills' | 'contact' | 'blog' | 'help'>('about');
+  const [mode, setMode] = React.useState<'NORMAL' | 'INSERT' | 'VISUAL' | 'COMMAND'>('NORMAL');
   const [commandBuffer, setCommandBuffer] = React.useState('');
   const [showAdminLogin, setShowAdminLogin] = React.useState(false);
   const [isAdmin, setIsAdmin] = React.useState(false);
   const [cursor, setCursor] = React.useState<[number, number]>([0, 0]);
-  const [visual, setVisual] = React.useState<[[number,number],[number,number]] | null>(null);
+  const [visual, setVisual] = React.useState<[[number, number], [number, number]] | null>(null);
   const [activeBlogPostId, setActiveBlogPostId] = React.useState<string | null>(null);
   const [count, setCount] = React.useState('');
   const [gBuffer, setGBuffer] = React.useState(false); // Separate buffer for 'gg' command
   const contentRef = React.useRef<HTMLDivElement>(null); // For typewriter mode scrolling
-const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_STRAPI_URL) || '';
+  const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_STRAPI_URL) || '';
 
   React.useEffect(() => {
     const loadData = async () => {
@@ -166,11 +168,11 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
             fetch(`${STRAPI_URL}/api/portfolio`),
             fetch(`${STRAPI_URL}/api/blog-posts?sort=date:desc`)
           ]);
-          
+
           if (portfolioRes.ok && blogRes.ok) {
             const portfolioJson = await portfolioRes.json();
             const blogJson = await blogRes.json();
-            
+
             const blogPosts: BlogPost[] = blogJson.data.map((post: { postId: string; title: string; date: string; content: string }) => ({
               id: post.postId,
               title: post.title,
@@ -179,12 +181,12 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
             }));
 
             // Normalize text: convert escaped sequences from Strapi to actual characters
-            const normalizeText = (text: string) => 
+            const normalizeText = (text: string) =>
               text?.replace(/\\n/g, '\n')
-                   .replace(/\\"/g, '"')
-                   .replace(/\\\\/g, '\\')
-                   .replace(/^["']|["']$/g, '')
-                   .trim() || '';
+                .replace(/\\"/g, '"')
+                .replace(/\\\\/g, '\\')
+                .replace(/^["']|["']$/g, '')
+                .trim() || '';
 
             setData({
               about: normalizeText(portfolioJson.data.about) || DEFAULT_DATA.about,
@@ -201,7 +203,7 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
           console.warn('Failed to fetch from Strapi, falling back to localStorage:', error);
         }
       }
-      
+
       // Fallback to localStorage
       try {
         const raw = window.localStorage.getItem(STORAGE_KEY);
@@ -209,28 +211,28 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
           const p = JSON.parse(raw);
           setData({ ...DEFAULT_DATA, ...p, blog: p.blog ?? DEFAULT_DATA.blog, help: p.help ?? DEFAULT_DATA.help });
         }
-      } catch {}
+      } catch { }
       setLoading(false);
     };
-    
+
     loadData();
   }, []);
 
-  const persist = (newData: PortfolioData) => { setData(newData); try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(newData)); } catch {} };
+  const persist = (newData: PortfolioData) => { setData(newData); try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(newData)); } catch { } };
   const getCurrentContent = () => {
     if (activeTab === 'blog') return activeBlogPostId ? (data.blog.find(p => p.id === activeBlogPostId)?.content || '') : '';
     if (activeTab === 'help') return data.help;
     return data[activeTab] || '';
   }
   const handleContentChange = (newContent: string) => {
-    if (activeTab === 'blog' && activeBlogPostId) persist({...data, blog: data.blog.map(p => p.id === activeBlogPostId ? {...p, content: newContent} : p)});
-    else if (activeTab === 'help') persist({...data, help: newContent});
-    else if (activeTab !== 'blog') persist({...data, [activeTab]: newContent});
+    if (activeTab === 'blog' && activeBlogPostId) persist({ ...data, blog: data.blog.map(p => p.id === activeBlogPostId ? { ...p, content: newContent } : p) });
+    else if (activeTab === 'help') persist({ ...data, help: newContent });
+    else if (activeTab !== 'blog') persist({ ...data, [activeTab]: newContent });
   };
-  const handleSave = () => { if (!isAdmin) return; setMode('COMMAND'); setCommandBuffer(`[Content Saved]`); setTimeout(() => { setCommandBuffer(''); setMode('NORMAL'); }, 1500);};
-  const handleCreatePost = (filename: string) => { if (!isAdmin || !filename) return; persist({ ...data, blog: [...data.blog, { id: filename.replace(/\s/g,'-').toLowerCase(), title: filename, date: new Date().toISOString().split('T')[0], content: `# ${filename}` }] }); };
+  const handleSave = () => { if (!isAdmin) return; setMode('COMMAND'); setCommandBuffer(`[Content Saved]`); setTimeout(() => { setCommandBuffer(''); setMode('NORMAL'); }, 1500); };
+  const handleCreatePost = (filename: string) => { if (!isAdmin || !filename) return; persist({ ...data, blog: [...data.blog, { id: filename.replace(/\s/g, '-').toLowerCase(), title: filename, date: new Date().toISOString().split('T')[0], content: `# ${filename}` }] }); };
   const handleDeletePost = (id: string) => { if (!isAdmin || !window.confirm(`Delete ${id}?`)) return; persist({ ...data, blog: data.blog.filter((p) => p.id !== id) }); if (activeBlogPostId === id) setActiveBlogPostId(null); };
-  
+
   const cycleTab = (direction: number) => {
     const tabsOrder: Array<typeof activeTab> = ['about', 'experience', 'skills', 'contact', 'blog', 'help'];
     const i = tabsOrder.indexOf(activeTab);
@@ -238,21 +240,21 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
     setActiveTab(tabsOrder[next]);
     setActiveBlogPostId(null);
   };
-  
+
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (showAdminLogin) return;
       if (e.key === 'Escape') { setMode('NORMAL'); setVisual(null); setCommandBuffer(''); setCount(''); e.preventDefault(); return; }
       if (mode === 'INSERT') return;
       if (e.ctrlKey) {
-          if (e.key === 'h' || e.key === 'ArrowLeft') cycleTab(-1);
-          else if (e.key === 'l' || e.key === 'ArrowRight') cycleTab(1);
-          e.preventDefault();
-          return;
+        if (e.key === 'h' || e.key === 'ArrowLeft') cycleTab(-1);
+        else if (e.key === 'l' || e.key === 'ArrowRight') cycleTab(1);
+        e.preventDefault();
+        return;
       }
       if (mode === 'COMMAND') {
-        if (e.key === 'Enter') { executeCommand(commandBuffer); setMode('NORMAL'); setCommandBuffer(''); } 
-        else if (e.key === 'Backspace') { setCommandBuffer(p => p.slice(0, -1)); if (commandBuffer.length <= 1) setMode('NORMAL'); } 
+        if (e.key === 'Enter') { executeCommand(commandBuffer); setMode('NORMAL'); setCommandBuffer(''); }
+        else if (e.key === 'Backspace') { setCommandBuffer(p => p.slice(0, -1)); if (commandBuffer.length <= 1) setMode('NORMAL'); }
         else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) setCommandBuffer(p => p + e.key);
         e.preventDefault();
         return;
@@ -263,26 +265,26 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
       if (e.key === '0' && count.length > 0) { setCount(c => c + e.key); return; }
       // If '0' with no count prefix, it falls through to the switch statement (go to line start)
       e.preventDefault();
-      
+
       const lines = getCurrentContent().split('\n');
       const maxLines = Math.max(0, lines.length - 1);
       const effectiveCount = parseInt(count, 10) || 1;
-      
+
       const updateCursor = (getNewPos: (c: [number, number]) => [number, number]) => {
-          let newPos = [...cursor] as [number, number];
-          for(let i=0; i<effectiveCount; i++) newPos = getNewPos(newPos);
-          const [line, char] = newPos;
-          const clampedLine = Math.max(0, Math.min(line, maxLines));
-          const maxChars = lines[clampedLine]?.length || 0;
-          const clampedChar = Math.max(0, Math.min(char, maxChars));
-          setCursor([clampedLine, clampedChar]);
-          if(mode === 'VISUAL') setVisual(v => v ? [v[0], [clampedLine, clampedChar]] : null);
-          setCount('');
-          setCommandBuffer('');
+        let newPos = [...cursor] as [number, number];
+        for (let i = 0; i < effectiveCount; i++) newPos = getNewPos(newPos);
+        const [line, char] = newPos;
+        const clampedLine = Math.max(0, Math.min(line, maxLines));
+        const maxChars = lines[clampedLine]?.length || 0;
+        const clampedChar = Math.max(0, Math.min(char, maxChars));
+        setCursor([clampedLine, clampedChar]);
+        if (mode === 'VISUAL') setVisual(v => v ? [v[0], [clampedLine, clampedChar]] : null);
+        setCount('');
+        setCommandBuffer('');
       };
 
       const motionKey = e.key;
-      
+
       // Handle 'gg' command with separate gBuffer
       if (motionKey === 'g') {
         if (gBuffer) {
@@ -293,10 +295,10 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
         }
         return;
       }
-      
+
       // Clear gBuffer if any other key is pressed
       if (gBuffer) setGBuffer(false);
-      
+
       switch (motionKey) {
         case 'j': case 'ArrowDown': updateCursor(c => [c[0] + 1, c[1]]); break;
         case 'k': case 'ArrowUp': updateCursor(c => [c[0] - 1, c[1]]); break;
@@ -315,39 +317,39 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [mode, commandBuffer, showAdminLogin, isAdmin, activeTab, activeBlogPostId, data, cursor, count, gBuffer]);
-  
+
   const executeCommand = (cmd: string) => {
     const [command, ...args] = cmd.replace(':', '').trim().split(' ');
-    switch(command) {
-        case 'login': setShowAdminLogin(true); break;
-        case 'w': case 'write': handleSave(); break;
-        case 'q': case 'quit': 
-          if (activeTab === 'blog' && activeBlogPostId) setActiveBlogPostId(null); 
-          else if (isAdmin) { setIsAdmin(false); alert('Admin logged out.'); }
-          else if (onExitTerminal) onExitTerminal();
-          break;
-        case 'touch': if (activeTab === 'blog') handleCreatePost(args.join(' ')); else alert('Can only create in ~/blog'); break;
-        case 'help': setActiveTab('help'); break;
+    switch (command) {
+      case 'login': setShowAdminLogin(true); break;
+      case 'w': case 'write': handleSave(); break;
+      case 'q': case 'quit':
+        if (activeTab === 'blog' && activeBlogPostId) setActiveBlogPostId(null);
+        else if (isAdmin) { setIsAdmin(false); alert('Admin logged out.'); }
+        else if (onExitTerminal) onExitTerminal();
+        break;
+      case 'touch': if (activeTab === 'blog') handleCreatePost(args.join(' ')); else alert('Can only create in ~/blog'); break;
+      case 'help': setActiveTab('help'); break;
     }
   };
 
-  React.useEffect(()=> { setCursor([0,0]); setVisual(null); setMode('NORMAL'); setCount(''); setGBuffer(false); }, [activeTab, activeBlogPostId]);
+  React.useEffect(() => { setCursor([0, 0]); setVisual(null); setMode('NORMAL'); setCount(''); setGBuffer(false); }, [activeTab, activeBlogPostId]);
 
   // Typewriter mode: Keep cursor line centered in viewport
   React.useEffect(() => {
     if (!contentRef.current || mode === 'INSERT') return;
-    
+
     // Use requestAnimationFrame for smooth scrolling
     requestAnimationFrame(() => {
       const container = contentRef.current;
       if (!container) return;
-      
+
       const lineHeight = 24; // leading-6 = 1.5rem = 24px
       const paddingTop = 32; // p-4 = 1rem = 16px, md:p-8 = 2rem = 32px
       const cursorLinePosition = paddingTop + (cursor[0] * lineHeight);
       const containerHeight = container.clientHeight;
       const targetScroll = cursorLinePosition - (containerHeight / 2) + (lineHeight / 2);
-      
+
       container.scrollTo({
         top: Math.max(0, targetScroll),
         behavior: 'smooth'
@@ -369,7 +371,7 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
     if (activeTab === 'blog' && !activeBlogPostId) return (
       <div className="font-mono">
         <div className={`${THEME.blue} mb-4 font-bold text-lg flex items-center border-b ${THEME.border} pb-2`}><Folder className="mr-2" size={20} /> ~/blog</div>
-        {data.blog.map((p) => <div key={p.id} onClick={() => setActiveBlogPostId(p.id)} className={`grid grid-cols-12 text-sm hover:bg-[#24283b] p-2 cursor-pointer group transition-colors`}><div className="col-span-2 opacity-70">-rw-r--r--</div><div className="col-span-2 opacity-70">fran</div><div className="col-span-2 text-[#7aa2f7]">{p.date}</div><div className="col-span-5 flex items-center"><FileText size={14} className="mr-2 text-[#9ece6a]" />{p.title}</div><div className="col-span-1 text-right">{isAdmin && <button onClick={(e) => { e.stopPropagation(); handleDeletePost(p.id);}} className="opacity-0 group-hover:opacity-100 hover:text-red-400"><Trash2 size={14} /></button>}</div></div>)}
+        {data.blog.map((p) => <div key={p.id} onClick={() => setActiveBlogPostId(p.id)} className={`grid grid-cols-12 text-sm hover:bg-[#24283b] p-2 cursor-pointer group transition-colors`}><div className="col-span-2 opacity-70">-rw-r--r--</div><div className="col-span-2 opacity-70">fran</div><div className="col-span-2 text-[#7aa2f7]">{p.date}</div><div className="col-span-5 flex items-center"><FileText size={14} className="mr-2 text-[#9ece6a]" />{p.title}</div><div className="col-span-1 text-right">{isAdmin && <button onClick={(e) => { e.stopPropagation(); handleDeletePost(p.id); }} className="opacity-0 group-hover:opacity-100 hover:text-red-400"><Trash2 size={14} /></button>}</div></div>)}
         {isAdmin && <div className="mt-8 pt-4 border-t border-[#414868] opacity-70 text-xs"><span className="text-[#e0af68]">TIP:</span> Use <code>:touch filename.md</code></div>}
       </div>);
     return <MarkdownRenderer content={content} cursor={cursor} visual={visual} mode={mode} />;
@@ -378,26 +380,26 @@ const STRAPI_URL = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLI
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 md:p-8">
       <div className={`w-full h-full max-w-7xl max-h-[85vh] ${THEME.bg} ${THEME.fg} flex flex-col font-mono overflow-hidden selection:bg-[#515c7e] selection:text-white rounded-xl shadow-2xl border border-[#414868] terminal-view`}>
-      <div className={`w-full ${THEME.bgDark} border-b ${THEME.border} flex items-center text-sm overflow-x-auto no-scrollbar`}>
-        {tabs.map((t, i) => <button key={t.id} onClick={() => { setActiveTab(t.id); setActiveBlogPostId(null);}} className={`flex items-center px-4 py-2 border-r ${THEME.border} transition-colors whitespace-nowrap ${activeTab === t.id ? `${THEME.bg} ${THEME.purple}` : 'opacity-60 hover:opacity-80 hover:bg-[#24283b]'}`}><span className="mr-2 text-xs opacity-50">[{i + 1}]</span><t.icon size={14} className="mr-2" />{t.label}</button>)}
-        <div className="flex-grow" />
-        <div className="px-4 text-xs opacity-50 hidden md:flex items-center whitespace-nowrap"><span className="mr-4 flex items-center"><Keyboard size={12} className="mr-1" /> 34-key layout</span><span className="mr-4">linux</span></div>
-      </div>
-      <div className="flex-grow flex relative overflow-hidden">
-        <div className={`hidden md:block py-4 ${THEME.bgDark} border-r ${THEME.border}`}><LineNumbers count={getCurrentContent().split('\n').length} cursorLine={cursor[0]} /></div>
-        <div ref={contentRef} className="flex-grow overflow-y-auto p-4 md:p-8 outline-none scroll-smooth">{loading ? <div>Loading...</div> : renderContent()}</div>
-        {showAdminLogin && <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm"><div className={`${THEME.bg} border ${THEME.border} p-6 w-96 shadow-2xl rounded-sm`}><div className={`${THEME.purple} mb-4 font-bold flex items-center`}><Lock size={16} className="mr-2" /> SUDO ACCESS</div><input type="password" autoFocus placeholder="Password..." className={`w-full bg-[#16161e] border ${THEME.border} p-2 text-white focus:outline-none focus:border-[#7aa2f7] mb-4`} onKeyDown={(e) => {if (e.key === 'Enter') {if ((e.target as HTMLInputElement).value === 'tokyo') { setIsAdmin(true); setShowAdminLogin(false); setMode('NORMAL'); } else { alert('Access Denied'); setShowAdminLogin(false); }}}} /><div className="text-xs text-right opacity-50">Hint: tokyo</div></div></div>}
-      </div>
-      <div className={`w-full h-8 ${THEME.bgDark} border-t ${THEME.border} flex items-center text-xs md:text-sm select-none z-10`}>
-         <div className={`px-3 h-full flex items-center font-bold text-[#15161e] transition-colors duration-200 ${mode === 'NORMAL' ? 'bg-[#7aa2f7]' : ''} ${mode === 'INSERT' ? 'bg-[#9ece6a]' : ''} ${mode === 'VISUAL' ? 'bg-[#bb9af7]' : ''} ${mode === 'COMMAND' ? 'bg-[#e0af68]' : ''}`}>
-          {mode} {count} {visual ? `(${Math.abs(visual[0][0] - visual[1][0]) + 1}L)` : ''}
+        <div className={`w-full ${THEME.bgDark} border-b ${THEME.border} flex items-center text-sm overflow-x-auto no-scrollbar`}>
+          {tabs.map((t, i) => <button key={t.id} onClick={() => { setActiveTab(t.id); setActiveBlogPostId(null); }} className={`flex items-center px-4 py-2 border-r ${THEME.border} transition-colors whitespace-nowrap ${activeTab === t.id ? `${THEME.bg} ${THEME.purple}` : 'opacity-60 hover:opacity-80 hover:bg-[#24283b]'}`}><span className="mr-2 text-xs opacity-50">[{i + 1}]</span><t.icon size={14} className="mr-2" />{t.label}</button>)}
+          <div className="flex-grow" />
+          <div className="px-4 text-xs opacity-50 hidden md:flex items-center whitespace-nowrap"><span className="mr-4 flex items-center"><Keyboard size={12} className="mr-1" /> 34-key layout</span><span className="mr-4">linux</span></div>
         </div>
-        <div className="px-3 h-full flex items-center bg-[#3b4261] text-[#7aa2f7] hidden sm:flex"><GitBranch size={12} className="mr-1" /> main</div>
-        <div className="px-3 h-full flex items-center text-[#a9b1d6] flex-grow">{activeTab === 'blog' && activeBlogPostId ? `~/blog/${activeBlogPostId}` : tabs.find(t => t.id === activeTab)?.label} {isAdmin && mode === 'INSERT' ? '[+]' : ''}</div>
-        <div className="px-4 text-[#a9b1d6]">{`${cursor[0]+1}:${cursor[1]+1}`}</div>
-        <div className="px-3 h-full flex items-center bg-[#3b4261] text-[#a9b1d6] hidden md:flex"><div className="flex items-center">{isAdmin ? <Unlock size={12} className="text-[#9ece6a]" /> : <Lock size={12} />}</div></div>
-      </div>
-       {mode === 'COMMAND' && <div className="absolute left-0 bottom-8 w-full bg-[#16161e] p-2 border-t border-[#414868] text-[#a9b1d6] shadow-lg">{commandBuffer}<span className="animate-pulse block w-2 h-4 bg-white inline-block ml-1 align-middle" /></div>}
+        <div className="flex-grow flex relative overflow-hidden">
+          <div className={`hidden md:block py-4 ${THEME.bgDark} border-r ${THEME.border}`}><LineNumbers count={getCurrentContent().split('\n').length} cursorLine={cursor[0]} /></div>
+          <div ref={contentRef} className="flex-grow overflow-y-auto p-4 md:p-8 outline-none scroll-smooth">{loading ? <div>Loading...</div> : renderContent()}</div>
+          {showAdminLogin && <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm"><div className={`${THEME.bg} border ${THEME.border} p-6 w-96 shadow-2xl rounded-sm`}><div className={`${THEME.purple} mb-4 font-bold flex items-center`}><Lock size={16} className="mr-2" /> SUDO ACCESS</div><input type="password" autoFocus placeholder="Password..." className={`w-full bg-[#16161e] border ${THEME.border} p-2 text-white focus:outline-none focus:border-[#7aa2f7] mb-4`} onKeyDown={(e) => { if (e.key === 'Enter') { if ((e.target as HTMLInputElement).value === 'tokyo') { setIsAdmin(true); setShowAdminLogin(false); setMode('NORMAL'); } else { alert('Access Denied'); setShowAdminLogin(false); } } }} /><div className="text-xs text-right opacity-50">Hint: tokyo</div></div></div>}
+        </div>
+        <div className={`w-full h-8 ${THEME.bgDark} border-t ${THEME.border} flex items-center text-xs md:text-sm select-none z-10`}>
+          <div className={`px-3 h-full flex items-center font-bold text-[#15161e] transition-colors duration-200 ${mode === 'NORMAL' ? 'bg-[#7aa2f7]' : ''} ${mode === 'INSERT' ? 'bg-[#9ece6a]' : ''} ${mode === 'VISUAL' ? 'bg-[#bb9af7]' : ''} ${mode === 'COMMAND' ? 'bg-[#e0af68]' : ''}`}>
+            {mode} {count} {visual ? `(${Math.abs(visual[0][0] - visual[1][0]) + 1}L)` : ''}
+          </div>
+          <div className="px-3 h-full flex items-center bg-[#3b4261] text-[#7aa2f7] hidden sm:flex"><GitBranch size={12} className="mr-1" /> main</div>
+          <div className="px-3 h-full flex items-center text-[#a9b1d6] flex-grow">{activeTab === 'blog' && activeBlogPostId ? `~/blog/${activeBlogPostId}` : tabs.find(t => t.id === activeTab)?.label} {isAdmin && mode === 'INSERT' ? '[+]' : ''}</div>
+          <div className="px-4 text-[#a9b1d6]">{`${cursor[0] + 1}:${cursor[1] + 1}`}</div>
+          <div className="px-3 h-full flex items-center bg-[#3b4261] text-[#a9b1d6] hidden md:flex"><div className="flex items-center">{isAdmin ? <Unlock size={12} className="text-[#9ece6a]" /> : <Lock size={12} />}</div></div>
+        </div>
+        {mode === 'COMMAND' && <div className="absolute left-0 bottom-8 w-full bg-[#16161e] p-2 border-t border-[#414868] text-[#a9b1d6] shadow-lg">{commandBuffer}<span className="animate-pulse block w-2 h-4 bg-white inline-block ml-1 align-middle" /></div>}
       </div>
     </div>
   );

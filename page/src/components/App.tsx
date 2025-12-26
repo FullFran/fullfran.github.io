@@ -3,12 +3,16 @@ import LandingPage from './LandingPage';
 import Layout from './Layout';
 import Portfolio from './Portfolio';
 
-const App: React.FC = () => {
+interface AppProps {
+  initialData?: any;
+}
+
+const App: React.FC<AppProps> = ({ initialData }) => {
   const [currentView, setCurrentView] = useState<'terminal' | 'landing'>('landing');
 
   return (
     <Layout currentView={currentView} onViewChange={setCurrentView}>
-      {currentView === 'landing' ? <LandingPage /> : <Portfolio onExitTerminal={() => setCurrentView('landing')} />}
+      {currentView === 'landing' ? <LandingPage initialData={initialData} /> : <Portfolio initialData={initialData} onExitTerminal={() => setCurrentView('landing')} />}
     </Layout>
   );
 };

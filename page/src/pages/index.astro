@@ -2,6 +2,14 @@
 import '../styles/global.css';
 import '../styles/premium.css';
 import App from '../components/App';
+import { fetchAllPortfolioData } from '../lib/strapi';
+
+const { portfolio, blogPosts } = await fetchAllPortfolioData();
+
+const initialData = {
+  ...portfolio,
+  blog: blogPosts || [],
+};
 ---
 
 <!DOCTYPE html>
@@ -27,7 +35,7 @@ import App from '../components/App';
 		<title>FullFran - AI Solutions Architect & Physicist</title>
 	</head>
 	<body>
-		<App client:only="react" />
+		<App client:load initialData={initialData} />
 	</body>
 </html>
 
