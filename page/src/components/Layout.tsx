@@ -1,20 +1,47 @@
-import { Globe, Menu, Terminal, X } from 'lucide-react';
-import React, { useState } from 'react';
+import { Globe, Terminal } from 'lucide-react';
+import React from 'react';
+import { site, type Locale } from '../data/site';
 
 interface LayoutProps {
   children: React.ReactNode;
   currentView: 'terminal' | 'landing';
   onViewChange: (view: 'terminal' | 'landing') => void;
+  locale: Locale;
+  onLocaleChange: (locale: Locale) => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, currentView, onViewChange }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const LocaleToggle: React.FC<{ locale: Locale; onLocaleChange: (l: Locale) => void }> = ({
+  locale,
+  onLocaleChange,
+}) => (
+  <div className="flex items-center text-sm font-mono border border-white/10 rounded-md overflow-hidden">
+    {(['es', 'en'] as Locale[]).map((l) => (
+      <button
+        key={l}
+        onClick={() => onLocaleChange(l)}
+        aria-pressed={locale === l}
+        className={`px-2.5 py-1 transition-colors ${
+          locale === l ? 'bg-[#7aa2f7] text-[#1a1b26]' : 'text-gray-400 hover:text-white'
+        }`}
+      >
+        {l.toUpperCase()}
+      </button>
+    ))}
+  </div>
+);
 
+const Layout: React.FC<LayoutProps> = ({
+  children,
+  currentView,
+  onViewChange,
+  locale,
+  onLocaleChange,
+}) => {
   return (
     <div className="min-h-screen bg-[#0a0a0f] relative overflow-x-hidden">
       {/* Carbon fiber background texture */}
       <div className="fixed inset-0 z-0 opacity-30 pointer-events-none carbon-fiber-bg" />
-      
+
       {/* Animated background gradients */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 right-[-20%] w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[150px] animate-pulse-slow" />
@@ -23,104 +50,51 @@ const Layout: React.FC<LayoutProps> = ({ children, currentView, onViewChange }) 
 
       {/* Navigation Bar */}
       <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/60 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
+        <div className="max-w-3xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between gap-4">
             {/* Logo */}
-            <div className="flex items-center space-x-3 group cursor-pointer">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] group-hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all">
-                <span className="text-white font-black text-xl">F</span>
-              </div>
-              <div>
-                <div className="text-white font-bold text-lg tracking-tight">FullFran</div>
-                <div className="text-xs text-gray-400 font-mono">AI Solutions Architect</div>
-              </div>
-            </div>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#about" className="text-gray-300 hover:text-white transition-colors font-medium">About</a>
-              <a href="#experience" className="text-gray-300 hover:text-white transition-colors font-medium">Experience</a>
-              <a href="#skills" className="text-gray-300 hover:text-white transition-colors font-medium">Skills</a>
-              <a href="#blog" className="text-gray-300 hover:text-white transition-colors font-medium">Blog</a>
-              <a href="#contact" className="text-gray-300 hover:text-white transition-colors font-medium">Contact</a>
-            </div>
-
-            {/* View Toggle */}
-            <div className="hidden md:flex items-center space-x-2 bg-white/5 rounded-lg p-1 border border-white/10">
-              <button
-                onClick={() => onViewChange('landing')}
-                className={`px-4 py-2 rounded-md transition-all flex items-center space-x-2 ${
-                  currentView === 'landing'
-                    ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                <Globe size={16} />
-                <span className="text-sm font-medium">Landing</span>
-              </button>
-              <button
-                onClick={() => onViewChange('terminal')}
-                className={`px-4 py-2 rounded-md transition-all flex items-center space-x-2 ${
-                  currentView === 'terminal'
-                    ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                <Terminal size={16} />
-                <span className="text-sm font-medium">Terminal</span>
-              </button>
-            </div>
-
-            {/* Mobile Menu Button */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
+              onClick={() => onViewChange('landing')}
+              className="flex items-center space-x-3 group cursor-pointer"
             >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] group-hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all">
+                <span className="text-white font-black text-lg">F</span>
+              </div>
+              <span className="text-white font-bold text-lg tracking-tight">FullFran</span>
             </button>
-          </div>
 
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden mt-4 pb-4 space-y-4 border-t border-white/10 pt-4">
-              <a href="#about" className="block text-gray-300 hover:text-white transition-colors font-medium">About</a>
-              <a href="#experience" className="block text-gray-300 hover:text-white transition-colors font-medium">Experience</a>
-              <a href="#skills" className="block text-gray-300 hover:text-white transition-colors font-medium">Skills</a>
-              <a href="#blog" className="block text-gray-300 hover:text-white transition-colors font-medium">Blog</a>
-              <a href="#contact" className="block text-gray-300 hover:text-white transition-colors font-medium">Contact</a>
-              
-              <div className="flex items-center space-x-2 pt-4 border-t border-white/10">
+            {/* Controls */}
+            <div className="flex items-center gap-2">
+              <LocaleToggle locale={locale} onLocaleChange={onLocaleChange} />
+
+              <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/10">
                 <button
-                  onClick={() => {
-                    onViewChange('landing');
-                    setMobileMenuOpen(false);
-                  }}
-                  className={`flex-1 px-4 py-2 rounded-md transition-all flex items-center justify-center space-x-2 ${
+                  onClick={() => onViewChange('landing')}
+                  aria-label="Landing view"
+                  className={`px-3 py-1.5 rounded-md transition-all flex items-center gap-2 ${
                     currentView === 'landing'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-white/5 text-gray-400'
+                      ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]'
+                      : 'text-gray-400 hover:text-white'
                   }`}
                 >
                   <Globe size={16} />
-                  <span className="text-sm font-medium">Landing</span>
+                  <span className="hidden sm:inline text-sm font-medium">Home</span>
                 </button>
                 <button
-                  onClick={() => {
-                    onViewChange('terminal');
-                    setMobileMenuOpen(false);
-                  }}
-                  className={`flex-1 px-4 py-2 rounded-md transition-all flex items-center justify-center space-x-2 ${
+                  onClick={() => onViewChange('terminal')}
+                  aria-label="Terminal view"
+                  className={`px-3 py-1.5 rounded-md transition-all flex items-center gap-2 ${
                     currentView === 'terminal'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-white/5 text-gray-400'
+                      ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]'
+                      : 'text-gray-400 hover:text-white'
                   }`}
                 >
                   <Terminal size={16} />
-                  <span className="text-sm font-medium">Terminal</span>
+                  <span className="hidden sm:inline text-sm font-medium">Terminal</span>
                 </button>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </nav>
 
@@ -131,14 +105,18 @@ const Layout: React.FC<LayoutProps> = ({ children, currentView, onViewChange }) 
 
       {/* Footer */}
       <footer className="relative z-10 border-t border-white/10 bg-black/40 backdrop-blur-sm mt-20">
-        <div className="max-w-7xl mx-auto px-6 py-8 text-center">
+        <div className="max-w-3xl mx-auto px-6 py-8 text-center space-y-2">
           <p className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} Francisco Olmedo Cortés. Built with{' '}
-            <span className="text-red-400">♥</span> using Astro, React & modern web technologies.
+            © {new Date().getFullYear()} Francisco Olmedo Cortés
           </p>
-          <p className="text-gray-500 text-xs mt-2 font-mono">
-            Inspired by terminal interfaces and premium automotive design
-          </p>
+          {currentView === 'landing' && (
+            <button
+              onClick={() => onViewChange('terminal')}
+              className="text-gray-600 hover:text-[#7dcfff] text-xs font-mono transition-colors"
+            >
+              {site[locale].terminalHint}
+            </button>
+          )}
         </div>
       </footer>
     </div>

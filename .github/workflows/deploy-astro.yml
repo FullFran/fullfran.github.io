@@ -21,8 +21,6 @@ jobs:
         uses: withastro/action@v2
         with:
           path: ./page
-        env:
-          PUBLIC_STRAPI_URL: ${{ secrets.PUBLIC_STRAPI_URL }}
   deploy:
     needs: build
     runs-on: ubuntu-latest

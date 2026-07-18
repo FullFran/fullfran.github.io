@@ -2,40 +2,45 @@
 import '../styles/global.css';
 import '../styles/premium.css';
 import App from '../components/App';
-import { fetchAllPortfolioData } from '../lib/strapi';
+import { getCollection } from 'astro:content';
 
-const { portfolio, blogPosts } = await fetchAllPortfolioData();
-
-const initialData = {
-  ...portfolio,
-  blog: blogPosts || [],
-};
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .map((entry) => ({
+    slug: entry.id,
+    title: entry.data.title,
+    date: entry.data.date.toISOString(),
+    lang: entry.data.lang,
+    description: entry.data.description ?? '',
+    body: entry.body ?? '',
+  }));
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content="Francisco Olmedo Cortés - AI Solutions Architect & Physicist. Building intelligent systems that solve real business problems." />
-		<meta name="keywords" content="AI, Machine Learning, Physics, Solutions Architect, BlakIA, LLMs, RAG" />
-		
+		<meta name="description" content="Physicist building production AI. Notes on AI, physics and keyboards." />
+		<meta name="keywords" content="AI, Machine Learning, Physics, Physicist, LLMs, RAG, keyboards" />
+		<link rel="alternate" type="application/rss+xml" title="Francisco Olmedo — Writing" href="/rss.xml" />
+
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
-		<meta property="og:title" content="FullFran - AI Solutions Architect" />
-		<meta property="og:description" content="Building intelligent systems that solve real business problems." />
-		
+		<meta property="og:title" content="Francisco Olmedo" />
+		<meta property="og:description" content="Physicist building production AI. Notes on AI, physics and keyboards." />
+
 		<!-- Twitter -->
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content="FullFran - AI Solutions Architect" />
-		<meta name="twitter:description" content="Building intelligent systems that solve real business problems." />
-		
-		<title>FullFran - AI Solutions Architect & Physicist</title>
+		<meta name="twitter:title" content="Francisco Olmedo" />
+		<meta name="twitter:description" content="Physicist building production AI. Notes on AI, physics and keyboards." />
+
+		<title>Francisco Olmedo — Physicist. I build AI systems that ship.</title>
 	</head>
 	<body>
-		<App client:load initialData={initialData} />
+		<App client:only="react" posts={posts} />
 	</body>
 </html>
 
