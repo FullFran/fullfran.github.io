@@ -174,20 +174,18 @@ const App: React.FC<PortfolioProps> = ({ posts = [], onExitTerminal }) => {
   const contentRef = React.useRef<HTMLDivElement>(null); // For typewriter mode scrolling
 
   React.useEffect(() => {
-    // Load content from localStorage overrides if present, otherwise use bundled JSON defaults
+    // Content is sourced from portfolio.json (single source of truth). Purge any stale
+    // localStorage content from older site versions — it could blank out the tabs.
     try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const p = JSON.parse(raw);
-        setData({ ...DEFAULT_DATA, ...p, help: p.help ?? DEFAULT_DATA.help });
-      }
+      window.localStorage.removeItem(STORAGE_KEY);
       const rawDrafts = window.localStorage.getItem(DRAFTS_KEY);
       if (rawDrafts) setDrafts(JSON.parse(rawDrafts));
     } catch {}
     setLoading(false);
   }, []);
 
-  const persist = (newData: PortfolioData) => { setData(newData); try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(newData)); } catch {} };
+  // Admin edits are in-memory for the session only; content lives in git (portfolio.json).
+  const persist = (newData: PortfolioData) => { setData(newData); };
   const persistDrafts = (newDrafts: BlogPost[]) => { setDrafts(newDrafts); try { window.localStorage.setItem(DRAFTS_KEY, JSON.stringify(newDrafts)); } catch {} };
   const getCurrentContent = () => {
     if (activeTab === 'blog') return activeBlogPostId ? (blog.find(p => p.id === activeBlogPostId)?.content || '') : '';
