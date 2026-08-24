@@ -27,6 +27,9 @@ const renderIntro = (intro: string): React.ReactNode => {
   );
 };
 
+// Drop [label](url) syntax down to just the label, for attributes that take plain text.
+const stripInline = (text: string): string => text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1');
+
 // Turn inline [label](url) markdown links into real anchors.
 const renderInline = (text: string, keyPrefix: string): React.ReactNode => {
   const pattern = /\[([^\]]+)\]\(([^)]+)\)/g;
@@ -63,6 +66,23 @@ const renderMarkdown = (text: string): React.ReactNode => {
     .map((line, i) => {
       const trimmed = line.trim();
       if (trimmed === '') return <div key={i} className="h-3" />;
+      const image = trimmed.match(/^!\[(.*)\]\(([^)\s]+)\)$/);
+      if (image)
+        return (
+          <figure key={i} className="my-5">
+            <img
+              src={image[2]}
+              alt={stripInline(image[1])}
+              loading="lazy"
+              className="w-full rounded-lg border border-[#292e42]"
+            />
+            {image[1] && (
+              <figcaption className="mt-2 text-xs text-[#565f89] leading-relaxed">
+                {renderInline(image[1], `cap-${i}`)}
+              </figcaption>
+            )}
+          </figure>
+        );
       if (line.startsWith('# '))
         return (
           <h4 key={i} className="text-[#bb9af7] font-bold text-lg mt-4 mb-2">
