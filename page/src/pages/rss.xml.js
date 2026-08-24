@@ -8,7 +8,7 @@ export async function GET(context) {
 
   return rss({
     title: 'Francisco Olmedo — Writing',
-    description: 'Notes on production AI, physics, keyboards, and whatever else comes up.',
+    description: 'Notes on AI, physics, keyboards, and whatever else comes up.',
     site: context.site,
     items: posts.map((post) => ({
       title: post.data.title,
