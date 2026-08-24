@@ -27,6 +27,34 @@ const renderIntro = (intro: string): React.ReactNode => {
   );
 };
 
+// Turn inline [label](url) markdown links into real anchors.
+const renderInline = (text: string, keyPrefix: string): React.ReactNode => {
+  const pattern = /\[([^\]]+)\]\(([^)]+)\)/g;
+  const nodes: React.ReactNode[] = [];
+  let last = 0;
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(text)) !== null) {
+    if (match.index > last) nodes.push(text.slice(last, match.index));
+    const href = match[2];
+    const external = /^https?:\/\//.test(href);
+    nodes.push(
+      <a
+        key={`${keyPrefix}-${match.index}`}
+        href={href}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noreferrer' : undefined}
+        className="text-[#7dcfff] hover:text-white transition-colors underline-offset-4 underline"
+      >
+        {match[1]}
+      </a>,
+    );
+    last = match.index + match[0].length;
+  }
+  if (nodes.length === 0) return text;
+  if (last < text.length) nodes.push(text.slice(last));
+  return nodes;
+};
+
 // Minimal inline markdown renderer for blog post content (Tokyo Night aesthetic)
 const renderMarkdown = (text: string): React.ReactNode => {
   return text
@@ -38,24 +66,24 @@ const renderMarkdown = (text: string): React.ReactNode => {
       if (line.startsWith('# '))
         return (
           <h4 key={i} className="text-[#bb9af7] font-bold text-lg mt-4 mb-2">
-            {line.replace(/^# /, '')}
+            {renderInline(line.replace(/^# /, ''), `h1-${i}`)}
           </h4>
         );
       if (line.startsWith('## '))
         return (
           <h5 key={i} className="text-[#7aa2f7] font-bold mt-3 mb-1">
-            {line.replace(/^## /, '')}
+            {renderInline(line.replace(/^## /, ''), `h2-${i}`)}
           </h5>
         );
       if (trimmed.startsWith('- ') || trimmed.startsWith('* '))
         return (
           <div key={i} className="pl-4 text-[#a9b1d6]">
-            <span className="text-[#ff9e64]">•</span> {trimmed.substring(2)}
+            <span className="text-[#ff9e64]">•</span> {renderInline(trimmed.substring(2), `li-${i}`)}
           </div>
         );
       return (
         <p key={i} className="text-[#a9b1d6] leading-relaxed mb-2">
-          {line}
+          {renderInline(line, `p-${i}`)}
         </p>
       );
     });
