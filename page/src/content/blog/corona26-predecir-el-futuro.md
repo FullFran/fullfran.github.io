@@ -1,6 +1,6 @@
 ---
 title: "Lo más cerca que tenemos de predecir el futuro"
-date: 2026-08-24
+date: 2026-08-13
 lang: es
 description: "Intenté predecir la forma de la corona solar antes del eclipse del 12 de agosto. Lo que me devolvió el proyecto no fue el acierto."
 ---
