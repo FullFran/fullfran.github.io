@@ -35,7 +35,7 @@ export const site: Record<Locale, SiteCopy> = {
   es: {
     tagline: 'Físico. Construyo sistemas de IA.',
     intro:
-      'Soy Fran. Uso IA y simulaciones para resolver problemas de física, y por el camino me aficioné a construir IA que aguanta el mundo real —tráfico real, datos reales, usuarios reales—. Ahora soy Chief Data Scientist en Hagalink; antes fundé una startup. Pero eso está en el /cv y ahí se queda: aquí escribo de lo que me sale de los cojones.',
+      'Soy Fran. Uso IA y simulaciones para resolver problemas de física, y por el camino me aficioné a construir IA que aguanta el mundo real —tráfico real, datos reales, usuarios reales—. Ahora soy Chief Data Scientist en Hagalink; antes fundé una startup. Pero eso está en el /cv y ahí se queda: aquí escribo de lo que me apetece.',
     nowTitle: 'Ahora',
     now: [
       'Chief Data Scientist en Hagalink — sistemas de IA de punta a punta.',
@@ -51,7 +51,7 @@ export const site: Record<Locale, SiteCopy> = {
   en: {
     tagline: 'Physicist. I build AI systems.',
     intro:
-      "I'm Fran. I use AI and simulations to solve physics problems, and along the way I got hooked on building AI that survives the real world —real traffic, real data, real users—. I'm Chief Data Scientist at Hagalink; before that I founded a startup. But that lives in the /cv and it can stay there: here I write about whatever I damn well please.",
+      "I'm Fran. I use AI and simulations to solve physics problems, and along the way I got hooked on building AI that survives the real world —real traffic, real data, real users—. I'm Chief Data Scientist at Hagalink; before that I founded a startup. But that lives in the /cv and it can stay there: here I write about whatever I feel like.",
     nowTitle: 'Now',
     now: [
       'Chief Data Scientist at Hagalink — end-to-end AI systems.',
