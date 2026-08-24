@@ -57,27 +57,37 @@ const Layout: React.FC<LayoutProps> = ({
         aria-label={locale === 'en' ? 'Site' : 'Sitio'}
         className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/60 border-b border-white/10"
       >
-        <div className="max-w-3xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between gap-4">
-            {/* Logo */}
-            <button
-              onClick={() => onViewChange('landing')}
-              className="flex items-center space-x-3 group cursor-pointer"
-            >
-              <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] group-hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all">
-                <span className="text-white font-black text-lg">F</span>
-              </div>
-              <span className="text-white font-bold text-lg tracking-tight">FullFran</span>
-            </button>
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4">
+          <div className="flex items-center justify-between gap-3 sm:gap-4">
+            {/* Logo + primary destinations */}
+            <div className="flex items-center gap-3 sm:gap-5 min-w-0">
+              <button
+                onClick={() => onViewChange('landing')}
+                className="flex items-center space-x-3 group cursor-pointer shrink-0"
+              >
+                <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] group-hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all">
+                  <span className="text-white font-black text-lg">F</span>
+                </div>
+                <span className="hidden sm:inline text-white font-bold text-lg tracking-tight">FullFran</span>
+              </button>
+
+              <a
+                href="/blog/"
+                className="text-sm font-medium text-[#a9b1d6] hover:text-[#7dcfff] transition-colors whitespace-nowrap"
+              >
+                {site[locale].writingTitle}
+              </a>
+            </div>
 
             {/* Controls */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <LocaleToggle locale={locale} onLocaleChange={onLocaleChange} />
 
               <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/10">
                 <button
                   onClick={() => onViewChange('landing')}
-                  aria-label="Landing view"
+                  aria-label={locale === 'en' ? 'Landing view' : 'Vista de inicio'}
+                  aria-pressed={currentView === 'landing'}
                   className={`px-3 py-1.5 rounded-md transition-all flex items-center gap-2 ${
                     currentView === 'landing'
                       ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]'
@@ -89,7 +99,8 @@ const Layout: React.FC<LayoutProps> = ({
                 </button>
                 <button
                   onClick={() => onViewChange('terminal')}
-                  aria-label="Terminal view"
+                  aria-label={locale === 'en' ? 'Terminal view' : 'Vista de terminal'}
+                  aria-pressed={currentView === 'terminal'}
                   className={`px-3 py-1.5 rounded-md transition-all flex items-center gap-2 ${
                     currentView === 'terminal'
                       ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]'

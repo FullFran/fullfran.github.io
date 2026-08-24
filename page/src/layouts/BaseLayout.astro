@@ -19,6 +19,8 @@ const canonical = new URL(path, Astro.site).href;
 const backLabel = lang === 'en' ? 'Writing' : 'Escribo';
 const homeLabel = lang === 'en' ? 'Home' : 'Inicio';
 const skipLabel = lang === 'en' ? 'Skip to content' : 'Saltar al contenido';
+const navLabel = lang === 'en' ? 'Site' : 'Sitio';
+const isArchive = path === '/blog/';
 ---
 
 <!doctype html>
@@ -57,10 +59,13 @@ const skipLabel = lang === 'en' ? 'Skip to content' : 'Saltar al contenido';
 
     <header class="site-header">
       <div class="shell">
-        <a href="/" class="brand">{name}</a>
-        <nav aria-label={backLabel}>
+        <a href="/" class="brand" aria-label={`${name} — ${homeLabel}`}>
+          <span class="brand-mark" aria-hidden="true">F</span>
+          <span class="brand-name">FullFran</span>
+        </a>
+        <nav aria-label={navLabel}>
           <a href="/">{homeLabel}</a>
-          <a href="/blog/">{backLabel}</a>
+          <a href="/blog/" aria-current={isArchive ? 'page' : undefined}>{backLabel}</a>
           <a href="/rss.xml">RSS</a>
         </nav>
       </div>
@@ -157,11 +162,40 @@ const skipLabel = lang === 'en' ? 'Skip to content' : 'Saltar al contenido';
   }
 
   .site-header .brand {
-    color: #fff;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
     text-decoration: none;
     white-space: nowrap;
+  }
+
+  .brand-mark {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: grid;
+    place-items: center;
+    border-radius: 0.5rem;
+    background: linear-gradient(135deg, #3b82f6, #22d3ee);
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+    color: #fff;
+    font-weight: 900;
+    font-size: 1.05rem;
+    transition: box-shadow 0.2s;
+  }
+
+  .site-header .brand:hover .brand-mark {
+    box-shadow: 0 0 30px rgba(37, 99, 235, 0.6);
+  }
+
+  .brand-name {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.075rem;
+    letter-spacing: -0.02em;
+  }
+
+  .site-header nav a[aria-current='page'] {
+    color: #7aa2f7;
   }
 
   .site-header nav {
