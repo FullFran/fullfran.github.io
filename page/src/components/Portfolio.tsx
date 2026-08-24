@@ -27,11 +27,11 @@ const DRAFTS_KEY = 'fullfran_blog_drafts_v1';
 const DEFAULT_DATA: PortfolioData = portfolioDataJson as PortfolioData;
 
 // --- THEME ---
-const THEME = { bg: 'bg-[#1a1b26]', bgDark: 'bg-[#16161e]', fg: 'text-[#a9b1d6]', fgDark: 'text-[#565f89]', blue: 'text-[#7aa2f7]', cyan: 'text-[#7dcfff]', purple: 'text-[#bb9af7]', green: 'text-[#9ece6a]', red: 'text-[#f7768e]', yellow: 'text-[#e0af68]', orange: 'text-[#ff9e64]', selection: 'bg-[#2e3c64]', cursor: 'bg-[#a9b1d6]', border: 'border-[#414868]' };
+const THEME = { bg: 'bg-[#1a1b26]', bgDark: 'bg-[#16161e]', fg: 'text-[#a9b1d6]', fgDark: 'text-[#828bb8]', blue: 'text-[#7aa2f7]', cyan: 'text-[#7dcfff]', purple: 'text-[#bb9af7]', green: 'text-[#9ece6a]', red: 'text-[#f7768e]', yellow: 'text-[#e0af68]', orange: 'text-[#ff9e64]', selection: 'bg-[#2e3c64]', cursor: 'bg-[#a9b1d6]', border: 'border-[#414868]' };
 
 // --- HELPERS & RENDERERS ---
 const LineNumbers = ({ count, cursorLine }: { count: number, cursorLine: number }) => (
-  <div className={`flex flex-col text-right pr-4 select-none ${THEME.fgDark} font-mono text-sm opacity-50 w-12 flex-shrink-0`}>
+  <div className={`flex flex-col text-right pr-4 select-none ${THEME.fgDark} font-mono text-sm w-12 flex-shrink-0`}>
     {Array.from({ length: count }).map((_, i) => <span key={i} className={`leading-6 relative ${i === cursorLine ? 'text-[#c0caf5]' : ''}`}>{i + 1}</span>)}
   </div>
 );
@@ -355,20 +355,20 @@ const App: React.FC<PortfolioProps> = ({ posts = [], onExitTerminal }) => {
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 md:p-8">
       <div className={`w-full h-full max-w-7xl max-h-[85vh] ${THEME.bg} ${THEME.fg} flex flex-col font-mono overflow-hidden selection:bg-[#515c7e] selection:text-white rounded-xl shadow-2xl border border-[#414868] terminal-view`}>
       <div className={`w-full ${THEME.bgDark} border-b ${THEME.border} flex items-center text-sm overflow-x-auto no-scrollbar`}>
-        {tabs.map((t, i) => <button key={t.id} onClick={() => { setActiveTab(t.id); setActiveBlogPostId(null);}} className={`flex items-center px-4 py-2 border-r ${THEME.border} transition-colors whitespace-nowrap ${activeTab === t.id ? `${THEME.bg} ${THEME.purple}` : 'opacity-60 hover:opacity-80 hover:bg-[#24283b]'}`}><span className="mr-2 text-xs opacity-50">[{i + 1}]</span><t.icon size={14} className="mr-2" />{t.label}</button>)}
+        {tabs.map((t, i) => <button key={t.id} onClick={() => { setActiveTab(t.id); setActiveBlogPostId(null);}} className={`flex items-center px-4 py-2 border-r ${THEME.border} transition-colors whitespace-nowrap ${activeTab === t.id ? `${THEME.bg} ${THEME.purple}` : 'text-[#828bb8] hover:text-[#c0caf5] hover:bg-[#24283b]'}`}><span className="mr-2 text-xs text-[#828bb8]">[{i + 1}]</span><t.icon size={14} className="mr-2" />{t.label}</button>)}
         <div className="flex-grow" />
-        <div className="px-4 text-xs opacity-50 hidden md:flex items-center whitespace-nowrap"><span className="mr-4 flex items-center"><Keyboard size={12} className="mr-1" /> 34-key layout</span><span className="mr-4">linux</span></div>
+        <div className="px-4 text-xs text-[#828bb8] hidden md:flex items-center whitespace-nowrap"><span className="mr-4 flex items-center"><Keyboard size={12} className="mr-1" /> 34-key layout</span><span className="mr-4">linux</span></div>
       </div>
       <div className="flex-grow flex relative overflow-hidden">
         <div className={`hidden md:block py-4 ${THEME.bgDark} border-r ${THEME.border}`}><LineNumbers count={getCurrentContent().split('\n').length} cursorLine={cursor[0]} /></div>
         <div ref={contentRef} className="flex-grow overflow-y-auto p-4 md:p-8 outline-none scroll-smooth">{loading ? <div>Loading...</div> : renderContent()}</div>
-        {showAdminLogin && <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm"><div className={`${THEME.bg} border ${THEME.border} p-6 w-96 shadow-2xl rounded-sm`}><div className={`${THEME.purple} mb-4 font-bold flex items-center`}><Lock size={16} className="mr-2" /> SUDO ACCESS</div><input type="password" autoFocus placeholder="Password..." className={`w-full bg-[#16161e] border ${THEME.border} p-2 text-white focus:outline-none focus:border-[#7aa2f7] mb-4`} onKeyDown={(e) => {if (e.key === 'Enter') {if ((e.target as HTMLInputElement).value === 'tokyo') { setIsAdmin(true); setShowAdminLogin(false); setMode('NORMAL'); } else { alert('Access Denied'); setShowAdminLogin(false); }}}} /><div className="text-xs text-right opacity-50">Hint: tokyo</div></div></div>}
+        {showAdminLogin && <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm"><div className={`${THEME.bg} border ${THEME.border} p-6 w-96 shadow-2xl rounded-sm`}><div className={`${THEME.purple} mb-4 font-bold flex items-center`}><Lock size={16} className="mr-2" /> SUDO ACCESS</div><input type="password" autoFocus placeholder="Password..." className={`w-full bg-[#16161e] border ${THEME.border} p-2 text-white focus:outline-none focus:border-[#7aa2f7] mb-4`} onKeyDown={(e) => {if (e.key === 'Enter') {if ((e.target as HTMLInputElement).value === 'tokyo') { setIsAdmin(true); setShowAdminLogin(false); setMode('NORMAL'); } else { alert('Access Denied'); setShowAdminLogin(false); }}}} /><div className="text-xs text-right text-[#828bb8]">Hint: tokyo</div></div></div>}
       </div>
       <div className={`w-full h-8 ${THEME.bgDark} border-t ${THEME.border} flex items-center text-xs md:text-sm select-none z-10`}>
          <div className={`px-3 h-full flex items-center font-bold text-[#15161e] transition-colors duration-200 ${mode === 'NORMAL' ? 'bg-[#7aa2f7]' : ''} ${mode === 'INSERT' ? 'bg-[#9ece6a]' : ''} ${mode === 'VISUAL' ? 'bg-[#bb9af7]' : ''} ${mode === 'COMMAND' ? 'bg-[#e0af68]' : ''}`}>
           {mode} {count} {visual ? `(${Math.abs(visual[0][0] - visual[1][0]) + 1}L)` : ''}
         </div>
-        <div className="px-3 h-full flex items-center bg-[#3b4261] text-[#7aa2f7] hidden sm:flex"><GitBranch size={12} className="mr-1" /> main</div>
+        <div className="px-3 h-full flex items-center bg-[#3b4261] text-[#a9c4fb] hidden sm:flex"><GitBranch size={12} className="mr-1" /> main</div>
         <div className="px-3 h-full flex items-center text-[#a9b1d6] flex-grow">{activeTab === 'blog' && activeBlogPostId ? `~/blog/${activeBlogPostId}` : tabs.find(t => t.id === activeTab)?.label} {isAdmin && mode === 'INSERT' ? '[+]' : ''}</div>
         <div className="px-4 text-[#a9b1d6]">{`${cursor[0]+1}:${cursor[1]+1}`}</div>
         <div className="px-3 h-full flex items-center bg-[#3b4261] text-[#a9b1d6] hidden md:flex"><div className="flex items-center">{isAdmin ? <Unlock size={12} className="text-[#9ece6a]" /> : <Lock size={12} />}</div></div>
