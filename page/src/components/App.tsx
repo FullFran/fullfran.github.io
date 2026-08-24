@@ -12,18 +12,23 @@ interface AppProps {
 
 const App: React.FC<AppProps> = ({ posts = [] }) => {
   const [currentView, setCurrentView] = useState<'terminal' | 'landing'>('landing');
-  const [locale, setLocale] = useState<Locale>(() => {
-    if (typeof window !== 'undefined') {
-      const stored = window.localStorage.getItem(LOCALE_KEY);
-      if (stored === 'es' || stored === 'en') return stored;
-    }
-    return 'es';
-  });
+  // Server and first client render must agree, so the stored preference is
+  // adopted after mount rather than seeded into the initial state.
+  const [locale, setLocale] = useState<Locale>('es');
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(LOCALE_KEY, locale);
-    }
+    const stored = window.localStorage.getItem(LOCALE_KEY);
+    if (stored === 'es' || stored === 'en') setLocale(stored);
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (hydrated) window.localStorage.setItem(LOCALE_KEY, locale);
+  }, [locale, hydrated]);
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
   }, [locale]);
 
   return (

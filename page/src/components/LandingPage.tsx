@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { links, name, site, type Locale, type Post } from '../data/site';
 
 interface LandingPageProps {
@@ -27,91 +27,16 @@ const renderIntro = (intro: string): React.ReactNode => {
   );
 };
 
-// Drop [label](url) syntax down to just the label, for attributes that take plain text.
-const stripInline = (text: string): string => text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1');
-
-// Turn inline [label](url) markdown links into real anchors.
-const renderInline = (text: string, keyPrefix: string): React.ReactNode => {
-  const pattern = /\[([^\]]+)\]\(([^)]+)\)/g;
-  const nodes: React.ReactNode[] = [];
-  let last = 0;
-  let match: RegExpExecArray | null;
-  while ((match = pattern.exec(text)) !== null) {
-    if (match.index > last) nodes.push(text.slice(last, match.index));
-    const href = match[2];
-    const external = /^https?:\/\//.test(href);
-    nodes.push(
-      <a
-        key={`${keyPrefix}-${match.index}`}
-        href={href}
-        target={external ? '_blank' : undefined}
-        rel={external ? 'noreferrer' : undefined}
-        className="text-[#7dcfff] hover:text-white transition-colors underline-offset-4 underline"
-      >
-        {match[1]}
-      </a>,
-    );
-    last = match.index + match[0].length;
-  }
-  if (nodes.length === 0) return text;
-  if (last < text.length) nodes.push(text.slice(last));
-  return nodes;
-};
-
-// Minimal inline markdown renderer for blog post content (Tokyo Night aesthetic)
-const renderMarkdown = (text: string): React.ReactNode => {
-  return text
-    .trim()
-    .split('\n')
-    .map((line, i) => {
-      const trimmed = line.trim();
-      if (trimmed === '') return <div key={i} className="h-3" />;
-      const image = trimmed.match(/^!\[(.*)\]\(([^)\s]+)\)$/);
-      if (image)
-        return (
-          <figure key={i} className="my-5">
-            <img
-              src={image[2]}
-              alt={stripInline(image[1])}
-              loading="lazy"
-              className="w-full rounded-lg border border-[#292e42]"
-            />
-            {image[1] && (
-              <figcaption className="mt-2 text-xs text-[#565f89] leading-relaxed">
-                {renderInline(image[1], `cap-${i}`)}
-              </figcaption>
-            )}
-          </figure>
-        );
-      if (line.startsWith('# '))
-        return (
-          <h4 key={i} className="text-[#bb9af7] font-bold text-lg mt-4 mb-2">
-            {renderInline(line.replace(/^# /, ''), `h1-${i}`)}
-          </h4>
-        );
-      if (line.startsWith('## '))
-        return (
-          <h5 key={i} className="text-[#7aa2f7] font-bold mt-3 mb-1">
-            {renderInline(line.replace(/^## /, ''), `h2-${i}`)}
-          </h5>
-        );
-      if (trimmed.startsWith('- ') || trimmed.startsWith('* '))
-        return (
-          <div key={i} className="pl-4 text-[#a9b1d6]">
-            <span className="text-[#ff9e64]">•</span> {renderInline(trimmed.substring(2), `li-${i}`)}
-          </div>
-        );
-      return (
-        <p key={i} className="text-[#a9b1d6] leading-relaxed mb-2">
-          {renderInline(line, `p-${i}`)}
-        </p>
-      );
-    });
-};
+const formatDate = (iso: string, locale: Locale) =>
+  new Date(iso).toLocaleDateString(locale === 'en' ? 'en-GB' : 'es-ES', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
 
 const LandingPage: React.FC<LandingPageProps> = ({ locale, posts, onEnterTerminal }) => {
   const copy = site[locale];
-  const [openPost, setOpenPost] = useState<string | null>(null);
 
   // Easter egg: press "~" to jump into the terminal view
   useEffect(() => {
@@ -138,7 +63,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ locale, posts, onEnterTermina
           <p className="text-[#a9b1d6] leading-relaxed">{renderIntro(copy.intro)}</p>
 
           {/* Links row */}
-          <nav className="flex flex-wrap gap-x-5 gap-y-2 pt-2 text-sm">
+          <nav className="flex flex-wrap gap-x-5 gap-y-2 pt-2 text-sm" aria-label={copy.linksLabel}>
             {links.map((link) => (
               <a
                 key={link.label}
@@ -154,13 +79,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ locale, posts, onEnterTermina
 
         {/* Now */}
         <section className="mt-16">
-          <h2 className="text-xs font-mono uppercase tracking-widest text-[#565f89] mb-4">
+          <h2 className="text-xs font-mono uppercase tracking-widest text-[#828bb8] mb-4">
             {copy.nowTitle}
           </h2>
           <ul className="space-y-2">
             {copy.now.map((line, i) => (
               <li key={i} className="flex gap-3 text-[#a9b1d6] leading-relaxed">
-                <span className="text-[#9ece6a] select-none">▹</span>
+                <span className="text-[#9ece6a] select-none" aria-hidden="true">
+                  &#9657;
+                </span>
                 <span>{line}</span>
               </li>
             ))}
@@ -169,45 +96,46 @@ const LandingPage: React.FC<LandingPageProps> = ({ locale, posts, onEnterTermina
 
         {/* Writing */}
         <section className="mt-16">
-          <h2 className="text-xs font-mono uppercase tracking-widest text-[#565f89] mb-4">
+          <h2 className="text-xs font-mono uppercase tracking-widest text-[#828bb8] mb-4">
             {copy.writingTitle}
           </h2>
           <p className="text-[#a9b1d6] leading-relaxed mb-6">{copy.writingIntro}</p>
 
-          <ul className="divide-y divide-[#292e42]">
-            {posts.map((post) => {
-              const isOpen = openPost === post.slug;
-              return (
-                <li key={post.slug} className="py-3">
-                  <button
-                    type="button"
-                    onClick={() => setOpenPost(isOpen ? null : post.slug)}
-                    aria-expanded={isOpen}
-                    className="w-full flex items-baseline justify-between gap-4 text-left group"
+          <ul className="border-t border-[#1c1f2e]">
+            {posts.map((post) => (
+              <li key={post.slug} className="border-b border-[#1c1f2e]">
+                <a
+                  href={`/blog/${post.slug}/`}
+                  lang={post.lang}
+                  className="group block py-4 sm:grid sm:grid-cols-[6.5rem_1fr] sm:gap-5 sm:items-baseline"
+                >
+                  <time
+                    dateTime={post.date.slice(0, 10)}
+                    className="block text-xs font-mono text-[#828bb8] whitespace-nowrap"
                   >
-                    <span className="text-[#c0caf5] group-hover:text-[#7aa2f7] transition-colors font-medium">
+                    {formatDate(post.date, locale)}
+                  </time>
+                  <span className="block">
+                    <span className="block font-medium text-[#c0caf5] group-hover:text-[#7aa2f7] transition-colors leading-snug">
                       {post.title}
                     </span>
-                    <span className="shrink-0 text-xs font-mono text-[#565f89]">
-                      {post.date.slice(0, 10)}
-                    </span>
-                  </button>
-                  {isOpen && (
-                    <div className="mt-4 pl-4 border-l-2 border-[#414868]">
-                      {renderMarkdown(post.body)}
-                      <button
-                        type="button"
-                        onClick={() => setOpenPost(null)}
-                        className="mt-4 text-xs font-mono text-[#565f89] hover:text-[#7dcfff] transition-colors"
-                      >
-                        [{copy.closeLabel}]
-                      </button>
-                    </div>
-                  )}
-                </li>
-              );
-            })}
+                    {post.description && (
+                      <span className="mt-1 block text-sm leading-relaxed text-[#828bb8]">
+                        {post.description}
+                      </span>
+                    )}
+                  </span>
+                </a>
+              </li>
+            ))}
           </ul>
+
+          <a
+            href="/blog/"
+            className="mt-6 inline-block text-sm text-[#7dcfff] hover:text-white transition-colors underline-offset-4 hover:underline"
+          >
+            {copy.allWritingLabel}
+          </a>
         </section>
       </div>
     </div>

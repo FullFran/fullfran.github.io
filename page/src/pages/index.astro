@@ -5,6 +5,7 @@ import App from '../components/App';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog'))
+  .filter((entry) => !entry.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .map((entry) => ({
     slug: entry.id,
@@ -16,7 +17,7 @@ const posts = (await getCollection('blog'))
   }));
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 	<head>
 		<meta charset="UTF-8" />
@@ -25,12 +26,14 @@ const posts = (await getCollection('blog'))
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content="Physicist building production AI. Notes on AI, physics and keyboards." />
 		<meta name="keywords" content="AI, Machine Learning, Physics, Physicist, LLMs, RAG, keyboards" />
+		<link rel="canonical" href="https://www.fullfran.com/" />
 		<link rel="alternate" type="application/rss+xml" title="Francisco Olmedo — Writing" href="/rss.xml" />
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content="Francisco Olmedo" />
 		<meta property="og:description" content="Physicist building production AI. Notes on AI, physics and keyboards." />
+		<meta property="og:url" content="https://www.fullfran.com/" />
 
 		<!-- Twitter -->
 		<meta name="twitter:card" content="summary_large_image" />
@@ -40,14 +43,57 @@ const posts = (await getCollection('blog'))
 		<title>Francisco Olmedo — Physicist. I build AI systems that ship.</title>
 	</head>
 	<body>
-		<App client:only="react" posts={posts} />
+		<App client:load posts={posts} />
 	</body>
 </html>
 
 <style is:global>
+	:root {
+		color-scheme: dark;
+	}
+
 	html, body {
 		margin: 0;
 		padding: 0;
 		background: #0a0a0f;
+	}
+
+	/* Visible keyboard focus, without touching mouse users. */
+	:focus-visible {
+		outline: 2px solid #7dcfff;
+		outline-offset: 3px;
+		border-radius: 3px;
+	}
+
+	.skip-link {
+		position: absolute;
+		left: 1rem;
+		top: -4rem;
+		z-index: 100;
+		padding: 0.6rem 1rem;
+		background: #7aa2f7;
+		color: #0a0a0f;
+		font-weight: 600;
+		border-radius: 0 0 8px 8px;
+		text-decoration: none;
+		transition: top 0.15s;
+	}
+
+	.skip-link:focus {
+		top: 0;
+	}
+
+	/* The background gradients pulse forever; give people a way out. */
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+		}
 	}
 </style>

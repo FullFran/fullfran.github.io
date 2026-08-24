@@ -17,8 +17,8 @@ export interface SiteCopy {
   writingTitle: string;
   writingIntro: string;
   terminalHint: string;
-  readLabel: string;
-  closeLabel: string;
+  linksLabel: string;
+  allWritingLabel: string;
 }
 
 export const name = 'Francisco Olmedo';
@@ -45,8 +45,8 @@ export const site: Record<Locale, SiteCopy> = {
     writingTitle: 'Escribo',
     writingIntro: 'Notas sobre IA en producción, física, teclados y lo que se cruce.',
     terminalHint: 'pulsa ~ para la terminal',
-    readLabel: 'leer',
-    closeLabel: 'cerrar',
+    linksLabel: 'Enlaces',
+    allWritingLabel: 'Ver todo lo que he escrito \u2192',
   },
   en: {
     tagline: 'Physicist. I build AI systems that ship.',
@@ -61,7 +61,7 @@ export const site: Record<Locale, SiteCopy> = {
     writingTitle: 'Writing',
     writingIntro: 'Notes on production AI, physics, keyboards, and whatever else comes up.',
     terminalHint: 'press ~ for terminal',
-    readLabel: 'read',
-    closeLabel: 'close',
+    linksLabel: 'Links',
+    allWritingLabel: 'See everything I have written \u2192',
   },
 };
