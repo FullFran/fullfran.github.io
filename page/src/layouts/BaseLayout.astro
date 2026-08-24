@@ -1,0 +1,222 @@
+---
+import '../styles/global.css';
+import '../styles/prose.css';
+import 'katex/dist/katex.min.css';
+import { name } from '../data/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  lang?: 'es' | 'en';
+  /** Absolute path of the current page, for canonical and og:url. */
+  path: string;
+  /** ISO date, set on article pages so the card shows a publication time. */
+  published?: string;
+}
+
+const { title, description = '', lang = 'es', path, published } = Astro.props;
+const canonical = new URL(path, Astro.site).href;
+const backLabel = lang === 'en' ? 'Writing' : 'Escribo';
+const homeLabel = lang === 'en' ? 'Home' : 'Inicio';
+const skipLabel = lang === 'en' ? 'Skip to content' : 'Saltar al contenido';
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title={`${name} — Writing`} href="/rss.xml" />
+
+    <meta property="og:type" content={published ? 'article' : 'website'} />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={name} />
+    {published && <meta property="article:published_time" content={published} />}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap"
+    />
+  </head>
+
+  <body>
+    <a href="#content" class="skip-link">{skipLabel}</a>
+
+    <header class="site-header">
+      <div class="shell">
+        <a href="/" class="brand">{name}</a>
+        <nav aria-label={backLabel}>
+          <a href="/">{homeLabel}</a>
+          <a href="/blog/">{backLabel}</a>
+          <a href="/rss.xml">RSS</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="content" class="shell">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell">
+        <p>{name}</p>
+        <p><a href="/rss.xml">RSS</a> · <a href="https://github.com/FullFran" rel="me">GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: #0a0a0f;
+    color: #c0caf5;
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  ::selection {
+    background: #2e3c64;
+    color: #fff;
+  }
+
+  /* Visible keyboard focus everywhere, without touching mouse users. */
+  :focus-visible {
+    outline: 2px solid #7dcfff;
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  .skip-link {
+    position: absolute;
+    inset-inline-start: 1rem;
+    inset-block-start: -4rem;
+    z-index: 100;
+    padding: 0.6rem 1rem;
+    background: #7aa2f7;
+    color: #0a0a0f;
+    font-weight: 600;
+    border-radius: 0 0 8px 8px;
+    text-decoration: none;
+    transition: inset-block-start 0.15s;
+  }
+
+  .skip-link:focus {
+    inset-block-start: 0;
+  }
+
+  .shell {
+    width: 100%;
+    max-width: 44rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  /* ---------- header ---------- */
+
+  .site-header {
+    border-block-end: 1px solid #1c1f2e;
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 50;
+  }
+
+  .site-header .shell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-block: 0.9rem;
+  }
+
+  .site-header .brand {
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .site-header nav {
+    display: flex;
+    gap: 1.15rem;
+    font-size: 0.875rem;
+  }
+
+  .site-header nav a,
+  .site-footer a {
+    color: #828bb8;
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .site-header nav a:hover,
+  .site-footer a:hover {
+    color: #7dcfff;
+  }
+
+  /* ---------- footer ---------- */
+
+  .site-footer {
+    margin-block-start: auto;
+    border-block-start: 1px solid #1c1f2e;
+    padding-block: 2rem;
+    font-size: 0.85rem;
+    color: #828bb8;
+  }
+
+  .site-footer .shell {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .site-footer p {
+    margin: 0;
+  }
+
+  main {
+    padding-block: 3.5rem 5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>

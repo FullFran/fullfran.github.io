@@ -1,0 +1,157 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { name, site } from '../../data/site';
+
+const posts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Group by year so the archive reads as a timeline rather than a flat list.
+const byYear = posts.reduce((acc, post) => {
+  const year = post.data.date.getUTCFullYear();
+  (acc[year] ??= []).push(post);
+  return acc;
+}, {} as Record<number, typeof posts>);
+
+const years = Object.keys(byYear)
+  .map(Number)
+  .sort((a, b) => b - a);
+
+const copy = site.es;
+---
+
+<BaseLayout
+  title={`${copy.writingTitle} — ${name}`}
+  description={copy.writingIntro}
+  path="/blog/"
+>
+  <header class="index-head">
+    <h1>{copy.writingTitle}</h1>
+    <p>{copy.writingIntro}</p>
+  </header>
+
+  {
+    years.map((year) => (
+      <section class="year" aria-labelledby={`year-${year}`}>
+        <h2 id={`year-${year}`}>{year}</h2>
+        <ul>
+          {byYear[year].map((post) => (
+            <li>
+              <a href={`/blog/${post.id}/`}>
+                <time datetime={post.data.date.toISOString().slice(0, 10)}>
+                  {post.data.date.toLocaleDateString('es-ES', {
+                    day: '2-digit',
+                    month: 'short',
+                    timeZone: 'UTC',
+                  })}
+                </time>
+                <span class="entry">
+                  <span class="entry-title">{post.data.title}</span>
+                  {post.data.description && (
+                    <span class="entry-desc">{post.data.description}</span>
+                  )}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</BaseLayout>
+
+<style>
+  .index-head {
+    margin-block-end: 3.5rem;
+  }
+
+  .index-head h1 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(2rem, 6vw, 2.75rem);
+    letter-spacing: -0.03em;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .index-head p {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #828bb8;
+    max-width: 34rem;
+  }
+
+  .year + .year {
+    margin-block-start: 3rem;
+  }
+
+  .year h2 {
+    margin: 0 0 0.75rem;
+    font-size: 0.78rem;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    letter-spacing: 0.16em;
+    color: #828bb8;
+    font-weight: 500;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-block-start: 1px solid #1c1f2e;
+  }
+
+  li {
+    border-block-end: 1px solid #1c1f2e;
+  }
+
+  li a {
+    display: grid;
+    gap: 0.15rem 1.25rem;
+    padding-block: 1.15rem;
+    text-decoration: none;
+  }
+
+  @media (min-width: 640px) {
+    li a {
+      grid-template-columns: 4.5rem 1fr;
+      align-items: baseline;
+    }
+  }
+
+  time {
+    font-size: 0.78rem;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    color: #828bb8;
+    white-space: nowrap;
+  }
+
+  .entry {
+    display: block;
+  }
+
+  .entry-title {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #c0caf5;
+    letter-spacing: -0.01em;
+    transition: color 0.15s;
+    text-wrap: balance;
+  }
+
+  .entry-desc {
+    display: block;
+    margin-block-start: 0.3rem;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: #828bb8;
+    text-wrap: pretty;
+  }
+
+  li a:hover .entry-title {
+    color: #7aa2f7;
+  }
+</style>

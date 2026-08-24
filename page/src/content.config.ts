@@ -8,6 +8,8 @@ const blog = defineCollection({
     date: z.coerce.date(),
     lang: z.enum(['es', 'en']).default('es'),
     description: z.string().optional(),
+    // Kept out of the site until it is ready: no page, no listing, no feed.
+    draft: z.boolean().default(false),
   }),
 });
 

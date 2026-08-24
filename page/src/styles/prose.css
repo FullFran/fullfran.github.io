@@ -1,0 +1,291 @@
+/* Long-form reading styles for rendered markdown.
+   Sans for the furniture, serif for the prose: the chrome stays part of the
+   app, the article reads like an article. */
+
+.prose {
+  --ink: #a9b1d6; /* body            9.4:1 on the page background */
+  --ink-strong: #c0caf5; /* bold, table headers  12.2:1 */
+  --ink-muted: #828bb8; /* captions, meta        6.0:1 — AA at small sizes */
+  --accent: #7aa2f7;
+  --accent-soft: #bb9af7;
+  --link: #7dcfff;
+  --rule: #292e42; /* decorative separators */
+  --rule-strong: #545c7e; /* rules that carry meaning  3.0:1 */
+  --surface: #12131c;
+
+  color: var(--ink);
+  font-family: 'Source Serif 4', Charter, 'Iowan Old Style', Georgia, serif;
+  font-size: 1.1875rem;
+  line-height: 1.75;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  overflow-wrap: break-word;
+}
+
+.prose > * + * {
+  margin-block-start: 1.4em;
+}
+
+/* Lede — the opening paragraph carries a little more weight. */
+.prose > p:first-of-type {
+  font-size: 1.28rem;
+  line-height: 1.65;
+  color: var(--ink-strong);
+}
+
+/* ---------- headings ---------- */
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-variant-numeric: normal;
+  color: #fff;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  scroll-margin-top: 6rem;
+}
+
+.prose h2 {
+  margin-block-start: 2.6em;
+  margin-block-end: 0.15em;
+  font-size: 1.55rem;
+  font-weight: 700;
+}
+
+/* A short accent rule instead of a heavy underline. */
+.prose h2::before {
+  content: '';
+  display: block;
+  width: 2.25rem;
+  height: 2px;
+  margin-block-end: 0.75rem;
+  background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+  border-radius: 2px;
+}
+
+.prose h3 {
+  margin-block-start: 2em;
+  margin-block-end: 0.1em;
+  font-size: 1.2rem;
+  font-weight: 650;
+  color: var(--ink-strong);
+}
+
+.prose h4 {
+  margin-block-start: 1.7em;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.prose :is(h2, h3, h4) + * {
+  margin-block-start: 0.6em;
+}
+
+/* ---------- inline ---------- */
+
+.prose strong {
+  color: var(--ink-strong);
+  font-weight: 650;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, var(--link) 45%, transparent);
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+
+.prose a:hover {
+  color: #fff;
+  text-decoration-color: currentColor;
+}
+
+.prose code {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.85em;
+  color: var(--accent-soft);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0.12em 0.36em;
+}
+
+/* ---------- lists ---------- */
+
+.prose :is(ul, ol) {
+  padding-inline-start: 1.4em;
+}
+
+.prose li + li {
+  margin-block-start: 0.45em;
+}
+
+.prose li::marker {
+  color: var(--accent);
+}
+
+.prose ul {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+.prose ul > li {
+  position: relative;
+  padding-inline-start: 1.4em;
+}
+
+.prose ul > li::before {
+  content: '▹';
+  position: absolute;
+  inset-inline-start: 0;
+  color: var(--accent);
+}
+
+.prose :is(ul, ol) :is(ul, ol) {
+  margin-block-start: 0.45em;
+}
+
+/* ---------- blocks ---------- */
+
+.prose blockquote {
+  margin-inline: 0;
+  padding-inline-start: 1.15em;
+  border-inline-start: 3px solid var(--rule-strong);
+  color: var(--ink-muted);
+}
+
+.prose pre {
+  background: var(--surface) !important;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  font-size: 0.87rem;
+  line-height: 1.65;
+  tab-size: 2;
+}
+
+.prose pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+.prose hr {
+  border: 0;
+  border-block-start: 1px solid var(--rule);
+  margin-block: 2.75em;
+}
+
+/* ---------- figures ---------- */
+
+.prose figure {
+  margin-inline: 0;
+}
+
+.prose :is(img, video) {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.prose figcaption {
+  margin-block-start: 0.7em;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+
+/* ---------- tables ---------- */
+
+.prose .table-scroll {
+  overflow-x: auto;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.92rem;
+}
+
+.prose :is(th, td) {
+  padding: 0.55em 0.8em;
+  border-block-end: 1px solid var(--rule);
+  text-align: start;
+  vertical-align: top;
+}
+
+.prose th {
+  color: var(--ink-strong);
+  font-weight: 600;
+  border-block-end-color: var(--rule-strong);
+  white-space: nowrap;
+}
+
+/* ---------- maths ---------- */
+
+.prose .katex {
+  font-size: 1.04em;
+}
+
+.prose .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.6em;
+  margin-block: 1.6em;
+}
+
+/* ---------- footnotes ---------- */
+
+.prose .footnotes {
+  margin-block-start: 3.5em;
+  padding-block-start: 1.5em;
+  border-block-start: 1px solid var(--rule);
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+}
+
+.prose .footnotes h2 {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  margin-block-start: 0;
+}
+
+.prose .footnotes h2::before {
+  display: none;
+}
+
+.prose [data-footnote-ref] {
+  text-decoration: none;
+  font-size: 0.8em;
+  vertical-align: super;
+  padding-inline: 0.15em;
+}
+
+@media (max-width: 640px) {
+  .prose {
+    font-size: 1.09rem;
+  }
+  .prose > p:first-of-type {
+    font-size: 1.16rem;
+  }
+  .prose h2 {
+    font-size: 1.38rem;
+  }
+}

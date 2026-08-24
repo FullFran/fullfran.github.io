@@ -1,0 +1,167 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { name } from '../../data/site';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('blog'))
+    .filter((post) => !post.data.draft)
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      // The list is newest first, so the *next* entry is the older post.
+      newer: posts[i - 1] ?? null,
+      older: posts[i + 1] ?? null,
+    },
+  }));
+}
+
+const { post, newer, older } = Astro.props;
+const { Content } = await render(post);
+
+const lang = post.data.lang;
+const words = post.body?.trim().split(/\s+/).length ?? 0;
+const minutes = Math.max(1, Math.round(words / 200));
+const readingTime = lang === 'en' ? `${minutes} min read` : `${minutes} min de lectura`;
+const moreLabel = lang === 'en' ? 'More writing' : 'Más cosas escritas';
+
+const dateLabel = post.data.date.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+---
+
+<BaseLayout
+  title={`${post.data.title} — ${name}`}
+  description={post.data.description}
+  lang={lang}
+  path={`/blog/${post.id}/`}
+  published={post.data.date.toISOString()}
+>
+  <article>
+    <header class="post-head">
+      <p class="post-meta">
+        <time datetime={post.data.date.toISOString().slice(0, 10)}>{dateLabel}</time>
+        <span aria-hidden="true">·</span>
+        <span>{readingTime}</span>
+      </p>
+      <h1>{post.data.title}</h1>
+      {post.data.description && <p class="post-standfirst">{post.data.description}</p>}
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+
+  <nav class="post-nav" aria-label={moreLabel}>
+    {
+      older && (
+        <a href={`/blog/${older.id}/`} class="post-nav-link">
+          <span class="post-nav-dir">← {lang === 'en' ? 'Older' : 'Anterior'}</span>
+          <span class="post-nav-title">{older.data.title}</span>
+        </a>
+      )
+    }
+    {
+      newer && (
+        <a href={`/blog/${newer.id}/`} class="post-nav-link post-nav-next">
+          <span class="post-nav-dir">{lang === 'en' ? 'Newer' : 'Siguiente'} →</span>
+          <span class="post-nav-title">{newer.data.title}</span>
+        </a>
+      )
+    }
+  </nav>
+</BaseLayout>
+
+<style>
+  .post-head {
+    margin-block-end: 3rem;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 0.9rem;
+    font-size: 0.8rem;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    letter-spacing: 0.04em;
+    color: #828bb8;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2rem, 6vw, 2.9rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+    color: #fff;
+    text-wrap: balance;
+  }
+
+  .post-standfirst {
+    margin: 1.1rem 0 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #828bb8;
+    text-wrap: pretty;
+  }
+
+  .post-nav {
+    display: grid;
+    gap: 1rem;
+    margin-block-start: 4.5rem;
+    padding-block-start: 2rem;
+    border-block-start: 1px solid #1c1f2e;
+  }
+
+  @media (min-width: 640px) {
+    .post-nav {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .post-nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid #1c1f2e;
+    border-radius: 10px;
+    text-decoration: none;
+    transition:
+      border-color 0.15s,
+      background 0.15s;
+  }
+
+  .post-nav-link:hover {
+    border-color: #545c7e;
+    background: #12131c;
+  }
+
+  .post-nav-next {
+    text-align: end;
+  }
+
+  .post-nav-dir {
+    font-size: 0.75rem;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    color: #828bb8;
+  }
+
+  .post-nav-title {
+    color: #c0caf5;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  .post-nav-link:hover .post-nav-title {
+    color: #7aa2f7;
+  }
+</style>
