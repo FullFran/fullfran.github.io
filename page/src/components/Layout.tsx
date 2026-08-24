@@ -39,6 +39,10 @@ const Layout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div className="min-h-screen bg-[#0a0a0f] relative overflow-x-hidden">
+      <a href="#content" className="skip-link">
+        {locale === 'en' ? 'Skip to content' : 'Saltar al contenido'}
+      </a>
+
       {/* Carbon fiber background texture */}
       <div className="fixed inset-0 z-0 opacity-30 pointer-events-none carbon-fiber-bg" />
 
@@ -49,7 +53,10 @@ const Layout: React.FC<LayoutProps> = ({
       </div>
 
       {/* Navigation Bar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/60 border-b border-white/10">
+      <nav
+        aria-label={locale === 'en' ? 'Site' : 'Sitio'}
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/60 border-b border-white/10"
+      >
         <div className="max-w-3xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between gap-4">
             {/* Logo */}
@@ -99,7 +106,7 @@ const Layout: React.FC<LayoutProps> = ({
       </nav>
 
       {/* Main Content */}
-      <main className={`relative pt-20 ${currentView === 'terminal' ? 'z-40' : 'z-10'}`}>
+      <main id="content" className={`relative pt-20 ${currentView === 'terminal' ? 'z-40' : 'z-10'}`}>
         {children}
       </main>
 
@@ -112,7 +119,7 @@ const Layout: React.FC<LayoutProps> = ({
           {currentView === 'landing' && (
             <button
               onClick={() => onViewChange('terminal')}
-              className="text-gray-600 hover:text-[#7dcfff] text-xs font-mono transition-colors"
+              className="text-[#828bb8] hover:text-[#7dcfff] text-xs font-mono transition-colors"
             >
               {site[locale].terminalHint}
             </button>
