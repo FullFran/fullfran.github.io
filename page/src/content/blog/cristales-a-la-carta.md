@@ -7,13 +7,16 @@ description: "El problema que hay detrás de una pompa de jabón, de un espejo d
 
 Una pompa de jabón es líquido incoloro y está violentamente coloreada. Un charco con una gota de aceite tiene colores. El caparazón de un escarabajo tiene colores y no lleva dentro ni un gramo de pigmento. Tus gafas tienen un reflejo violeta y la lente frontal de una cámara lo tiene verde. Un espejo láser parece un trozo de cristal y te devuelve el 99,999% de lo que le llega.
 
-![Una pompa de jabón. El color no es un pigmento: es interferencia. Foto de Brocken Inaglory, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), vía [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Reflection_in_a_soap_bubble_edit.jpg).](/img/pompa-de-jabon.jpg)
+<figure>
+  <img src="/img/pompa-de-jabon.jpg" alt="Primer plano de una pompa de jabón cuya superficie muestra bandas de color verdes, rosas y doradas que se curvan siguiendo la esfera." />
+  <figcaption>El color no es un pigmento: es interferencia en una película de unos cientos de nanómetros. Foto de Brocken Inaglory, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>, vía <a href="https://commons.wikimedia.org/wiki/File:Reflection_in_a_soap_bubble_edit.jpg">Wikimedia Commons</a>.</figcaption>
+</figure>
 
 Todas esas cosas son el mismo objeto: unas pocas capas de material transparente, cada una de un espesor que es una fracción de la longitud de onda, apiladas una encima de otra.
 
 Ninguna tiene absorción haciendo el trabajo. El color no es un tinte. Es interferencia, el mismo fenómeno que dos altavoces cancelándose en una habitación, solo que ocurriendo quinientos billones de veces por segundo.
 
-# El problema
+## El problema
 
 Planteado del todo, que es como hay que plantearlo antes de tocar nada.
 
@@ -23,7 +26,7 @@ Eso es todo. Esas dos fracciones se llaman R y T, y ese es el problema directo e
 
 A eso se le llama el problema directo, y tiene un hermano mucho más divertido al que llegaré al final.
 
-# Por qué la respuesta intuitiva está mal
+## Por qué la respuesta intuitiva está mal
 
 El primer modelo que se le ocurre a cualquiera: la luz llega a la primera interfaz y rebota una fracción; lo que queda llega a la segunda y rebota otra; sumas las fracciones.
 
@@ -40,9 +43,9 @@ De ahí salen las dos cosas que convierten esto en una industria:
 
 Mismas ecuaciones. Lo único que cambia es la fase. Y un modelo que suma potencias no puede producir ninguna de las dos: no es una aproximación peor, es otra situación física.
 
-# Para qué importa
+## Para qué importa
 
-El vidrio desnudo refleja alrededor de un 4% por cara. Suena despreciable hasta que cuentas caras. Un objetivo de seis lentes tiene doce, y 0,9574 elevado a doce da 0,59: se ha ido el 41% de la luz. Lo peor no es que se haya ido, es que no se ha ido a ninguna parte — está rebotando dentro del barrilete produciendo flare y comiéndose el contraste.
+El vidrio desnudo refleja alrededor de un 4% por cara. Suena despreciable hasta que cuentas caras. Un objetivo de seis lentes tiene doce, y $0{,}9574^{12} = 0{,}59$: se ha ido el 41% de la luz. Lo peor no es que se haya ido, es que no se ha ido a ninguna parte — está rebotando dentro del barrilete produciendo flare y comiéndose el contraste.
 
 El silicio desnudo es peor. Con un índice cercano a 3,9, la cara frontal de una célula solar refleja un 35% antes de que el semiconductor tenga la menor oportunidad. Una sola capa de nitruro de silicio de un cuarto de onda lo deja en un 0,02% a la longitud de onda de diseño. Esa capa sola vale más que casi toda la optimización de proceso que viene después.
 
@@ -55,7 +58,7 @@ Hacia el otro extremo, cuando lo que quieres es reflejar:
 - En LIGO, las masas de prueba son recubrimientos multicapa donde el presupuesto de pérdidas se mide en partes por millón, y el ruido térmico del propio recubrimiento es una de las cosas que limitan el instrumento.
 - Y las alas de las mariposas Morpho llevaban haciéndolo bastante antes que Zeiss.
 
-# Dónde deja de valer
+## Dónde deja de valer
 
 Esta es la parte que casi siempre falta, y es la que más me interesa.
 
@@ -71,7 +74,7 @@ Pero mi favorita de toda la lista es otra, y es de las que solo se encuentran to
 
 Si eliges la rama equivocada, la conservación de la energía se te sigue cumpliendo perfectamente. Todos los tests en verde. Simplemente estás simulando un medio que amplifica la luz.
 
-# Y luego, diseñar
+## Y luego, diseñar
 
 Todo lo anterior es el problema directo: te dan la pila y calculas la curva. La gracia está en darle la vuelta.
 
@@ -87,7 +90,7 @@ Y si tu solver es sutilmente incorrecto, es peor. El optimizador va a encontrar 
 
 Por eso el directo tiene que ser exacto y barato antes que ninguna otra cosa.
 
-# Por qué lo he publicado
+## Por qué lo he publicado
 
 He empezado a subir a un sitio las simulaciones de cosas fundamentales que he ido haciendo estos años. La idea es recopilarlas todas con un mismo estándar en vez de tenerlas repartidas en cuadernos de 2023 y 2024 que no hay quien lea.
 

@@ -15,7 +15,7 @@ El problema es que llevaba años sin practicarla de verdad. Me fui desplazando h
 
 Este verano me acordé.
 
-# El pretexto: un eclipse
+## El pretexto: un eclipse
 
 El 12 de agosto de 2026 hubo un eclipse total visible desde Colmenar Viejo. La pregunta que me hice no fue "¿lo voy a ver?", sino otra bastante más tonta y bastante más divertida:
 
@@ -25,7 +25,7 @@ La corona no es decorativa. Su forma es el campo magnético del Sol hecho visibl
 
 Así nació [corona26](https://www.fullfran.com/corona26/).
 
-# El pipeline
+## El pipeline
 
 La cadena es más corta de lo que parece:
 
@@ -41,13 +41,13 @@ ADAPT no da un mapa del Sol: da doce realizaciones distintas, porque la cara ocu
 
 Esa dispersión es la predicción honesta. Una streamer que aparece en los sesenta miembros es una predicción. Una que aparece en tres es ruido con buena prensa.
 
-# Congelar antes de mirar
+## Congelar antes de mirar
 
 La parte menos glamurosa del proyecto y la única imprescindible: antes del eclipse congelé el resultado. Un PNG concreto, en un commit concreto, declarado en público como la predicción oficial. Cualquier render posterior sería exploratorio y no puntuaría.
 
 Esto no es burocracia. Es la frontera exacta entre hacer ciencia y hacer marketing. Si te permites volver a renderizar después de haber visto la corona, aciertas siempre y no has aprendido absolutamente nada.
 
-# Y luego uno mira al cielo
+## Y luego uno mira al cielo
 
 Veredicto honesto: parcialmente apoyada.
 
@@ -57,7 +57,7 @@ Lo que no coincide: la corona real es mucho más abrupta. El reparto de brillo e
 
 Sobre el error dominante conviene ser claro, porque es el resultado más útil de todo esto: no es el renderer, ni el PFSS, ni la resolución. Es que no vemos la cara oculta del Sol. En agosto de 2026 estamos cerca del máximo solar y las regiones activas evolucionan en días. Una región que emerge en el farside y ancla un helmet streamer te rompe la predicción, y no hay malla lo bastante fina que arregle eso. Los grupos que lo hacen mejor lo hacen porque asimilan magnetogramas del otro lado, no porque calculen más fino.
 
-# Lo que me llevo
+## Lo que me llevo
 
 No es el acierto parcial. Es otra cosa.
 

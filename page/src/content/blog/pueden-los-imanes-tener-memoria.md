@@ -9,13 +9,15 @@ Sí. Y esa es la parte aburrida de la respuesta.
 
 La parte interesante es cuánto, y si podemos elegir qué. Porque tirando de ese hilo se llega, sin salirse de la física de un imán, a una memoria que te devuelve un recuerdo completo cuando le enseñas un trozo estropeado de él.
 
-# Un imán ya se acuerda de algo
+## Un imán ya se acuerda de algo
 
 El modelo más tonto que describe un imán es el de Ising. Un montón de flechitas —espines— colocadas en una red, y cada una solo puede apuntar arriba o abajo. Más y menos uno, nada intermedio.
 
 La energía del conjunto es una suma sobre parejas:
 
-E = −½ Σ J_ij s_i s_j
+$$
+E(s) = -\tfrac{1}{2}\sum_{i \neq j} J_{ij}\, s_i s_j
+$$
 
 Y lo único que dice esa fórmula es: si dos espines acoplados apuntan igual, el producto es positivo, el signo menos lo convierte en energía negativa, y al sistema le gusta. Vecinos de acuerdo bajan la energía. Vecinos en desacuerdo la suben.
 
@@ -23,11 +25,14 @@ Si J es positiva e igual para todos los vecinos, tienes un ferromagneto, y tiene
 
 Eso ya es memoria. Es un bit. Magnetizas el material en un sentido y se acuerda de en cuál, hasta que llegue alguien con calor o con otro campo. Y no es una metáfora: así es literalmente como un disco duro guarda información, regiones magnetizadas en un sentido o en el otro.
 
-![Dominios magnéticos dentro de un solo grano de acero eléctrico, en una zona de una décima de milímetro de ancho, fotografiada al microscopio por efecto Kerr. Cada región clara u oscura es un trozo de metal donde todos los espines han acordado apuntar en el mismo sentido. Imagen de Zureks y Chris Vardon, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), vía [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Magnetic_domain_with_arrows_by_Zureks.png).](/img/dominios-magneticos.jpg)
+<figure>
+  <img src="/img/dominios-magneticos.jpg" alt="Micrografía en blanco y negro de un grano de acero eléctrico dividido en franjas claras y oscuras alternas, con flechas superpuestas que indican el sentido de la magnetización de cada franja." />
+  <figcaption>Dominios magnéticos dentro de un solo grano de acero eléctrico, en una zona de una décima de milímetro, al microscopio por efecto Kerr. Cada franja es un trozo de metal donde todos los espines han acordado apuntar igual. Imagen de Zureks y Chris Vardon, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>, vía <a href="https://commons.wikimedia.org/wiki/File:Magnetic_domain_with_arrows_by_Zureks.png">Wikimedia Commons</a>.</figcaption>
+</figure>
 
 Así que la pregunta buena no es si un imán puede recordar. Es si puede recordar más de una cosa, y si podemos decidir nosotros cuáles.
 
-# La jugada de Hopfield
+## La jugada de Hopfield
 
 Dos cambios sobre Ising. Los dos son trampa, y los dos son la trampa correcta.
 
@@ -37,17 +42,21 @@ El segundo, y este es el bueno: dejar de tratar J como una constante de la natur
 
 ¿Y qué escribimos? Esto:
 
-W = (1/N) Σ_μ p_μ p_μᵀ
+$$
+W = \frac{1}{N}\sum_{\mu=1}^{P} p^{\mu}\left(p^{\mu}\right)^{\mathsf{T}}, \qquad W_{ii} = 0
+$$
 
 Coges los patrones que quieres guardar y sumas el producto exterior de cada uno consigo mismo. En cristiano: dos neuronas que estén de acuerdo en los patrones almacenados acaban acopladas positivamente, y dos que se lleven la contraria acaban acopladas en negativo. Se llama regla de Hebb, es de 1949, y es de una pasada. Sin gradiente, sin iteración, sin entrenamiento.
 
 Cada patrón que metes ahí excava un valle en el paisaje de energía.
 
-# Recordar es rodar cuesta abajo
+## Recordar es rodar cuesta abajo
 
 La dinámica es la de siempre en un imán: cada espín se alinea con el campo que le hacen los demás.
 
-h_i = Σ_j W_ij s_j, y luego s_i pasa a ser el signo de h_i.
+$$
+h_i = \sum_j W_{ij}\, s_j, \qquad s_i \leftarrow \operatorname{sign}(h_i)
+$$
 
 Eso es exactamente Metropolis a temperatura cero: solo se aceptan los movimientos que bajan la energía. Nada de excitación térmica, nada de escaparse de un mínimo. Cuesta abajo y punto.
 
@@ -57,7 +66,7 @@ Y aquí está lo que a mí me sigue pareciendo bonito después de años: el recu
 
 En la implementación que he subido, con cuatro patrones y un cuarto de los bits cambiados a mano, los cuatro vuelven exactos en dos barridos. Los patrones almacenados están a una energía por neurona de unos −0,55; un estado aleatorio, a −0,0003. Los recuerdos son los valles, medido y no supuesto.
 
-# Dos condiciones, y una que parece un detalle
+## Dos condiciones, y una que parece un detalle
 
 Todo el teorema se apoya en dos cosas: que la matriz de acoplamientos sea simétrica y que su diagonal sea cero.
 
@@ -69,7 +78,7 @@ Y ahora el detalle que no es un detalle: ese argumento exige que las neuronas se
 
 Eso no es un problema de implementación, es física. Por eso en el repo hay dos métodos y no uno, y por eso el test de "la energía nunca sube" no está en el contrato común: exigírselo a los dos métodos sería afirmar algo falso.
 
-# Los recuerdos que nadie guardó
+## Los recuerdos que nadie guardó
 
 El paisaje tiene valles que no ha excavado nadie.
 
@@ -81,7 +90,7 @@ Y luego está lo que sale cuando lo pruebas de verdad, que fue lo más interesan
 
 Eso último no es un fallo, es correlación. Mis patrones eran glifos que comparten mucha estructura, y esa estructura le cambia la forma al paisaje. Con patrones sin correlación la mezcla sí es estable, exactamente como dice la teoría, y el mismo script lo comprueba en la misma ejecución para que no me lo tenga que creer nadie.
 
-# Cuánto cabe
+## Cuánto cabe
 
 Un número: alrededor de 0,138 patrones por neurona.
 
@@ -89,7 +98,7 @@ Por encima de eso, deja de funcionar. Y no deja de funcionar poco a poco, sino c
 
 Una red más grande no aguanta mejor. Aguanta hasta más tarde, y luego se cae más de golpe. Como toda transición de fase, se afila con el tamaño.
 
-# El fallo que no mordía
+## El fallo que no mordía
 
 La versión de esto que escribí en 2024 dividía los acoplamientos entre el número de patrones en vez de entre el número de neuronas.
 
@@ -99,7 +108,7 @@ Lo que rompe es la energía, que sí depende de la escala. Y por tanto rompe com
 
 Un fallo invisible hasta que haces la única pregunta que lo necesita. De esos hay muchos más de los que parece, y por eso el número que citas tiene que salir del código que has ejecutado.
 
-# A dónde lleva esto
+## A dónde lleva esto
 
 Súbele la temperatura por encima de cero, para que acepte de vez en cuando un movimiento que sube la energía, y tienes una máquina de Boltzmann.
 

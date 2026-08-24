@@ -13,7 +13,7 @@ Lo que me fascina de las tres no es el resultado. Es la desproporción. La herra
 
 Yo quería aprender a hacer eso.
 
-# El problema de querer aprender eso
+## El problema de querer aprender eso
 
 No se aprende leyéndolo.
 
@@ -25,7 +25,7 @@ Se llama La servilleta y el ordenador y son 43 capítulos, 684 páginas y 453 pr
 
 Los capítulos van de herramientas, de fenómenos y de método. Y entre medias hay ocho interludios históricos que son, básicamente, mis escenas favoritas: los papelitos de Fermi, el solitario de Ulam, la junta tórica, Lorenz y el redondeo que descubrió el caos, y la señora del MANIAC, que hizo mucho más de lo que le reconocieron.
 
-# El disgusto
+## El disgusto
 
 Al ir a las fuentes descubrí que parte de lo que admiraba es leyenda.
 
@@ -39,7 +39,7 @@ Va con la misma regla para todo lo demás: las 76 figuras las genera un script v
 
 Está en v0.1 y no está auditado entero. Hay un ERRATA.md, hay issues abiertas, y las tres primeras erratas las encontró un lector. Si encuentras la cuarta me haces un favor enorme.
 
-# Para qué lo quiero
+## Para qué lo quiero
 
 Para entrenar. En serio y a menudo, como quien va al gimnasio o saca la guitarra.
 
@@ -47,7 +47,7 @@ Porque lo que de verdad echaba de menos no era saber más física. Era esa cosa 
 
 Quiero recuperar esa ilusión y no volver a perderla. Ver el mundo como algo que merece ser admirado y, con suerte, entendido.
 
-# El libro
+## El libro
 
 - [Descargar el PDF](https://github.com/FullFran/la-servilleta-y-el-ordenador/releases/download/v0.1/la-servilleta-y-el-ordenador.pdf) — 684 páginas, 11 MB.
 - [La versión v0.1 completa](https://github.com/FullFran/la-servilleta-y-el-ordenador/releases/tag/v0.1) — PDF, edición HTML y un zip con capítulos y diapositivas sueltos.
