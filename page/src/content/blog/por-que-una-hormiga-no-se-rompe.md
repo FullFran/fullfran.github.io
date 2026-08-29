@@ -117,13 +117,18 @@ Frenar en un centímetro contra hormigón o en treinta contra un toldo, con la m
 
 Un gato flexionando las patas aporta unos cinco centímetros. Encadenando las dos mitades —cuánto corre y cuánto frena— sale la altura a la que empieza a hacerse daño de verdad: **trece metros, tres pisos y medio**.
 
-Pero lo bueno es lo otro. Existe una distancia de frenado por encima de la cual **ninguna altura es letal**:
+<figure>
+  <img src="/img/gatos-golpe-altura.png" alt="Gráfica del golpe recibido frente a la altura de la caída, en escala logarítmica, con cuatro curvas según la distancia de frenado: hormigón sin flexionar, sólo las patas, patas más césped y patas más toldo. Una línea horizontal marca lo que aguanta un gato y las tres primeras curvas la cruzan a 2, 13 y 32 metros; la del toldo no la cruza nunca." />
+  <figcaption>Cada curva es una superficie distinta. Donde cruza la línea horizontal es la altura a la que ese gato empieza a romperse: dos metros contra hormigón si no flexiona, trece con sus patas, treinta y dos si además hay césped. Fíjate en la de abajo del todo.</figcaption>
+</figure>
+
+Porque la de abajo no cruza nunca. Y ahí está lo bueno. Existe una distancia de frenado por encima de la cual **ninguna altura es letal**:
 
 $$
 x_{\text{crítico}} = \frac{v_c^2}{2\,a_{\text{tol}}\,g} \approx 18{,}5\ \text{cm}
 $$
 
-Porque ni llegando a la velocidad máxima se supera lo que aguanta. El techo que pone el aire y el frenado que pone el suelo se cubren mutuamente.
+Ni llegando a la velocidad máxima se supera lo que aguanta. El techo que pone el aire y el frenado que pone el suelo se cubren mutuamente.
 
 ## El fallo que no mordía
 
