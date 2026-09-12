@@ -205,7 +205,7 @@ Y la que me va a durar: **un parámetro que controla dos cosas a la vez te va a 
 
 ---
 
-El cuaderno completo, con las predicciones firmadas, los errores catalogados y el código, está en [github.com/FullFran/reto-semanal](https://github.com/FullFran/reto-semanal). Es la segunda entrega de una serie donde ataco un problema de física por semana; la anterior iba sobre [por qué los gatos no caen mejor desde más alto](/blog/los-gatos-no-caen-mejor-desde-mas-alto).
+Esta es la segunda entrega de una serie donde ataco un problema de física por semana: predicción firmada antes de calcular, errores catalogados aparte y la literatura al final, nunca antes. La anterior iba sobre [por qué los gatos no caen mejor desde más alto](/blog/los-gatos-no-caen-mejor-desde-mas-alto).
 
 ### Referencias
 
