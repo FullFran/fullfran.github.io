@@ -5,11 +5,15 @@ lang: es
 description: "Al pulsar una cuerda no solo la haces sonar: borras armónicos enteros. Cuáles faltan delata dónde pusiste el dedo, y eso se puede leer al revés hasta dos milímetros."
 ---
 
-Toca la misma nota dos veces en la misma guitarra. Una junto al puente, otra sobre la boca.
+Toca la misma nota dos veces en la misma guitarra. Una junto al puente —esa pieza de abajo donde las cuerdas se anclan— y otra sobre la boca.
 
 El tono es idéntico. El sonido no se parece en nada.
 
-Eso no es una sutileza de guitarrista. Es que al pulsar en un sitio concreto **borras armónicos enteros**. No los debilitas: los anulas. Y cuáles se anulan depende solo de dónde pusiste el dedo.
+Eso no es una sutileza de guitarrista. Es que al pulsar en un sitio concreto **borras armónicos enteros**.
+
+Y aquí conviene parar un segundo, porque de esa palabra depende todo lo demás. Cuando pulsas una cuerda no suena *una* frecuencia: suenan muchas a la vez. La más grave es la que tu oído reconoce como la nota. Las demás —los armónicos— van apiladas por encima, y son las que hacen que un mi de guitarra no suene igual que un mi de piano. El tono lo pone la primera. **El color lo ponen todas las otras.**
+
+Pues bien: al pulsar en un sitio concreto, algunas de esas otras no llegan a existir. No las debilitas, las anulas. Y cuáles se anulan depende solo de dónde pusiste el dedo.
 
 Lo que quiero contarte es que esa frase se puede leer al revés.
 
@@ -45,14 +49,14 @@ De ahí sale la regla completa:
 
 ## Pruébalo
 
-Debajo tienes el cálculo funcionando. Mueve la posición y mira cómo los dientes de cobre —los armónicos ausentes— se desplazan. Y dale a **Pulsar la cuerda** para oírlo.
+Debajo tienes el cálculo funcionando. Lo que ves es el **espectro**, que no es más que la lista de cuánto suena cada armónico: una barra por cada uno, del más grave al más agudo. Mueve la posición y mira cómo los dientes de cobre —los armónicos ausentes— se desplazan. Y dale a **Pulsar la cuerda** para oírlo.
 
 <figure>
   <iframe src="/simuladores/peine-de-pulsacion.html" title="Simulador interactivo del espectro de una cuerda pulsada" loading="lazy" style="width:100%;height:min(88vh,920px);border:1px solid rgba(128,128,128,.35);border-radius:6px;"></iframe>
   <figcaption>El espectro de una cuerda pulsada. En verde los armónicos presentes, en cobre los que el punto de pulsación ha borrado.</figcaption>
 </figure>
 
-Si quieres ver de golpe de qué va todo esto, prueba el ajuste **Ponticello** y luego **Tasto**, y escucha los dos. Es el mismo tono, la misma cuerda y la misma tensión. Lo único que cambia es qué armónicos existen.
+Si quieres ver de golpe de qué va todo esto, prueba el ajuste **Ponticello** —que es como se llama a tocar pegado al puente, ese sonido nasal y metálico— y luego **Tasto**, que es justo lo contrario, tocar lejos, sobre la boca, con ese sonido redondo y con cuerpo. Escucha los dos. Es el mismo tono, la misma cuerda y la misma tensión. Lo único que cambia es qué armónicos existen.
 
 ## Hay huecos que no se pueden tapar
 
@@ -63,7 +67,9 @@ A_n = \frac{2hL}{n^2\pi^2}\left[\frac{\sin(n\pi a)}{a} + \frac{\sin(n\pi b)}{L-b
 \qquad a = p - \tfrac{w}{2},\quad b = p + \tfrac{w}{2}
 $$
 
-Ahora los huecos ya no son cero exacto: se rellenan. Con una yema de 5 mm sobre una cuerda de 650 mm, el hueco pasa de ser infinitamente profundo a unos 30 dB, y se sigue rellenando a razón de 20 dB por cada década de anchura.
+Ahora los huecos ya no son cero exacto: se rellenan. Con una yema de 5 mm sobre una cuerda de 650 mm, el hueco pasa de ser infinitamente profundo a unos 30 decibelios.
+
+El decibelio es la forma de decir *cuánto más flojo* sin manejar ceros a la izquierda: cada 20 dB es diez veces más flojo, así que 30 dB es aproximadamente treinta veces. Un hueco de 30 dB todavía se ve sin esfuerzo. Uno de 6 se lo come el ruido de la sala.
 
 Salvo en un sitio.
 
@@ -82,7 +88,7 @@ Hay dos clases de cero. Los que salen de una coincidencia aritmética son frági
 
 ## Darle la vuelta
 
-Si el sitio decide qué falta, lo que falta delata el sitio. Eso es un **problema inverso**, y se puede atacar.
+Si el sitio decide qué falta, lo que falta delata el sitio. Eso es un **problema inverso**: en vez de ir de la causa al efecto, que es lo fácil, toca ir del efecto a la causa. Y se puede atacar.
 
 La clave está en invertir por lo correcto. La anchura del dedo cambia la *profundidad* de los huecos, pero no su *posición*. Así que si mides dónde están los mínimos en vez de cuánto bajan, tienes una medida robusta: no necesitas calibrar el micrófono, ni saber con cuánta fuerza se pulsó, ni modelar cómo se apaga la nota.
 
@@ -116,7 +122,7 @@ No falló en la cuenta. **Falló de mecanismo, y con toda la confianza del mundo
 
 Todo lo anterior invertía audio que generaba yo mismo con la misma física. Eso no es leer un sonido: es comprobar que sé deshacer mi propia cuenta.
 
-El salto lo hice sobre 240 grabaciones reales de guitarra eléctrica con la distancia al puente anotada. Elegí eléctrica a propósito: **quita la caja de resonancia**, que es el factor que más miedo me daba, y a cambio mete uno nuevo pero de forma conocida, porque una pastilla lee la cuerda en un punto e impone **su propio peine**.
+El salto lo hice sobre 240 grabaciones reales de guitarra eléctrica con la distancia al puente anotada. Elegí eléctrica a propósito: **quita la caja de resonancia**, que es el factor que más miedo me daba, y a cambio mete uno nuevo pero de forma conocida, porque una pastilla —el imán que va debajo de las cuerdas y convierte su vibración en señal eléctrica— lee la cuerda en un punto concreto, y eso impone **su propio peine**.
 
 Lo primero fue mirar el dato antes de construirle nada encima:
 
@@ -149,7 +155,9 @@ $$
 f_n = n f_0\sqrt{1 + Bn^2}
 $$
 
-Las cuerdas entorchadas graves tienen $B \approx 10^{-4}$, diez veces lo que yo había supuesto. Con ese valor, el armónico 40 se desplaza **128 cents**: más de un semitono. Mi ventana de búsqueda medía 21 cents.
+Las cuerdas graves entorchadas —las gordas, las que llevan un hilo enrollado alrededor del alma— tienen $B \approx 10^{-4}$, diez veces lo que yo había supuesto. Con ese valor, el armónico 40 se desplaza **128 cents**.
+
+El cent es la centésima parte de un semitono, o sea de la distancia entre dos teclas seguidas de un piano. Así que 128 cents significa que ese armónico no está donde yo lo buscaba: está desafinado más de una tecla entera. Y mi ventana de búsqueda medía 21 cents.
 
 A las cuerdas graves se les salían los armónicos de la ventana. No era un problema de inversión: era de medida.
 
@@ -169,7 +177,7 @@ Las reflexiones *prohibidas* en un patrón de difracción revelan la simetría d
 
 Los huecos de Kirkwood en el cinturón de asteroides son órbitas vacías en resonancia con Júpiter. La ausencia codifica la dinámica.
 
-Y el más bonito: después de un terremoto muy grande, **la Tierra entera suena como una campana** durante días. La amplitud con la que se excita cada modo depende de dónde se rompió. Un foco en el nodo de un modo no lo excita, igual que no excitas el segundo armónico pulsando en el centro de la cuerda. Es la misma ecuación en una esfera elástica.
+Y el más bonito: después de un terremoto muy grande, **la Tierra entera suena como una campana** durante días. La amplitud con la que se excita cada modo —cada una de las formas en que el planeta entero puede vibrar, que son los armónicos de la Tierra— depende de dónde se rompió. Un foco en el nodo de un modo no lo excita, igual que no excitas el segundo armónico pulsando en el centro de la cuerda. Es la misma ecuación en una esfera elástica.
 
 Con un detalle que cierra el círculo. En sismología, esa amplitud la controlan la posición de la fuente **y la del receptor**: el sismómetro también está en algún sitio y también pesa cada modo. Es literalmente mi problema de la pastilla. Y por eso, con una sola observación, fuente y receptor no se pueden separar.
 
