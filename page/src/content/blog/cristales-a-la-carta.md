@@ -20,7 +20,7 @@ Ninguna tiene absorción haciendo el trabajo. El color no es un tinte. Es interf
 
 Planteado del todo, que es como hay que plantearlo antes de tocar nada.
 
-Tienes N capas paralelas, cada una con su índice de refracción y su espesor. Llega una onda plana desde fuera, con un ángulo y una longitud de onda. La pregunta es: qué fracción de la potencia se vuelve por donde vino, y qué fracción atraviesa.
+Tienes N capas paralelas, cada una con su índice de refracción —cuánto frena la luz ese material— y su espesor. Llega una onda plana desde fuera, con un ángulo y una longitud de onda. La pregunta es: qué fracción de la potencia se vuelve por donde vino, y qué fracción atraviesa.
 
 Eso es todo. Esas dos fracciones se llaman R y T, y ese es el problema directo entero.
 
@@ -53,8 +53,8 @@ Y hay una lección de historia buenísima ahí: Rayleigh observó en 1886 que el
 
 Hacia el otro extremo, cuando lo que quieres es reflejar:
 
-- En litografía EUV, a 13,5 nanómetros, todos los materiales absorben y ninguno refracta de forma útil. No hay lentes. Todo el tren óptico son espejos multicapa de molibdeno y silicio, y cada uno te cuesta un 30%, que es justo por lo que hay los menos posibles.
-- Un láser VCSEL tiene una ganancia por pasada de décimas de porcentaje, así que sus espejos tienen que pasar del 99,9%. Ningún metal llega ahí. Cuarenta pares de AlAs y GaAs sí.
+- En litografía EUV —ultravioleta extremo, la luz con la que se graban los chips más avanzados—, a 13,5 nanómetros, todos los materiales absorben y ninguno refracta de forma útil. No hay lentes. Todo el tren óptico son espejos multicapa de molibdeno y silicio, y cada uno te cuesta un 30%, que es justo por lo que hay los menos posibles.
+- Un láser VCSEL —un láser diminuto que emite hacia arriba, de los que lleva el sensor de proximidad del móvil— tiene una ganancia por pasada de décimas de porcentaje, así que sus espejos tienen que pasar del 99,9%. Ningún metal llega ahí. Cuarenta pares de AlAs y GaAs sí.
 - En LIGO, las masas de prueba son recubrimientos multicapa donde el presupuesto de pérdidas se mide en partes por millón, y el ruido térmico del propio recubrimiento es una de las cosas que limitan el instrumento.
 - Y las alas de las mariposas Morpho llevaban haciéndolo bastante antes que Zeiss.
 

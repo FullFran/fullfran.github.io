@@ -56,7 +56,7 @@ Veintidós. Y por encima del noveno, trece.
 
 <figure>
   <img src="/img/gatos-muestras.png" alt="Barras en escala logarítmica comparando el número de casos que sostiene cada afirmación: 13 y 22 gatos en el estudio de 1987, 10 en el de 2004 y 1125 en el de 2025." />
-  <figcaption>La escala es logarítmica, que ya dice bastante. Las afirmaciones contraintuitivas salen de las barras rojas.</figcaption>
+  <figcaption>La escala es logarítmica —cada división multiplica en vez de sumar—, así que la distancia real entre las barras es mucho mayor de lo que aparenta. Las afirmaciones contraintuitivas salen de las barras rojas.</figcaption>
 </figure>
 
 Y no es un caso aislado. En 2004 un estudio croata de ciento diecinueve gatos reportó otro patrón bonito: los que caen del tercer piso se rompen huesos y los que caen del séptimo o más se dañan el tórax. Un trasvase limpio.
@@ -115,7 +115,7 @@ En los mil ciento veinticinco gatos hay una categoría de lesión que se comport
 
 Eso un modelo de impacto no lo puede producir. Si el daño depende de la velocidad y la velocidad crece con la altura, todo tiene que crecer con la altura. Una categoría que decrece exige algo que *mejore* al caer desde más alto.
 
-La respuesta obvia sería que desde poca altura al gato no le da tiempo a orientarse. Y es una idea preciosa, porque el enderezamiento de un gato es de las cosas más elegantes que hace un animal: gira sin apoyarse en nada, con momento angular cero, sólo cambiando de forma. Lo modelaron Kane y Scher en 1969 como dos cilindros que se doblan y giran alternativamente.
+La respuesta obvia sería que desde poca altura al gato no le da tiempo a orientarse. Y es una idea preciosa, porque el enderezamiento de un gato es de las cosas más elegantes que hace un animal: gira sin apoyarse en nada, con momento angular cero —la cantidad de giro total, que si empieza en cero tiene que seguir en cero pase lo que pase—, sólo cambiando de forma. Lo modelaron Kane y Scher en 1969 como dos cilindros que se doblan y giran alternativamente.
 
 El problema es que le bastan treinta centímetros y unas tres décimas de segundo. Y esas caídas «bajas» del estudio son de cuatro a cinco metros, o sea **un segundo entero**. Tres veces lo que necesita.
 

@@ -5,7 +5,7 @@ lang: es
 description: "Un gato cayó 32 pisos sobre hormigón y salió del hospital a los dos días. La respuesta no está en el gato: está en dos exponentes que no son iguales."
 ---
 
-En 1984, en Nueva York, un gato se cayó de un piso 32 sobre hormigón. Ciento diecisiete metros. Le dieron el alta a las cuarenta y ocho horas con un neumotórax leve y un diente astillado.
+En 1984, en Nueva York, un gato se cayó de un piso 32 sobre hormigón. Ciento diecisiete metros. Le dieron el alta a las cuarenta y ocho horas con un neumotórax leve —el pulmón parcialmente colapsado— y un diente astillado.
 
 Eso está publicado, con nombres y apellidos, en el *Journal of the American Veterinary Medical Association*.
 

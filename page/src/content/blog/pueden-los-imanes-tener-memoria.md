@@ -21,7 +21,7 @@ $$
 
 Y lo único que dice esa fórmula es: si dos espines acoplados apuntan igual, el producto es positivo, el signo menos lo convierte en energía negativa, y al sistema le gusta. Vecinos de acuerdo bajan la energía. Vecinos en desacuerdo la suben.
 
-Si J es positiva e igual para todos los vecinos, tienes un ferromagneto, y tiene exactamente dos estados de energía mínima: todos arriba, o todos abajo. Los dos igual de buenos. La naturaleza elige uno y se queda ahí.
+Si J es positiva e igual para todos los vecinos, tienes un ferromagneto —un imán de los de verdad, como el de la nevera— y tiene exactamente dos estados de energía mínima: todos arriba, o todos abajo. Los dos igual de buenos. La naturaleza elige uno y se queda ahí.
 
 Eso ya es memoria. Es un bit. Magnetizas el material en un sentido y se acuerda de en cuál, hasta que llegue alguien con calor o con otro campo. Y no es una metáfora: así es literalmente como un disco duro guarda información, regiones magnetizadas en un sentido o en el otro.
 
@@ -58,7 +58,7 @@ $$
 h_i = \sum_j W_{ij}\, s_j, \qquad s_i \leftarrow \operatorname{sign}(h_i)
 $$
 
-Eso es exactamente Metropolis a temperatura cero: solo se aceptan los movimientos que bajan la energía. Nada de excitación térmica, nada de escaparse de un mínimo. Cuesta abajo y punto.
+Eso es exactamente el algoritmo de Metropolis, pero a temperatura cero: solo se aceptan los movimientos que bajan la energía. Nada de excitación térmica, nada de escaparse de un mínimo. Cuesta abajo y punto.
 
 Ahora le das un patrón estropeado y lo sueltas. El sistema rueda hasta el fondo del valle más cercano, que es el patrón entero.
 
@@ -94,7 +94,7 @@ Eso último no es un fallo, es correlación. Mis patrones eran glifos que compar
 
 Un número: alrededor de 0,138 patrones por neurona.
 
-Por encima de eso, deja de funcionar. Y no deja de funcionar poco a poco, sino como una transición de fase, que es la señal de que esto sigue siendo física estadística y no una analogía bonita. En las medidas: por debajo del umbral el error es prácticamente cero para cualquier tamaño de red; justo por encima, el error crece más rápido cuanto más grande es la red. A una carga de 0,16, el error casi se triplica al pasar de cien neuronas a quinientas.
+Por encima de eso, deja de funcionar. Y no deja de funcionar poco a poco, sino como una transición de fase —de golpe, como el agua que se vuelve hielo, no poco a poco—, que es la señal de que esto sigue siendo física estadística y no una analogía bonita. En las medidas: por debajo del umbral el error es prácticamente cero para cualquier tamaño de red; justo por encima, el error crece más rápido cuanto más grande es la red. A una carga de 0,16, el error casi se triplica al pasar de cien neuronas a quinientas.
 
 Una red más grande no aguanta mejor. Aguanta hasta más tarde, y luego se cae más de golpe. Como toda transición de fase, se afila con el tamaño.
 
