@@ -15,7 +15,7 @@ Y aquí conviene parar un segundo, porque de esa palabra depende todo lo demás.
 
 Pues bien: al pulsar en un sitio concreto, algunas de esas otras no llegan a existir. No las debilitas, las anulas. Y cuáles se anulan depende solo de dónde pusiste el dedo.
 
-Lo que quiero contarte es que esa frase se puede leer al revés.
+Lo que quiero contarte es que esa frase se puede leer al revés. Dame una grabación y te digo dónde pusiste el dedo. Y, con más dificultad de la que esperaba, algo de **cómo** lo pusiste.
 
 ## La respuesta está en lo que falta
 
@@ -166,6 +166,72 @@ Estimando $B$ en cada grabación, el error final quedó en **2.05 mm de mediana*
 Para situarlo: el trabajo de referencia sobre este problema reporta 2.91 mm. No es una comparación de tú a tú —otra guitarra, otro montaje, otro protocolo de evaluación, y ellos además miden con la cadena de efectos puesta— así que no voy a decir que lo he mejorado. Lo que sí dice ese número es que estamos en el mismo orden de magnitud, y eso era exactamente lo que quería saber: que el método aguanta fuera del laboratorio.
 
 Y hay una comprobación que me gusta más que el milímetro. Las $B$ que salieron del ajuste reproducen solas la tabla del artículo de 2022, sin que nadie se las diera: del orden de $10^{-4}$ en la sexta y de $10^{-5}$ en la prima. Eso no se puede ajustar por casualidad.
+
+## ¿Y el *cómo*?
+
+Dónde es media pregunta. La otra media es **cómo**: con la uña o con la yema, con qué anchura.
+
+Y también se puede sacar, precisamente por lo que acabamos de ver. La posición decide dónde caen los ceros. La anchura no los mueve: solo inclina la envolvente. Entran por puertas distintas, así que se pueden separar. Amplié la búsqueda a dos dimensiones y listo.
+
+Sobre amplitudes limpias sale perfecto. Error cero en las dos, en las veinticuatro combinaciones que probé.
+
+Y eso no vale nada.
+
+Con dos parámetros, sin ruido y con la respuesta dentro de la rejilla que estás barriendo, el ajuste siempre encuentra la respuesta exacta por débil que sea la señal. No es una medida: es una tautología. Solo dice que no me he equivocado al programarlo.
+
+La prueba de verdad es con ruido:
+
+| anchura real | error en la posición | error en la anchura |
+|---|---|---|
+| 1 mm | 1.6 mm | **9 mm** |
+| 5 mm | 1.6 mm | **6 mm** |
+| 10 mm | 1.0 mm | 4 mm |
+| 20 mm | 0.7 mm | 2 mm |
+| 40 mm | 1.0 mm | 2 mm |
+
+Fíjate en la columna de la izquierda: la posición se mantiene alrededor del milímetro pase lo que pase. Y ahora la de la derecha. Con anchuras pequeñas, **el error es más grande que la cosa que intento medir**.
+
+Una yema de verdad mide unos cinco milímetros. Justo en el borde.
+
+### Y aquí se me cae otra predicción
+
+Antes había razonado que la anchura solo deja huella en los armónicos con $n \gtrsim L/w$. De ahí se sigue algo muy razonable: si miro más armónicos, debería poder medir anchuras más finas. El umbral tendría que bajar como $L/n_{max}$.
+
+Lo medí:
+
+```
+  armonicos    umbral medido    lo que predecia la formula
+      20            4 mm                 32 mm
+      40            6 mm                 16 mm
+      80            7 mm                  8 mm
+```
+
+**No baja. Sube.**
+
+Y el motivo, cuando lo entiendes, es de los que se te quedan. Mi fórmula decía cuándo la anchura deja huella en una señal **limpia**, y en una señal limpia no hay umbral ninguno, como acabábamos de ver. No decía nada sobre si esa huella sobrevive al ruido.
+
+Los armónicos altos suenan más flojo, porque la envolvente cae. El ruido de fondo, en cambio, es más o menos el mismo en todos. Así que cada armónico que añado por arriba llega peor de señal que el anterior — y mi ajuste, que es un mínimos cuadrados de toda la vida, **los pesa a todos igual**.
+
+Estaba diluyendo lo bueno con lo malo y llamándolo "usar más datos".
+
+### Y en la guitarra de verdad
+
+Sobre las 240 grabaciones, la anchura estimada sale en **20 mm de mediana**.
+
+Que es un disparate para una púa. Pero resulta que no estoy midiendo la púa: la bobina de una pastilla tiene unos 25 mm de ancho, y también promedia la cuerda a lo largo de ese tramo. Es decir, el filtro que estoy midiendo es el de la pastilla, y la púa está escondida debajo.
+
+No es la respuesta que buscaba. Pero que salga 20 donde la física conocida pone 25 dice que el estimador está midiendo algo real, aunque no sea lo que yo quería.
+
+### La frase que resume la semana entera
+
+Mira las dos columnas de la tabla de arriba otra vez. La posición aguanta. La anchura no. Y no es casualidad:
+
+> El **dónde** se mide bien porque está escrito en las **posiciones** de los huecos.
+> El **cómo** se mide mal porque está escrito en los **niveles**.
+
+Las posiciones sobreviven al ruido, a no saber la ganancia, al micrófono que uses y a cómo se apague la nota. Los niveles no sobreviven a nada.
+
+Si te llevas una sola idea de todo esto, que sea esa.
 
 ## Esto no va de guitarras
 
