@@ -249,6 +249,36 @@ Con un detalle que cierra el círculo. En sismología, esa amplitud la controlan
 
 Yo no lo resolví con dos sensores, sino con ocho pulsaciones distintas compartiendo una misma pastilla. La información no la da el número de sensores: la da el número de configuraciones independientes donde una incógnita cambia y la otra no.
 
+### El océano es una cuerda puesta de pie
+
+El agua entre la superficie y el fondo también es un dominio acotado, y también tiene modos. Localizar un barco o un submarino con hidrófonos se hace comparando el campo medido contra los modos calculados de esa guía de ondas, una técnica que se llama *matched field processing* y que arranca con Bucker en 1976.
+
+Y aquí viene lo que no me esperaba: **la profundidad de la fuente decide con qué peso se excita cada modo**, igual que el punto de pulsación en la cuerda. Una fuente a la profundidad del nodo de un modo no lo excita. En la literatura está dicho con estas palabras: *la amplitud del modo 2 es pequeña porque la fuente está cerca de un nulo del modo 2*.
+
+Es mi ecuación con la cuerda puesta de pie y midiendo cientos de metros. En agua somera se reportan errores de en torno al 2 % en distancia y al 10 % en profundidad.
+
+### Y el gemelo: escuchar una máquina rota
+
+Golpeas una pieza y la escuchas. Si tiene una grieta, sus modos cambian. De ahí se puede localizar el daño, y es una disciplina entera: monitorización de salud estructural.
+
+Es mi problema **con la incógnita cambiada de sitio**. Yo conozco la estructura y busco la excitación; ellos conocen la excitación y buscan el defecto.
+
+Y tienen mi mismo nodo. Si la grieta cae justo en el nodo de un modo, la frecuencia de ese modo **no cambia**, porque ahí ese modo no almacena energía de deformación. Igual que mi dedo en el nodo no excitaba el armónico. Cawley y Adams montaron en 1979 un método entero sobre eso: comparar cuánto se mueve cada frecuencia, porque cada modo "ve" la grieta con un peso distinto según su forma en ese punto.
+
+Y hay un resultado que me dio envidia por lo limpio: una grieta **desplaza las posiciones de los nodos**, y de ese desplazamiento se saca dónde está.
+
+Con la misma moraleja que la mía, además. La revisión canónica del campo dice que los desplazamientos de frecuencia **por sí solos no bastan** para localizar el daño: hace falta la forma del modo. Los números sueltos no. Las posiciones sí.
+
+### Una que parece de la familia y no lo es
+
+Un TAC no es esto. Reconstruye un mapa de densidades invirtiendo integrales de línea —la transformada de Radon— y ahí no hay dominio acotado, ni modos, ni nada que se parezca a un armónico ausente. Es otra familia entera, y decirlo también sirve: no todo problema inverso comparte maquinaria.
+
+Pero hay una que sí roza, y es inquietante. Cuando se localiza actividad cerebral desde electrodos en el cuero cabelludo, el problema **no tiene solución única**, y eso se sabe desde Helmholtz en 1853. Peor aún: existen las llamadas fuentes silenciosas, configuraciones de corriente que producen campo externo **exactamente cero**. En el modelo esférico de cabeza, toda fuente radial es magnéticamente invisible.
+
+Hay actividad cerebral que, por pura geometría, no deja huella fuera. No es que el aparato no llegue: es que no hay nada que medir.
+
+Eso no es lo mismo que mis armónicos —allí no hay peine ni modos indexados— pero el mecanismo abstracto es idéntico: **existen configuraciones que el instrumento no puede ver, y no por falta de precisión, sino por estructura.**
+
 ## El límite
 
 En 1966 Mark Kac preguntó si se puede **oír la forma de un tambor**. Es el hermano exacto de este problema, dado la vuelta: yo conozco la forma y busco la fuente; él conoce la fuente y busca la forma.
@@ -288,5 +318,10 @@ Esta es la segunda entrega de una serie donde ataco un problema de física por s
 - J. D. Tillman. *Response Effects of Guitar Pickup Position and Width.*
 - N. G. Horton, T. R. Moore. *Modeling the magnetic pickup of an electric guitar.* Am. J. Phys. 77(2), 2009.
 - C. J. Murray, S. B. Whitfield. *Inharmonicity in plucked guitar strings.* Am. J. Phys. 90(7), 2022.
+- H. P. Bucker. *Use of calculated sound fields and matched-field detection to locate sound sources in shallow water.* J. Acoust. Soc. Am. 59(2), 1976.
+- P. Cawley, R. D. Adams. *The Location of Defects in Structures from Measurements of Natural Frequencies.* J. Strain Analysis 14(2), 1979.
+- M. Dilena, A. Morassi. *Identification of crack location in vibrating beams from changes in node positions.* J. Sound Vib. 255, 2002.
+- S. W. Doebling et al. *Damage Identification and Health Monitoring... from Changes in their Vibration Characteristics.* Los Alamos LA-13070-MS, 1996.
+- M. Hämäläinen et al. *Magnetoencephalography.* Rev. Mod. Phys. 65(2), 1993.
 - M. Kac. *Can One Hear the Shape of a Drum?* Am. Math. Monthly 73(4), 1966.
 - C. Gordon, D. Webb, S. Wolpert. *One cannot hear the shape of a drum.* Bull. AMS 27(1), 1992.
