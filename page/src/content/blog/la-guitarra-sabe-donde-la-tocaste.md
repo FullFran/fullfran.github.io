@@ -153,9 +153,11 @@ Las cuerdas entorchadas graves tienen $B \approx 10^{-4}$, diez veces lo que yo 
 
 A las cuerdas graves se les salían los armónicos de la ventana. No era un problema de inversión: era de medida.
 
-Estimando $B$ en cada grabación, el error final quedó en **2.05 mm de mediana**, con el 78 % de los casos por debajo de un centímetro. La mejor referencia publicada da 2.91 mm.
+Estimando $B$ en cada grabación, el error final quedó en **2.05 mm de mediana**, con el 78 % de los casos por debajo de un centímetro.
 
-Y las $B$ que salieron reproducen solas la tabla del artículo, sin que nadie se las diera.
+Para situarlo: el trabajo de referencia sobre este problema reporta 2.91 mm. No es una comparación de tú a tú —otra guitarra, otro montaje, otro protocolo de evaluación, y ellos además miden con la cadena de efectos puesta— así que no voy a decir que lo he mejorado. Lo que sí dice ese número es que estamos en el mismo orden de magnitud, y eso era exactamente lo que quería saber: que el método aguanta fuera del laboratorio.
+
+Y hay una comprobación que me gusta más que el milímetro. Las $B$ que salieron del ajuste reproducen solas la tabla del artículo de 2022, sin que nadie se las diera: del orden de $10^{-4}$ en la sexta y de $10^{-5}$ en la prima. Eso no se puede ajustar por casualidad.
 
 ## Esto no va de guitarras
 
