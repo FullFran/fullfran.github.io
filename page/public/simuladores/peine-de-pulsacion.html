@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Simulador interactivo del espectro de una cuerda pulsada: posicion, anchura y perfil del ataque, con sonido en vivo.">
+<title>Peine de pulsación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>html{color-scheme:light dark}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<style>
+:root{
+  --bg:#E9EAE4; --panel:#F4F5EF; --sunk:#E0E2DA;
+  --ink:#241C18; --muted:#736E66; --line:#CFD2C8; --line-soft:#DEE1D7;
+  --accent:#0E6B60; --accent-soft:#0E6B6022; --copper:#B0551E; --ghost:#9AA39C;
+  --shadow:0 1px 2px rgba(36,28,24,.06), 0 8px 24px -16px rgba(36,28,24,.18);
+  --f-disp:"Spectral",Georgia,"Times New Roman",serif;
+  --f-ui:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#16181A; --panel:#1E2226; --sunk:#121517;
+    --ink:#E6E8E3; --muted:#949C96; --line:#2E343A; --line-soft:#242A2F;
+    --accent:#4FBFAE; --accent-soft:#4FBFAE26; --copper:#E08A4A; --ghost:#5C6660;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16181A; --panel:#1E2226; --sunk:#121517;
+  --ink:#E6E8E3; --muted:#949C96; --line:#2E343A; --line-soft:#242A2F;
+  --accent:#4FBFAE; --accent-soft:#4FBFAE26; --copper:#E08A4A; --ghost:#5C6660;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--f-ui); font-size:15px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px; margin:0 auto; padding-inline:20px; padding-block:32px 56px}
+
+header{margin-bottom:28px; max-width:62ch}
+h1{
+  font-family:var(--f-disp); font-weight:600; font-size:clamp(30px,5vw,44px);
+  line-height:1.08; margin:0 0 10px; letter-spacing:-.015em; text-wrap:balance;
+}
+.sub{margin:0; color:var(--muted); font-size:15.5px; max-width:58ch}
+.sub em{font-family:var(--f-disp); font-style:italic; color:var(--ink)}
+
+.bench{display:grid; grid-template-columns:300px minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:880px){ .bench{grid-template-columns:1fr} }
+
+.panel{background:var(--panel); border:1px solid var(--line); border-radius:6px; box-shadow:var(--shadow)}
+.controls{padding:20px; display:flex; flex-direction:column; gap:20px; position:sticky; top:20px}
+@media (max-width:880px){ .controls{position:static} }
+
+.eyebrow{
+  font-family:var(--f-ui); font-size:10.5px; font-weight:600; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--muted); margin:0 0 9px;
+}
+.field{display:flex; flex-direction:column; gap:7px}
+.field-head{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
+.field-head label{font-size:13px; font-weight:500}
+.val{font-family:var(--f-mono); font-size:13px; font-variant-numeric:tabular-nums; color:var(--accent); font-weight:500}
+
+input[type=range]{
+  -webkit-appearance:none; appearance:none; width:100%; height:22px;
+  background:transparent; cursor:pointer; margin:0;
+}
+input[type=range]::-webkit-slider-runnable-track{height:3px; background:var(--line); border-radius:2px}
+input[type=range]::-moz-range-track{height:3px; background:var(--line); border-radius:2px}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; width:15px; height:15px; border-radius:50%;
+  background:var(--accent); margin-top:-6px; border:2px solid var(--panel);
+}
+input[type=range]::-moz-range-thumb{
+  width:15px; height:15px; border-radius:50%; background:var(--accent);
+  border:2px solid var(--panel);
+}
+input[type=range]:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:3px}
+
+select{
+  width:100%; font-family:var(--f-ui); font-size:13.5px; color:var(--ink);
+  background:var(--sunk); border:1px solid var(--line); border-radius:4px;
+  padding:7px 9px; cursor:pointer;
+}
+select:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+
+.seg{display:grid; grid-template-columns:repeat(3,1fr); gap:0; border:1px solid var(--line); border-radius:4px; overflow:hidden}
+.seg button{
+  font-family:var(--f-ui); font-size:12px; font-weight:500; padding:8px 4px;
+  background:var(--sunk); color:var(--muted); border:0; cursor:pointer;
+  border-right:1px solid var(--line); transition:background .12s,color .12s;
+}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--panel)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+
+.actions{display:flex; flex-direction:column; gap:8px}
+.btn{
+  font-family:var(--f-ui); font-size:13.5px; font-weight:500; padding:10px 14px;
+  border-radius:4px; border:1px solid var(--line); background:var(--sunk);
+  color:var(--ink); cursor:pointer; transition:background .12s,border-color .12s;
+}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.btn-main{background:var(--accent); color:var(--panel); border-color:var(--accent); font-weight:600}
+.btn-main:hover{filter:brightness(1.08)}
+.btn-row{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+
+.presets{display:flex; flex-wrap:wrap; gap:6px}
+.chip{
+  font-family:var(--f-ui); font-size:11.5px; padding:5px 10px; border-radius:20px;
+  border:1px solid var(--line); background:transparent; color:var(--muted); cursor:pointer;
+}
+.chip:hover{border-color:var(--accent); color:var(--accent)}
+.chip:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+.screens{display:flex; flex-direction:column; gap:20px; min-width:0}
+.screen{padding:16px 18px 14px}
+.screen-head{display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:10px}
+.screen-head h2{font-family:var(--f-disp); font-weight:600; font-size:17px; margin:0; letter-spacing:-.01em}
+.screen-note{font-size:12px; color:var(--muted); font-family:var(--f-mono)}
+canvas{display:block; width:100%; height:auto; max-width:100%; border-radius:3px}
+
+.readout{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(128px,1fr));
+  border-top:1px solid var(--line-soft); margin-top:12px;
+}
+.cell{padding:11px 14px 4px; border-right:1px solid var(--line-soft)}
+.cell:last-child{border-right:0}
+.cell .k{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600}
+.cell .v{font-family:var(--f-mono); font-size:20px; font-variant-numeric:tabular-nums; margin-top:1px; letter-spacing:-.02em}
+.cell .v small{font-size:12px; color:var(--muted); font-weight:400}
+.v.copper{color:var(--copper)}
+.v.accent{color:var(--accent)}
+
+.legend{display:flex; flex-wrap:wrap; gap:16px; font-size:11.5px; color:var(--muted); margin-top:10px}
+.legend span{display:flex; align-items:center; gap:6px}
+.swatch{width:11px; height:11px; border-radius:2px; flex:none}
+
+footer{
+  margin-top:28px; padding-top:20px; border-top:1px solid var(--line);
+  color:var(--muted); font-size:13.5px; max-width:70ch;
+}
+footer p{margin:0 0 10px}
+footer code{font-family:var(--f-mono); font-size:12.5px; color:var(--ink); background:var(--sunk); padding:1px 5px; border-radius:3px}
+footer strong{color:var(--ink); font-weight:600}
+</style>
+
+<div class="wrap">
+<header>
+  <h1>Peine de pulsación</h1>
+  <p class="sub">Dónde pulsas escribe un <em>peine de armónicos ausentes</em> en el espectro. La anchura del contacto los rellena — salvo en el centro exacto de la cuerda, donde la simetría los protege. Mueve, mira, escucha.</p>
+</header>
+
+<div class="bench">
+  <section class="panel controls">
+    <div>
+      <p class="eyebrow">Cuerda</p>
+      <select id="cuerda" aria-label="Cuerda">
+        <option value="82.41">6ª · mi2 — 82.41 Hz</option>
+        <option value="110.00">5ª · la2 — 110.00 Hz</option>
+        <option value="146.83">4ª · re3 — 146.83 Hz</option>
+        <option value="196.00">3ª · sol3 — 196.00 Hz</option>
+        <option value="246.94">2ª · si3 — 246.94 Hz</option>
+        <option value="329.63">1ª · mi4 — 329.63 Hz</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <div class="field-head"><label for="pos">Posición · distancia al puente</label><span class="val" id="posVal">143 mm</span></div>
+      <input type="range" id="pos" min="0.02" max="0.5" step="0.001" value="0.22">
+      <div class="screen-note" id="posFrac">p = 0.220 · L = 650 mm</div>
+    </div>
+
+    <div class="field">
+      <div class="field-head"><label for="anchura">Anchura del contacto</label><span class="val" id="anchuraVal">5.0 mm</span></div>
+      <input type="range" id="anchura" min="0" max="25" step="0.1" value="5">
+    </div>
+
+    <div>
+      <p class="eyebrow">Perfil del ataque</p>
+      <div class="seg" id="perfil" role="group" aria-label="Perfil del ataque">
+        <button type="button" data-k="punta" aria-pressed="false">Punta</button>
+        <button type="button" data-k="plana" aria-pressed="false">Uña</button>
+        <button type="button" data-k="redonda" aria-pressed="true">Yema</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-head"><label for="desliz">Deslizamiento del dedo</label><span class="val" id="deslizVal">0.0 mm</span></div>
+      <input type="range" id="desliz" min="0" max="25" step="0.5" value="0">
+      <div class="screen-note">la cuerda no se suelta desde el reposo</div>
+    </div>
+
+    <div class="field">
+      <div class="field-head"><label for="inarm">Inarmonicidad <em>B</em></label><span class="val" id="inarmVal">3.0e-5</span></div>
+      <input type="range" id="inarm" min="0" max="150" step="1" value="30">
+      <div class="screen-note">solo afecta al sonido, no al peine</div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-main" id="play">Pulsar la cuerda</button>
+      <div class="btn-row">
+        <button class="btn" id="freeze">Congelar</button>
+        <button class="btn" id="clear">Limpiar</button>
+      </div>
+    </div>
+
+    <div>
+      <p class="eyebrow">Ajustes típicos</p>
+      <div class="presets" id="presets">
+        <button class="chip" data-p="0.32" data-w="8" data-k="redonda">Tasto</button>
+        <button class="chip" data-p="0.22" data-w="5" data-k="redonda">Natural</button>
+        <button class="chip" data-p="0.07" data-w="3" data-k="plana">Ponticello</button>
+        <button class="chip" data-p="0.22" data-w="1.5" data-k="plana">Uña dura</button>
+        <button class="chip" data-p="0.5" data-w="14" data-k="redonda">Centro exacto</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="screens">
+    <section class="panel screen">
+      <div class="screen-head">
+        <h2>Deformación inicial</h2>
+        <span class="screen-note">puente a la izquierda · cejuela a la derecha</span>
+      </div>
+      <canvas id="cv-shape" width="1600" height="260"></canvas>
+    </section>
+
+    <section class="panel screen">
+      <div class="screen-head">
+        <h2>Amplitudes modales</h2>
+        <span class="screen-note" id="specNote">48 parciales · escala dB relativa</span>
+      </div>
+      <canvas id="cv-spec" width="1600" height="620"></canvas>
+      <div class="legend">
+        <span><i class="swatch" style="background:var(--accent)"></i>parcial presente</span>
+        <span><i class="swatch" style="background:var(--copper)"></i>diente del peine (hueco)</span>
+        <span><i class="swatch" style="background:var(--ghost)"></i>espectro congelado</span>
+      </div>
+      <div class="readout">
+        <div class="cell"><div class="k">Primer hueco</div><div class="v copper" id="r-n">n = 4</div></div>
+        <div class="cell"><div class="k">Profundidad</div><div class="v" id="r-d">29.8 <small>dB</small></div></div>
+        <div class="cell"><div class="k">Huecos visibles</div><div class="v" id="r-c">11</div></div>
+        <div class="cell"><div class="k">Caída envolvente</div><div class="v accent" id="r-e">1/n<sup>2.0</sup></div></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<footer>
+  <p><strong>Qué estás viendo.</strong> La deformación inicial se proyecta sobre los modos <code>sin(nπx/L)</code>. Un modo con un nodo justo en el punto de pulsación no recibe nada: por eso mueren los <code>n</code> múltiplos de <code>1/p</code>.</p>
+  <p><strong>Prueba esto.</strong> Pon <em>Centro exacto</em> y sube la anchura hasta 25 mm: los huecos pares no se mueven. Luego baja a <code>p = 0.25</code> y repite — se rellenan enseguida. El relleno es proporcional a la asimetría <code>1/a − 1/(L−b)</code>, que vale cero en el centro.</p>
+  <p><strong>Deslizamiento.</strong> Una cuerda no se suelta desde el reposo: el dedo resbala y le comunica <em>velocidad</em>. Esa contribución cae como <code>1/n</code> en vez de <code>1/n²</code>, así que manda en los agudos y aplana la envolvente. Súbelo y mira cómo el espectro entero se inclina — es el mecanismo que hace que un estimador ingenuo confunda un dedo que resbala con un ponticello.</p>
+  <p><strong>Aviso.</strong> El decaimiento que oyes está inventado y no se ha validado contra ninguna grabación: sirve para que suene a cuerda, no para medir nada. El peine y las amplitudes sí son exactos.</p>
+  <p><strong>Perfiles.</strong> <em>Punta</em> es el triángulo ideal. <em>Uña</em> es un trapecio de esquinas duras. <em>Yema</em> es el mismo triángulo suavizado con un núcleo de Hann — contacto blando y repartido. A igual anchura rellenan distinto.</p>
+</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+const L_MM = 650, NPART = 48, NG = 1024;
+
+// tabla exacta: sin(n*pi*k/NG) = SIN[(n*k) % (2*NG)]
+const SIN = new Float64Array(2*NG);
+for (let j=0;j<2*NG;j++) SIN[j] = Math.sin(Math.PI*j/NG);
+
+const state = { f0:82.41, p:0.22, w:5, perfil:"redonda", B:30, desliz:0, ghost:null };
+
+/* ---------- forma inicial ---------- */
+function forma(p, wFrac, perfil){
+  const y = new Float64Array(NG+1);
+  if (perfil === "punta" || wFrac <= 0){
+    for (let k=0;k<=NG;k++){ const x=k/NG; y[k] = x<=p ? x/p : (1-x)/(1-p); }
+    return y;
+  }
+  if (perfil === "plana"){
+    let a = Math.max(1e-4, p - wFrac/2), b = Math.min(1-1e-4, p + wFrac/2);
+    for (let k=0;k<=NG;k++){
+      const x=k/NG;
+      y[k] = x < a ? x/a : (x <= b ? 1 : (1-x)/(1-b));
+    }
+    return y;
+  }
+  // yema: triangulo convolucionado con Hann de anchura w
+  const tri = new Float64Array(NG+1);
+  for (let k=0;k<=NG;k++){ const x=k/NG; tri[k] = x<=p ? x/p : (1-x)/(1-p); }
+  const M = Math.max(1, Math.round(wFrac*NG));
+  if (M < 2) return tri;
+  const ker = new Float64Array(M); let s=0;
+  for (let i=0;i<M;i++){ ker[i] = 0.5 - 0.5*Math.cos(2*Math.PI*(i+0.5)/M); s += ker[i]; }
+  for (let i=0;i<M;i++) ker[i] /= s;
+  const h = (M-1)/2;
+  for (let k=0;k<=NG;k++){
+    let acc=0;
+    for (let i=0;i<M;i++){
+      let j = Math.round(k - h + i);
+      if (j < 0) j = -j; if (j > NG) j = 2*NG - j;
+      if (j < 0) j = 0;
+      acc += ker[i]*tri[j];
+    }
+    y[k] = acc;
+  }
+  y[0]=0; y[NG]=0;
+  return y;
+}
+
+/* ---------- amplitudes modales ---------- */
+function modos(y){
+  const A = new Float64Array(NPART+1);
+  for (let n=1;n<=NPART;n++){
+    let acc=0;
+    for (let k=1;k<NG;k++) acc += y[k]*SIN[(n*k) % (2*NG)];
+    A[n] = 2*acc/NG;
+  }
+  return A;
+}
+
+/* ---------- canal de velocidad (el dedo desliza) ---------- */
+// La condicion inicial no es solo de posicion. Al resbalar, el dedo comunica
+// VELOCIDAD, y esa proyeccion cae como 1/n en vez de 1/n^2: domina en los
+// agudos y aplana la envolvente. Ahi es donde un modelo que solo conoce la
+// posicion se equivoca de mecanismo.
+// Cuanto mas largo el deslizamiento, mas momento comunica el dedo: la
+// fraccion de energia en el canal de velocidad crece con el, no es fija.
+const KAPPA_MAX = 0.45, DESLIZ_REF = 25/650;
+
+function conVelocidad(A, p, deslizFrac){
+  if (deslizFrac <= 0) return A;
+  const pp = Math.min(Math.max(p + deslizFrac, 0.01), 0.99), eps = 0.01, s = eps/2.355;
+  const v = new Float64Array(NG+1);
+  let suma = 0;
+  for (let k=0;k<=NG;k++){ const u=(k/NG - pp)/s; v[k] = Math.exp(-0.5*u*u); suma += v[k]; }
+  for (let k=0;k<=NG;k++) v[k] /= (suma/NG);
+  const P = modos(v);
+  let ea=0, eb=0;
+  const b = new Float64Array(NPART+1);
+  for (let n=1;n<=NPART;n++){ b[n] = P[n]/n; ea += A[n]*A[n]; eb += b[n]*b[n]; }
+  if (eb <= 0) return A;
+  const kap = KAPPA_MAX*Math.min(1, deslizFrac/DESLIZ_REF);
+  if (kap <= 0) return A;
+  const esc = Math.sqrt(kap/(1-kap) * ea/eb);
+  const out = new Float64Array(NPART+1);
+  for (let n=1;n<=NPART;n++){
+    const mag = Math.hypot(A[n], esc*b[n]);
+    out[n] = A[n] < 0 ? -mag : mag;
+  }
+  return out;
+}
+
+/* ---------- huecos ---------- */
+function huecos(A){
+  const out=[];
+  for (let n=2;n<NPART;n++){
+    const ref = Math.sqrt(Math.abs(A[n-1])*Math.abs(A[n+1]));
+    const v = Math.abs(A[n]);
+    if (ref > 0 && v < 0.5*ref){
+      out.push({ n, d: 20*Math.log10(ref/Math.max(v, 1e-18)) });
+    }
+  }
+  return out;
+}
+
+function pendiente(A){
+  // ajuste log|A| ~ -s*log(n) sobre los parciales NO anulados
+  let sx=0, sy=0, sxy=0, sxx=0, m=0;
+  for (let n=1;n<=NPART;n++){
+    const v = Math.abs(A[n]); if (v < 1e-9) continue;
+    const X = Math.log(n), Y = Math.log(v);
+    sx+=X; sy+=Y; sxy+=X*Y; sxx+=X*X; m++;
+  }
+  if (m < 4) return NaN;
+  return -(m*sxy - sx*sy)/(m*sxx - sx*sx);
+}
+
+/* ---------- dibujo ---------- */
+function tok(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+function fit(cv){
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  const w = cv.clientWidth || 800;
+  const h = Math.round(w * (cv.height/cv.width));
+  if (cv.width !== Math.round(w*dpr) || cv.height !== Math.round(h*dpr)){
+    cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr);
+  }
+  cv.style.height = h + "px";
+  const ctx = cv.getContext("2d");
+  ctx.setTransform(cv.width/w, 0, 0, cv.width/w, 0, 0);
+  return { ctx, w, h };
+}
+
+function dibujarForma(y){
+  const cv = document.getElementById("cv-shape");
+  const { ctx, w, h } = fit(cv);
+  const ink=tok("--ink"), acc=tok("--accent"), line=tok("--line-soft"), mut=tok("--muted"), cop=tok("--copper");
+  const padX=18, padT=26, padB=30;
+  ctx.clearRect(0,0,w,h);
+
+  // linea de reposo
+  const y0 = h - padB;
+  ctx.strokeStyle=line; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(padX,y0); ctx.lineTo(w-padX,y0); ctx.stroke();
+
+  const amp = h - padT - padB;
+  const X = k => padX + (w-2*padX)*k/NG;
+  const Y = v => y0 - amp*v;
+
+  // region de contacto
+  if (state.perfil !== "punta" && state.w > 0){
+    const wf = state.w/L_MM;
+    const a = Math.max(0, state.p - wf/2), b = Math.min(1, state.p + wf/2);
+    ctx.fillStyle = tok("--accent-soft");
+    ctx.fillRect(X(a*NG), padT-6, Math.max(1.5, X(b*NG)-X(a*NG)), amp+10);
+  }
+
+  // cuerda deformada
+  ctx.strokeStyle=acc; ctx.lineWidth=2.2; ctx.lineJoin="round";
+  ctx.beginPath();
+  for (let k=0;k<=NG;k+=2){ const px=X(k), py=Y(y[k]); k===0?ctx.moveTo(px,py):ctx.lineTo(px,py); }
+  ctx.stroke();
+
+  // marca del punto de pulsacion
+  const px = X(state.p*NG);
+  ctx.strokeStyle=cop; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(px, padT-10); ctx.lineTo(px, y0+6); ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle=mut; ctx.font='500 11px '+tok("--f-mono");
+  ctx.textAlign="left";  ctx.fillText("puente", padX, h-10);
+  ctx.textAlign="right"; ctx.fillText("cejuela", w-padX, h-10);
+  ctx.textAlign="center";
+  ctx.fillStyle=cop;
+  ctx.fillText(Math.round(state.p*L_MM)+" mm", px, h-10);
+}
+
+function dibujarEspectro(A, hs){
+  const cv = document.getElementById("cv-spec");
+  const { ctx, w, h } = fit(cv);
+  const ink=tok("--ink"), acc=tok("--accent"), line=tok("--line-soft"),
+        mut=tok("--muted"), cop=tok("--copper"), gh=tok("--ghost");
+  const padL=44, padR=16, padT=18, padB=34, FLOOR=-80;
+  ctx.clearRect(0,0,w,h);
+
+  let max=0; for (let n=1;n<=NPART;n++) max=Math.max(max, Math.abs(A[n]));
+  const dB = v => 20*Math.log10(Math.max(Math.abs(v), 1e-12)/max);
+  const plotW = w-padL-padR, plotH = h-padT-padB;
+  const X = n => padL + plotW*(n-0.5)/NPART;
+  const Y = d => padT + plotH*(Math.max(d,FLOOR)-0)/(FLOOR-0);
+
+  // rejilla dB
+  ctx.font='400 10px '+tok("--f-mono"); ctx.textAlign="right"; ctx.textBaseline="middle";
+  for (let d=0; d>=FLOOR; d-=20){
+    const yy=Y(d);
+    ctx.strokeStyle=line; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(padL,yy); ctx.lineTo(w-padR,yy); ctx.stroke();
+    ctx.fillStyle=mut; ctx.fillText(d+" dB", padL-8, yy);
+  }
+
+  const hset = new Set(hs.map(o=>o.n));
+
+  // espectro congelado
+  if (state.ghost){
+    const g = state.ghost; let gmax=0;
+    for (let n=1;n<=NPART;n++) gmax=Math.max(gmax, Math.abs(g[n]));
+    ctx.strokeStyle=gh; ctx.lineWidth=3.5; ctx.lineCap="butt"; ctx.globalAlpha=.5;
+    for (let n=1;n<=NPART;n++){
+      const d = 20*Math.log10(Math.max(Math.abs(g[n]),1e-12)/gmax);
+      if (d<=FLOOR) continue;
+      ctx.beginPath(); ctx.moveTo(X(n)+3, Y(FLOOR)); ctx.lineTo(X(n)+3, Y(d)); ctx.stroke();
+    }
+    ctx.globalAlpha=1;
+  }
+
+  // tallos
+  ctx.lineCap="butt";
+  for (let n=1;n<=NPART;n++){
+    const d = dB(A[n]);
+    const esHueco = hset.has(n) || d <= FLOOR;
+    if (esHueco){
+      ctx.strokeStyle=cop; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(X(n), Y(FLOOR)); ctx.lineTo(X(n), Y(FLOOR)+8); ctx.stroke();
+      if (d > FLOOR){
+        ctx.globalAlpha=.55;
+        ctx.beginPath(); ctx.moveTo(X(n), Y(FLOOR)); ctx.lineTo(X(n), Y(d)); ctx.stroke();
+        ctx.globalAlpha=1;
+      }
+      ctx.fillStyle=cop;
+      ctx.beginPath(); ctx.arc(X(n), Y(FLOOR)+13, 2.4, 0, 6.284); ctx.fill();
+    } else {
+      ctx.strokeStyle=acc; ctx.lineWidth=3.5;
+      ctx.beginPath(); ctx.moveTo(X(n), Y(FLOOR)); ctx.lineTo(X(n), Y(d)); ctx.stroke();
+    }
+  }
+
+  // eje n
+  ctx.strokeStyle=tok("--line"); ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(padL, Y(FLOOR)); ctx.lineTo(w-padR, Y(FLOOR)); ctx.stroke();
+  ctx.fillStyle=mut; ctx.textAlign="center"; ctx.textBaseline="top";
+  ctx.font='400 10px '+tok("--f-mono");
+  for (let n=1;n<=NPART;n++){
+    if (n===1 || n%6===0) ctx.fillText(String(n), X(n), Y(FLOOR)+19);
+  }
+  ctx.fillStyle=mut; ctx.textAlign="right";
+  ctx.font='500 10px '+tok("--f-ui");
+  ctx.fillText("nº de parcial", w-padR, h-13);
+}
+
+/* ---------- audio ---------- */
+let actx = null;
+function tocar(A){
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    if (actx.state === "suspended") actx.resume();
+  }catch(e){ return; }
+  const sr = actx.sampleRate, dur = 2.6, N = Math.floor(sr*dur);
+  const buf = actx.createBuffer(1, N, sr);
+  const d = buf.getChannelData(0);
+  const B = state.B * 1e-6, f0 = state.f0, tau0 = 2.1;
+
+  let max=0; for (let n=1;n<=NPART;n++) max=Math.max(max, Math.abs(A[n]));
+  if (max === 0) return;
+
+  for (let n=1;n<=NPART;n++){
+    const a = A[n]/max;
+    if (Math.abs(a) < 1e-4) continue;
+    const fn = n*f0*Math.sqrt(1 + B*n*n);
+    if (fn > sr*0.45) continue;
+    const tau = tau0/(1 + Math.pow(n/13, 1.7));
+    const wn = 2*Math.PI*fn/sr, ph = (n*2.399) % (2*Math.PI);
+    const dec = Math.exp(-1/(tau*sr));
+    let env = 1;
+    for (let k=0;k<N;k++){
+      d[k] += a*env*Math.sin(wn*k + ph);
+      env *= dec;
+    }
+  }
+  // ataque suave + normalizado
+  const ramp = Math.floor(sr*0.003);
+  for (let k=0;k<ramp;k++) d[k] *= k/ramp;
+  let pk=0; for (let k=0;k<N;k++) pk=Math.max(pk, Math.abs(d[k]));
+  const g = pk>0 ? 0.82/pk : 0;
+  for (let k=0;k<N;k++) d[k] *= g;
+
+  const src = actx.createBufferSource(); src.buffer = buf;
+  const vol = actx.createGain(); vol.gain.value = 1;
+  src.connect(vol); vol.connect(actx.destination); src.start();
+}
+
+/* ---------- render ---------- */
+let ultimoA = null;
+function render(){
+  const wf = state.w/L_MM;
+  const y = forma(state.p, wf, state.perfil);
+  const A = conVelocidad(modos(y), state.p, state.desliz/L_MM);
+  ultimoA = A;
+  const hs = huecos(A);
+
+  dibujarForma(y);
+  dibujarEspectro(A, hs);
+
+  document.getElementById("posVal").textContent = Math.round(state.p*L_MM)+" mm";
+  document.getElementById("posFrac").textContent = "p = "+state.p.toFixed(3)+" · L = 650 mm";
+  document.getElementById("anchuraVal").textContent = state.w.toFixed(1)+" mm";
+  document.getElementById("deslizVal").textContent = state.desliz.toFixed(1)+" mm";
+  document.getElementById("inarmVal").textContent = (state.B*1e-6).toExponential(1).replace("e-","e-");
+
+  const r_n = document.getElementById("r-n"), r_d = document.getElementById("r-d"), r_c = document.getElementById("r-c");
+  if (hs.length){
+    const first = hs.reduce((a,b)=> a.n<=b.n?a:b);
+    r_n.textContent = "n = "+first.n;
+    r_d.innerHTML = (first.d>200 ? "&infin;" : first.d.toFixed(1))+' <small>dB</small>';
+  } else {
+    r_n.textContent = "—"; r_d.innerHTML = '— <small>dB</small>';
+  }
+  r_c.textContent = hs.length;
+  const s = pendiente(A);
+  document.getElementById("r-e").innerHTML = isNaN(s) ? "—" : "1/n<sup>"+s.toFixed(1)+"</sup>";
+}
+
+/* ---------- eventos ---------- */
+const $ = id => document.getElementById(id);
+$("cuerda").addEventListener("change", e => { state.f0 = parseFloat(e.target.value); });
+$("pos").addEventListener("input", e => { state.p = parseFloat(e.target.value); render(); });
+$("anchura").addEventListener("input", e => { state.w = parseFloat(e.target.value); render(); });
+$("desliz").addEventListener("input", e => { state.desliz = parseFloat(e.target.value); render(); });
+$("inarm").addEventListener("input", e => { state.B = parseFloat(e.target.value); render(); });
+
+document.querySelectorAll("#perfil button").forEach(b => {
+  b.addEventListener("click", () => {
+    state.perfil = b.dataset.k;
+    document.querySelectorAll("#perfil button").forEach(o => o.setAttribute("aria-pressed", String(o===b)));
+    render();
+  });
+});
+
+$("play").addEventListener("click", () => { if (ultimoA) tocar(ultimoA); });
+$("freeze").addEventListener("click", () => { state.ghost = ultimoA ? Float64Array.from(ultimoA) : null; render(); });
+$("clear").addEventListener("click", () => { state.ghost = null; render(); });
+
+document.querySelectorAll("#presets .chip").forEach(c => {
+  c.addEventListener("click", () => {
+    state.p = parseFloat(c.dataset.p); state.w = parseFloat(c.dataset.w); state.perfil = c.dataset.k;
+    state.desliz = 0;
+    $("pos").value = state.p; $("anchura").value = state.w; $("desliz").value = 0;
+    document.querySelectorAll("#perfil button").forEach(o => o.setAttribute("aria-pressed", String(o.dataset.k===state.perfil)));
+    render();
+  });
+});
+
+window.addEventListener("resize", render);
+if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
+new MutationObserver(render).observe(document.documentElement, { attributes:true, attributeFilter:["data-theme"] });
+
+render();
+})();
+</script>
+
+</body>
+</html>
