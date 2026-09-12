@@ -5,11 +5,13 @@ lang: es
 description: "Escribí un libro para aprender a pensar como Fermi, Ulam y Feynman. Spoiler: eso no se aprende leyendo."
 ---
 
-Tres escenas que me tienen fascinado desde hace años.
+Fermi, en Trinity, estima la potencia de la primera bomba atómica soltando papelitos y midiendo cuánto se desplazan al pasar la onda de choque.
 
-Fermi, en Trinity, estima la potencia de la primera bomba atómica soltando papelitos y midiendo cuánto se desplazan al pasar la onda de choque. Ulam, convaleciente en una cama y harto de calcular a mano la probabilidad de que le salga un solitario, se da cuenta de que sería más fácil jugar muchas partidas y contar: acaba de inventar el método de Montecarlo. Feynman, delante de una comisión del Congreso, mete una junta tórica en un vaso de agua con hielo y se termina la discusión sobre el Challenger.
+Ulam, convaleciente en una cama y harto de calcular a mano la probabilidad de que le salga un solitario, se da cuenta de que sería más fácil jugar muchas partidas y contar: acaba de inventar el método de Montecarlo.
 
-Lo que me fascina de las tres no es el resultado. Es la desproporción. La herramienta era ridícula al lado del problema, y aun así el problema cayó.
+Feynman, delante de una comisión del Congreso, mete una junta tórica en un vaso de agua con hielo y se termina la discusión sobre el Challenger.
+
+Tres escenas que me tienen fascinado desde hace años. Y lo que me fascina no es el resultado: es la desproporción. La herramienta era ridícula al lado del problema, y aun así el problema cayó.
 
 Yo quería aprender a hacer eso.
 

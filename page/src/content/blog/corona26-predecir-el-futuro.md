@@ -5,7 +5,9 @@ lang: es
 description: "Intenté predecir la forma de la corona solar antes del eclipse del 12 de agosto. Lo que me devolvió el proyecto no fue el acierto."
 ---
 
-Voy a defender una tesis discutible: la física y la ciencia de datos son lo más cerca que ha estado la humanidad de predecir el futuro. Sin bola de cristal, sin cartas, sin vísceras de animal. Coges unas ecuaciones, unas condiciones iniciales medidas con instrumentos carísimos, le das a ejecutar, y sale un número que dice qué va a pasar mañana.
+Antes del eclipse del 12 de agosto congelé un PNG en un commit y lo declaré en público: esa era mi predicción de qué forma iba a tener la corona solar, publicada antes de que nadie pudiera mirarla.
+
+Lo hice porque quería volver a una cosa que había dejado de practicar, y que sigo pensando que es lo más cerca que ha estado la humanidad de predecir el futuro. Sin bola de cristal, sin cartas, sin vísceras de animal. Coges unas ecuaciones, unas condiciones iniciales medidas con instrumentos carísimos, le das a ejecutar, y sale un número que dice qué va a pasar mañana.
 
 Y a veces acierta.
 

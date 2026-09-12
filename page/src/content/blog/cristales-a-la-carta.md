@@ -90,6 +90,8 @@ Y si tu solver es sutilmente incorrecto, es peor. El optimizador va a encontrar 
 
 Por eso el directo tiene que ser exacto y barato antes que ninguna otra cosa.
 
+Vuelve a mirar la pompa de la foto. Ese arcoíris es la misma cuenta que diseña un espejo de láser: capas, fase y suma. La diferencia es que el espejo lo ha calculado alguien, y la pompa no.
+
 ## Por qué lo he publicado
 
 He empezado a subir a un sitio las simulaciones de cosas fundamentales que he ido haciendo estos años. La idea es recopilarlas todas con un mismo estándar en vez de tenerlas repartidas en cuadernos de 2023 y 2024 que no hay quien lea.
