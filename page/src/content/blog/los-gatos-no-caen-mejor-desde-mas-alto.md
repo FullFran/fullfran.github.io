@@ -138,4 +138,4 @@ Y hay un premio de consolación que sí sobrevive intacto: los gatos aguantan mu
 - Whitney WO, Mehlhaff CJ. *High-rise syndrome in cats.* JAVMA 1987;191(11):1399–1403.
 - Candela Andrade M et al. *High-rise syndrome in cats (part 2).* J Feline Med Surg 2025.
 - Diamond J. *Why cats have nine lives.* Nature 1988;332:586–587.
-- [El cuaderno completo](https://github.com/FullFran/reto-semanal) — incluida la predicción que sellé antes de mirar ninguno de estos datos, con sus errores dentro.
+- Cuaderno propio: la predicción quedó sellada antes de mirar ninguno de estos datos, y sus errores están dentro, catalogados en vez de corregidos.
