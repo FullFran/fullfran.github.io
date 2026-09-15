@@ -7,9 +7,9 @@ description: "Escribí un libro para aprender a pensar como Fermi, Ulam y Feynma
 
 Fermi, en Trinity (la primera prueba nuclear de la historia), estima la potencia de la bomba soltando papelitos y midiendo cuánto se desplazan al pasar la onda de choque.
 
-Ulam, convaleciente en una cama (y harto de calcular a mano la probabilidad de que le salga un solitario), se da cuenta de que sería más fácil jugar muchas partidas y contar: acaba de inventar el método de Montecarlo.
+Ulam, convaleciente en una cama y harto de calcular a mano la probabilidad de que le salga un solitario, se da cuenta de que sería más fácil jugar muchas partidas y contar: acaba de inventar el método de Montecarlo.
 
-Feynman, delante de una comisión del Congreso, mete una junta tórica (el anillo de goma que sellaba las juntas del cohete) en un vaso de agua con hielo, y se termina la discusión sobre el Challenger.
+Feynman, delante de una comisión del Congreso, mete una junta tórica (el anillo de goma que sellaba las uniones del cohete) en un vaso de agua con hielo, y se termina la discusión sobre el Challenger.
 
 Tres escenas que me tienen fascinado desde hace años. Y lo que me fascina no es el resultado: es la desproporción. La herramienta era ridícula al lado del problema, y aun así el problema cayó.
 
@@ -23,7 +23,7 @@ Te puedo contar lo de los papelitos en dos minutos, te va a parecer precioso, y 
 
 Así que me monté el gimnasio.
 
-Se llama La servilleta y el ordenador y son 43 capítulos, 684 páginas y 453 problemas. No enseña fórmulas nuevas. Entrena un ciclo, que es siempre el mismo: coges un fenómeno, sacas una pregunta, estimas el orden de magnitud, decides qué variables importan, construyes el modelo más pequeño que sirva, lo resuelves aproximado, lo simulas, lo validas, le pones barras de error, lo interpretas, dices dónde deja de valer, y de ahí sale la siguiente pregunta.
+Se llama *La servilleta y el ordenador* y son 43 capítulos, 684 páginas y 453 problemas. No enseña fórmulas nuevas. Entrena un ciclo, que es siempre el mismo: coges un fenómeno, sacas una pregunta, estimas el orden de magnitud, decides qué variables importan, construyes el modelo más pequeño que sirva, lo resuelves aproximado, lo simulas, lo validas, le pones barras de error, lo interpretas, dices dónde deja de valer, y de ahí sale la siguiente pregunta.
 
 Los capítulos van de herramientas, de fenómenos y de método. Y entre medias hay ocho interludios históricos que son, básicamente, mis escenas favoritas: los papelitos de Fermi, el solitario de Ulam, la junta tórica, Lorenz y el redondeo que descubrió el caos, y la señora del MANIAC (que hizo bastante más de lo que le reconocieron).
 

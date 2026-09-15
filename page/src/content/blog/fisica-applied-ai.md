@@ -7,7 +7,7 @@ description: "Por qué 'applied AI' no fue un giro de carrera, sino lo que siemp
 
 Cuando digo que soy físico y que construyo IA, la gente asume que hice un giro de carrera. No lo hice.
 
-En la carrera simulaba la luz en medios desordenados con ray tracing (trazar los rayos uno a uno y ver dónde acaban) y usaba algoritmos genéticos para diseñar cristales a la carta. En el doctorado uso redes neuronales y física diferenciable para reconstruir curvas de brillo en dosimetría. Distintos problemas, la misma idea: usar computación para arrancarle respuestas a la física.
+En la carrera simulaba la luz en medios desordenados con ray tracing (seguir cada rayo uno a uno y ver dónde acaba) y usaba algoritmos genéticos para diseñar [cristales a la carta](/blog/cristales-a-la-carta). En el doctorado uso redes neuronales y física diferenciable para reconstruir curvas de brillo en dosimetría (medir cuánta radiación ha recibido algo). Distintos problemas, la misma idea: usar computación para arrancarle respuestas a la física.
 
 "Applied AI" no fue un pivote. Fue lo que llevaba haciendo todo el tiempo, solo que un día el mundo le puso nombre.
 
