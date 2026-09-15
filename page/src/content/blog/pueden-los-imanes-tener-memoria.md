@@ -11,7 +11,7 @@ La parte interesante es cuánto, y si podemos elegir qué. Porque tirando de ese
 
 ## Un imán ya se acuerda de algo
 
-El modelo más tonto que describe un imán es el de Ising. Un montón de flechitas —espines— colocadas en una red, y cada una solo puede apuntar arriba o abajo. Más y menos uno, nada intermedio.
+El modelo más tonto que describe un imán es el de Ising. Un montón de flechitas (espines) colocadas en una red, y cada una solo puede apuntar arriba o abajo. Más y menos uno, nada intermedio.
 
 La energía del conjunto es una suma sobre parejas:
 
@@ -21,16 +21,16 @@ $$
 
 Y lo único que dice esa fórmula es: si dos espines acoplados apuntan igual, el producto es positivo, el signo menos lo convierte en energía negativa, y al sistema le gusta. Vecinos de acuerdo bajan la energía. Vecinos en desacuerdo la suben.
 
-Si J es positiva e igual para todos los vecinos, tienes un ferromagneto —un imán de los de verdad, como el de la nevera— y tiene exactamente dos estados de energía mínima: todos arriba, o todos abajo. Los dos igual de buenos. La naturaleza elige uno y se queda ahí.
+Si J es positiva e igual para todos los vecinos, tienes un ferromagneto (un imán de los de verdad, como el de la nevera) y tiene exactamente dos estados de energía mínima: todos arriba, o todos abajo. Los dos igual de buenos. La naturaleza elige uno y se queda ahí.
 
-Eso ya es memoria. Es un bit. Magnetizas el material en un sentido y se acuerda de en cuál, hasta que llegue alguien con calor o con otro campo. Y no es una metáfora: así es literalmente como un disco duro guarda información, regiones magnetizadas en un sentido o en el otro.
+Y eso ya es memoria. Es un bit. Magnetizas el material en un sentido y se acuerda de en cuál, hasta que llegue alguien con calor o con otro campo. Y no es una metáfora: así es literalmente como un disco duro guarda información, regiones magnetizadas en un sentido o en el otro.
 
 <figure>
   <img src="/img/dominios-magneticos.jpg" alt="Micrografía en blanco y negro de un grano de acero eléctrico dividido en franjas claras y oscuras alternas, con flechas superpuestas que indican el sentido de la magnetización de cada franja." />
   <figcaption>Dominios magnéticos dentro de un solo grano de acero eléctrico, en una zona de una décima de milímetro, al microscopio por efecto Kerr. Cada franja es un trozo de metal donde todos los espines han acordado apuntar igual. Imagen de Zureks y Chris Vardon, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>, vía <a href="https://commons.wikimedia.org/wiki/File:Magnetic_domain_with_arrows_by_Zureks.png">Wikimedia Commons</a>.</figcaption>
 </figure>
 
-Así que la pregunta buena no es si un imán puede recordar. Es si puede recordar más de una cosa, y si podemos decidir nosotros cuáles.
+Pero la pregunta buena no es si un imán puede recordar. Es si puede recordar más de una cosa, y si podemos decidir nosotros cuáles.
 
 ## La jugada de Hopfield
 
@@ -72,7 +72,7 @@ Todo el teorema se apoya en dos cosas: que la matriz de acoplamientos sea simét
 
 Con esas dos, si cambias un solo espín la energía varía en menos el cambio del espín por su campo local, que nunca es positivo. Es decir: la energía nunca sube. Es una función de Lyapunov, y por tanto la red no puede vagar eternamente. Tiene que parar.
 
-Lo de la diagonal a cero merece un segundo. Si dejas que una neurona se acople consigo misma, puede cambiar de estado por la fuerza de su propio valor actual. Eso ya no es un recuerdo, es un biestable.
+Lo de la diagonal a cero merece un segundo. Es que si dejas que una neurona se acople consigo misma, cambia de estado por la fuerza de su propio valor actual. Y eso ya no es un recuerdo, es un biestable.
 
 Y ahora el detalle que no es un detalle: ese argumento exige que las neuronas se actualicen de una en una. Si las actualizas todas a la vez, la garantía se cae. La energía puede subir y aparecen ciclos de periodo dos, con la red oscilando entre dos estados para siempre.
 
@@ -88,13 +88,13 @@ Luego están las mezclas. El signo de la suma de tres patrones almacenados suele
 
 Y luego está lo que sale cuando lo pruebas de verdad, que fue lo más interesante del experimento. Un tablero de ajedrez sin ninguna relación con nada terminó exactamente sobre el espejo de uno de los recuerdos. Una variante ligeramente distinta de un patrón guardado no recuperó el original: se quedó atascada en un valle cercano que no era ningún recuerdo. Y la mezcla de tres patrones del libro de texto no era estable: se fue rodando hasta uno de ellos.
 
-Eso último no es un fallo, es correlación. Mis patrones eran glifos que comparten mucha estructura, y esa estructura le cambia la forma al paisaje. Con patrones sin correlación la mezcla sí es estable, exactamente como dice la teoría, y el mismo script lo comprueba en la misma ejecución para que no me lo tenga que creer nadie.
+Pero eso último no es un fallo, es correlación. Mis patrones eran glifos que comparten mucha estructura, y esa estructura le cambia la forma al paisaje. Con patrones sin correlación la mezcla sí es estable, exactamente como dice la teoría, y el mismo script lo comprueba en la misma ejecución para que no me lo tenga que creer nadie.
 
 ## Cuánto cabe
 
 Un número: alrededor de 0,138 patrones por neurona.
 
-Por encima de eso, deja de funcionar. Y no deja de funcionar poco a poco, sino como una transición de fase —de golpe, como el agua que se vuelve hielo, no poco a poco—, que es la señal de que esto sigue siendo física estadística y no una analogía bonita. En las medidas: por debajo del umbral el error es prácticamente cero para cualquier tamaño de red; justo por encima, el error crece más rápido cuanto más grande es la red. A una carga de 0,16, el error casi se triplica al pasar de cien neuronas a quinientas.
+Por encima de eso, deja de funcionar. Y no deja de funcionar poco a poco, sino como una transición de fase (de golpe, como el agua que se vuelve hielo, no poco a poco), que es la señal de que esto sigue siendo física estadística y no una analogía bonita. En las medidas: por debajo del umbral el error es prácticamente cero para cualquier tamaño de red; justo por encima, el error crece más rápido cuanto más grande es la red. A una carga de 0,16, el error casi se triplica al pasar de cien neuronas a quinientas.
 
 Una red más grande no aguanta mejor. Aguanta hasta más tarde, y luego se cae más de golpe. Como toda transición de fase, se afila con el tamaño.
 
@@ -102,7 +102,7 @@ Una red más grande no aguanta mejor. Aguanta hasta más tarde, y luego se cae m
 
 La versión de esto que escribí en 2024 dividía los acoplamientos entre el número de patrones en vez de entre el número de neuronas.
 
-Da igual. O eso parecía: es un factor de escala global sobre toda la matriz, y a la función signo el factor de escala se la trae al pairo. La dinámica era correcta. Los recuerdos se recuperaban igual de bien. Cero síntomas.
+Da igual, ¿no? O eso parecía: es un factor de escala global sobre toda la matriz, y a la función signo el factor de escala se la trae al pairo. La dinámica era correcta. Los recuerdos se recuperaban igual de bien. Cero síntomas.
 
 Lo que rompe es la energía, que sí depende de la escala. Y por tanto rompe comparar energías entre redes entrenadas con distinto número de patrones. Que es, exactamente, lo único que hace el experimento de capacidad.
 
@@ -116,5 +116,5 @@ Cambia la energía explícita por una aprendida, y el descenso por un calendario
 
 O sea que el camino desde "¿pueden los imanes tener memoria?" hasta Stable Diffusion es bastante más corto de lo que parece. Es el mismo truco todo el rato: defines un paisaje de energía y dejas que las cosas rueden hacia abajo.
 
-- [La entrada de Hopfield](https://github.com/FullFran/first-principles/blob/main/hopfield/README.md) — las ecuaciones, los tres experimentos con sus números, y qué deja fuera a propósito.
-- [El repositorio](https://github.com/FullFran/first-principles) — una carpeta por mecanismo, implementación mínima reconstruida desde las ecuaciones.
+- [La entrada de Hopfield](https://github.com/FullFran/first-principles/blob/main/hopfield/README.md): las ecuaciones, los tres experimentos con sus números, y qué deja fuera a propósito.
+- [El repositorio](https://github.com/FullFran/first-principles): una carpeta por mecanismo, implementación mínima reconstruida desde las ecuaciones.

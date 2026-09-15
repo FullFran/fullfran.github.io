@@ -19,7 +19,7 @@ Yo quería aprender a hacer eso.
 
 No se aprende leyéndolo.
 
-Te puedo contar lo de los papelitos en dos minutos, te va a parecer precioso, y no habrás aprendido absolutamente nada. Es como ver tocar la guitarra: entretenidísimo, cero transferencia. Lo que hacía esa gente no es una anécdota, es un oficio. Y un oficio se entrena de una sola manera, que es haciéndolo mal muchas veces hasta que empieza a salir.
+Te puedo contar lo de los papelitos en dos minutos, te va a parecer precioso, y no habrás aprendido absolutamente nada. Es que lo que hacía esa gente no se transmite contándolo. De hecho es como ver tocar la guitarra: entretenidísimo, cero transferencia. No es una anécdota, es un oficio. Y un oficio se entrena de una sola manera, que es haciéndolo mal muchas veces hasta que empieza a salir.
 
 Así que me monté el gimnasio.
 
@@ -33,7 +33,7 @@ Al ir a las fuentes descubrí que parte de lo que admiraba es leyenda.
 
 Los papelitos de Trinity están documentados en fuente primaria, tranquilos. Pero el famoso "cuántos afinadores de pianos hay en Chicago", que todo el mundo le atribuye a Fermi, no tiene ni una sola fuente primaria. Es folclore. Muy bueno, pero folclore.
 
-Podía quitarlo, o podía mirar hacia otro lado. Hice la tercera cosa: cada afirmación histórica del libro lleva su nivel de verificación en la página. A si hay fuente primaria, B si es secundaria documentada, C si es folclore y se presenta como tal. Los papelitos son A. El afinador de pianos es C.
+Podía quitarlo, o podía mirar hacia otro lado. Pero las dos me parecían trampa. Hice la tercera cosa: cada afirmación histórica del libro lleva su nivel de verificación en la página. A si hay fuente primaria, B si es secundaria documentada, C si es folclore y se presenta como tal. Los papelitos son A. El afinador de pianos es C.
 
 Admirar a alguien en serio incluye no mentir sobre él.
 
@@ -51,6 +51,6 @@ Quiero recuperar esa ilusión y no volver a perderla. Ver el mundo como algo que
 
 ## El libro
 
-- [Descargar el PDF](https://github.com/FullFran/la-servilleta-y-el-ordenador/releases/download/v0.1/la-servilleta-y-el-ordenador.pdf) — 684 páginas, 11 MB.
-- [La versión v0.1 completa](https://github.com/FullFran/la-servilleta-y-el-ordenador/releases/tag/v0.1) — PDF, edición HTML y un zip con capítulos y diapositivas sueltos.
-- [El repositorio](https://github.com/FullFran/la-servilleta-y-el-ordenador) — el texto con licencia CC BY-SA, el código con MIT, y las issues por si te apetece encontrarme un fallo.
+- [Descargar el PDF](https://github.com/FullFran/la-servilleta-y-el-ordenador/releases/download/v0.1/la-servilleta-y-el-ordenador.pdf): 684 páginas, 11 MB.
+- [La versión v0.1 completa](https://github.com/FullFran/la-servilleta-y-el-ordenador/releases/tag/v0.1): PDF, edición HTML y un zip con capítulos y diapositivas sueltos.
+- [El repositorio](https://github.com/FullFran/la-servilleta-y-el-ordenador): el texto con licencia CC BY-SA, el código con MIT, y las issues por si te apetece encontrarme un fallo.

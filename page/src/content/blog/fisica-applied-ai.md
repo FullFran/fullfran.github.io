@@ -11,6 +11,6 @@ En la carrera simulaba la luz en medios desordenados con ray tracing y usaba alg
 
 "Applied AI" no fue un pivote. Fue lo que llevaba haciendo todo el tiempo, solo que un día el mundo le puso nombre.
 
-Lo que la física me dejó no es una técnica concreta —esas cambian—. Es un reflejo: desconfiar de lo que solo funciona en las diapositivas. Un modelo que da buenas métricas en un notebook y se cae con datos reales no está "casi bien": está mal. Ese reflejo es lo más útil que me llevé a producción.
+Lo que la física me dejó no es una técnica concreta (esas cambian). Es un reflejo: desconfiar de lo que solo funciona en las diapositivas. Un modelo que da buenas métricas en un notebook y se cae con datos reales no está "casi bien": está mal. Ese reflejo es lo más útil que me llevé a producción.
 
 Este es el primer log. Aquí escribiré sobre eso: IA que aguanta el mundo real.

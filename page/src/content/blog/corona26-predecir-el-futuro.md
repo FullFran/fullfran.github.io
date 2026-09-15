@@ -29,19 +29,19 @@ Así nació [corona26](https://www.fullfran.com/corona26/).
 
 ## El pipeline
 
-La cadena es más corta de lo que parece:
+¿Y cómo se hace eso? La cadena es más corta de lo que parece:
 
 - Magnetograma fotosférico real de ADAPT-GONG, que es el campo magnético medido en la superficie del Sol.
 - Extrapolación PFSS: un cálculo que, partiendo del campo magnético medido en la superficie, deduce qué líneas se cierran sobre el Sol y cuáles escapan al espacio.
 - Un proxy de densidad electrónica construido sobre esa topología.
-- Un renderer de dispersión Thomson —la corona se ve porque su luz rebota en electrones libres, y eso es lo que hay que simular— escrito desde cero, con integración a lo largo de la línea de visión.
+- Un renderer de dispersión Thomson (la corona se ve porque su luz rebota en electrones libres, y eso es lo que hay que simular) escrito desde cero, con integración a lo largo de la línea de visión.
 - La corona sintética orientada exactamente como se vería desde Colmenar Viejo ese día, a esa hora.
 
 Lo interesante no es ninguna de esas piezas por separado. Es que el error tiene barra.
 
 ADAPT no da un mapa del Sol: da doce realizaciones distintas, porque la cara oculta no se ve y hay que modelar cómo evoluciona el flujo magnético mientras está fuera de nuestra vista. Multiplícalo por cinco valores razonables del radio de la superficie de fuente y tienes sesenta miembros en el ensemble. Sesenta coronas ligeramente distintas.
 
-Esa dispersión es la predicción honesta. Una streamer —esas estructuras alargadas y brillantes que salen del Sol como pétalos, ancladas sobre zonas de campo cerrado— que aparece en los sesenta miembros es una predicción. Una que aparece en tres es ruido con buena prensa.
+Y esa dispersión es la predicción honesta. Una streamer (esas estructuras alargadas y brillantes que salen del Sol como pétalos, ancladas sobre zonas de campo cerrado) que aparece en los sesenta miembros es una predicción. Una que aparece en tres es ruido con buena prensa.
 
 ## Congelar antes de mirar
 
@@ -55,9 +55,9 @@ Veredicto honesto: parcialmente apoyada.
 
 La forma general estaba ahí. Una corona multipolar con tres o cuatro sectores anchos, que es justo lo que se ve en los fotogramas de la totalidad del feed de la ESA. Eso coincide.
 
-Lo que no coincide: la corona real es mucho más abrupta. El reparto de brillo es menos equilibrado que el de mi proxy de densidad, que es suave por construcción y por tanto reparte de más. Y no hay puntuación oficial, porque para puntuar de verdad hace falta una observación con orientación, paridad y calibración verificables, y un feed de vídeo no las tiene.
+Pero lo que no coincide es bastante: la corona real es mucho más abrupta. El reparto de brillo es menos equilibrado que el de mi proxy de densidad, que es suave por construcción y por tanto reparte de más. Y no hay puntuación oficial, porque para puntuar de verdad hace falta una observación con orientación, paridad y calibración verificables, y un feed de vídeo no las tiene.
 
-Sobre el error dominante conviene ser claro, porque es el resultado más útil de todo esto: no es el renderer, ni el PFSS, ni la resolución. Es que no vemos la cara oculta del Sol. En agosto de 2026 estamos cerca del máximo solar y las regiones activas evolucionan en días. Una región que emerge en el farside —la cara oculta, la que nunca miramos— y ancla ahí una de esas estructuras te rompe la predicción, y no hay malla lo bastante fina que arregle eso. Los grupos que lo hacen mejor lo hacen porque asimilan magnetogramas del otro lado, no porque calculen más fino.
+Sobre el error dominante conviene ser claro, porque es el resultado más útil de todo esto: no es el renderer, ni el PFSS, ni la resolución. Es que no vemos la cara oculta del Sol. En agosto de 2026 estamos cerca del máximo solar y las regiones activas evolucionan en días. Una región que emerge en el farside (la cara oculta, la que nunca miramos) y ancla ahí una de esas estructuras te rompe la predicción, y no hay malla lo bastante fina que arregle eso. Los grupos que lo hacen mejor creo que lo hacen porque asimilan magnetogramas del otro lado, no porque calculen más fino.
 
 ## Lo que me llevo
 
