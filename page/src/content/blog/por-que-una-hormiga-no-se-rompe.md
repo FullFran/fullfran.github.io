@@ -162,7 +162,7 @@ El tamaño no es un parámetro más. Es el que decide en qué régimen del mismo
 
 ---
 
-En la siguiente entrada, la otra mitad de la historia: de dónde sale la creencia de que los gatos se hacen *menos* daño desde más alto, por qué no sobrevive, y qué pasa cuando los datos que tienes son sólo los animales que llegaron vivos a la clínica.
+En [la siguiente entrada](/blog/los-gatos-no-caen-mejor-desde-mas-alto), la otra mitad de la historia: de dónde sale la creencia de que los gatos se hacen *menos* daño desde más alto, por qué no sobrevive, y qué pasa cuando los datos que tienes son sólo los animales que llegaron vivos a la clínica.
 
 - Cuaderno propio: la servilleta, la predicción sellada antes de mirar los datos, los tres modelos y el informe.
 - El código son ocho módulos sin más dependencias que numpy: los controles se ejecutan, no se afirman.

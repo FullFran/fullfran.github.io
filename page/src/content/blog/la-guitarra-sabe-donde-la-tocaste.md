@@ -309,7 +309,7 @@ Y la que me va a durar: un parámetro que controla dos cosas a la vez te va a me
 
 ---
 
-Esta es la segunda entrega de una serie donde ataco un problema de física por semana: predicción firmada antes de calcular, errores catalogados aparte y la literatura al final, nunca antes. La anterior iba sobre [por qué los gatos no caen mejor desde más alto](/blog/los-gatos-no-caen-mejor-desde-mas-alto).
+Esta es la segunda entrega de una serie donde ataco un problema de física por semana: predicción firmada antes de calcular, errores catalogados aparte y la literatura al final, nunca antes. El problema anterior fueron los gatos, y salió en dos partes: [por qué una hormiga no se rompe](/blog/por-que-una-hormiga-no-se-rompe) y [por qué no caen mejor desde más alto](/blog/los-gatos-no-caen-mejor-desde-mas-alto).
 
 ### Referencias
 
