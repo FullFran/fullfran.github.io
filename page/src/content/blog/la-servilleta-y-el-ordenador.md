@@ -5,11 +5,11 @@ lang: es
 description: "Escribí un libro para aprender a pensar como Fermi, Ulam y Feynman. Spoiler: eso no se aprende leyendo."
 ---
 
-Fermi, en Trinity, estima la potencia de la primera bomba atómica soltando papelitos y midiendo cuánto se desplazan al pasar la onda de choque.
+Fermi, en Trinity (la primera prueba nuclear de la historia), estima la potencia de la bomba soltando papelitos y midiendo cuánto se desplazan al pasar la onda de choque.
 
-Ulam, convaleciente en una cama y harto de calcular a mano la probabilidad de que le salga un solitario, se da cuenta de que sería más fácil jugar muchas partidas y contar: acaba de inventar el método de Montecarlo.
+Ulam, convaleciente en una cama (y harto de calcular a mano la probabilidad de que le salga un solitario), se da cuenta de que sería más fácil jugar muchas partidas y contar: acaba de inventar el método de Montecarlo.
 
-Feynman, delante de una comisión del Congreso, mete una junta tórica en un vaso de agua con hielo y se termina la discusión sobre el Challenger.
+Feynman, delante de una comisión del Congreso, mete una junta tórica (el anillo de goma que sellaba las juntas del cohete) en un vaso de agua con hielo, y se termina la discusión sobre el Challenger.
 
 Tres escenas que me tienen fascinado desde hace años. Y lo que me fascina no es el resultado: es la desproporción. La herramienta era ridícula al lado del problema, y aun así el problema cayó.
 
@@ -25,7 +25,7 @@ Así que me monté el gimnasio.
 
 Se llama La servilleta y el ordenador y son 43 capítulos, 684 páginas y 453 problemas. No enseña fórmulas nuevas. Entrena un ciclo, que es siempre el mismo: coges un fenómeno, sacas una pregunta, estimas el orden de magnitud, decides qué variables importan, construyes el modelo más pequeño que sirva, lo resuelves aproximado, lo simulas, lo validas, le pones barras de error, lo interpretas, dices dónde deja de valer, y de ahí sale la siguiente pregunta.
 
-Los capítulos van de herramientas, de fenómenos y de método. Y entre medias hay ocho interludios históricos que son, básicamente, mis escenas favoritas: los papelitos de Fermi, el solitario de Ulam, la junta tórica, Lorenz y el redondeo que descubrió el caos, y la señora del MANIAC, que hizo mucho más de lo que le reconocieron.
+Los capítulos van de herramientas, de fenómenos y de método. Y entre medias hay ocho interludios históricos que son, básicamente, mis escenas favoritas: los papelitos de Fermi, el solitario de Ulam, la junta tórica, Lorenz y el redondeo que descubrió el caos, y la señora del MANIAC (que hizo bastante más de lo que le reconocieron).
 
 ## El disgusto
 
@@ -33,11 +33,11 @@ Al ir a las fuentes descubrí que parte de lo que admiraba es leyenda.
 
 Los papelitos de Trinity están documentados en fuente primaria, tranquilos. Pero el famoso "cuántos afinadores de pianos hay en Chicago", que todo el mundo le atribuye a Fermi, no tiene ni una sola fuente primaria. Es folclore. Muy bueno, pero folclore.
 
-Podía quitarlo, o podía mirar hacia otro lado. Pero las dos me parecían trampa. Hice la tercera cosa: cada afirmación histórica del libro lleva su nivel de verificación en la página. A si hay fuente primaria, B si es secundaria documentada, C si es folclore y se presenta como tal. Los papelitos son A. El afinador de pianos es C.
+Podía quitarlo, o podía mirar hacia otro lado. Pero las dos me parecían trampa. Hice la tercera cosa: cada afirmación histórica del libro lleva su nivel de verificación en la página (A si hay fuente primaria, B si es secundaria documentada, C si es folclore y se presenta como tal). Los papelitos son A. El afinador de pianos es C.
 
 Admirar a alguien en serio incluye no mentir sobre él.
 
-Va con la misma regla para todo lo demás: las 76 figuras las genera un script versionado con semilla fija, no hay ni una imagen de origen misterioso. Y sí, lo escribí con ayuda de IA, lo pone en la primera pantalla del repo, y hay un capítulo entero sobre cómo hacerlo sin acabar publicando mentiras con buena tipografía.
+Va con la misma regla para todo lo demás: las 76 figuras las genera un script versionado con semilla fija, y no hay ni una imagen de origen misterioso. Y sí, lo escribí con ayuda de IA (lo pone en la primera pantalla del repo), y hay un capítulo entero sobre cómo hacerlo sin acabar publicando mentiras con buena tipografía.
 
 Está en v0.1 y no está auditado entero. Hay un ERRATA.md, hay issues abiertas, y las tres primeras erratas las encontró un lector. Si encuentras la cuarta me haces un favor enorme.
 
