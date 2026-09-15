@@ -79,8 +79,10 @@ Lo comprobé subiendo la anchura hasta lo absurdo:
 
 | anchura del dedo | hueco en $p=1/2$ | hueco en $p=1/4$ |
 |---|---|---|
-| 5 mm | 320 dB | 29.8 dB |
+| 5 mm | 320 dB | 29,8 dB |
 | 40 mm | 320 dB | ~10 dB |
+
+Esos 320 dB no son una profundidad medida: son el suelo de la aritmética en doble precisión, o sea el cero exacto que el ordenador sabe escribir.
 
 Un dedo de cuatro centímetros no roza los armónicos ausentes de la pulsación central. Y el motivo no tiene nada que ver con triángulos: el centro es un punto de simetría, los armónicos pares son antisimétricos respecto a él, y el solape de algo simétrico con algo antisimétrico es cero sea cual sea la forma.
 
@@ -94,7 +96,7 @@ La clave está en invertir por lo correcto. La anchura del dedo cambia la *profu
 
 Antes de programarlo escribí mi predicción y la dejé firmada: pensé que acertaría con unos 2 cm de margen.
 
-Salió 0.33 mm. Fallé por un factor de sesenta.
+Salió 0,33 mm. Fallé por un factor de sesenta.
 
 Y el motivo de fallar es más interesante que el número. Yo había supuesto que la anchura del dedo emborrona la información. No lo hace, y hay una razón geométrica preciosa: el armónico $n$ tiene una longitud de onda de $2L/n$, que en el armónico 32 son 40 milímetros. Ocho veces más ancho que el dedo. Un contacto solo empieza a notarse en armónicos con $n \gtrsim L/w$, o sea alrededor del 130. Yo estaba mirando los primeros 32.
 
@@ -132,7 +134,7 @@ Lo primero fue mirar el dato antes de construirle nada encima:
    170 mm       -1    0   -3  -14   -4   -5  -15  -15    <- hueco en n=4
 ```
 
-Predicho en 5.9 y 3.8. Observado en 6 y 4. El peine está ahí, en una guitarra de verdad.
+Predicho en 5,9 y 3,8. Observado en 6 y 4. El peine está ahí, en una guitarra de verdad.
 
 Y hay un detalle que lo confirma por partida doble: comparando las tres pastillas sobre la misma pulsación, todas comparten el hueco del armónico 4 (ese es el de la pulsación) pero con la pastilla del mástil se hunde a −28 dB y aparece otro en el 8. Porque el mástil está a unos 160 mm del puente y los dos peines se solapan.
 
@@ -140,7 +142,7 @@ Eso permitió una comprobación que nadie me regaló. Las distancias estaban ano
 
 $$
 L_{\text{estimada}} = 638 \pm 32~\text{mm}
-\qquad\text{(real: 647.7 mm en una Fender)}
+\qquad\text{(real: 647,7 mm en una Fender)}
 $$
 
 Recuperé, solo del sonido, una medida física de un instrumento que no he visto nunca.
@@ -161,9 +163,9 @@ El cent es la centésima parte de un semitono, o sea de la distancia entre dos t
 
 A las cuerdas graves se les salían los armónicos de la ventana. No era un problema de inversión: era de medida.
 
-Estimando $B$ en cada grabación, el error final quedó en 2.05 mm de mediana, con el 78 % de los casos por debajo de un centímetro.
+Estimando $B$ en cada grabación, el error final quedó en 2,05 mm de mediana, con el 78 % de los casos por debajo de un centímetro.
 
-Para situarlo: el trabajo de referencia sobre este problema reporta 2.91 mm. No es una comparación de tú a tú (otra guitarra, otro montaje, otro protocolo de evaluación, y ellos además miden con la cadena de efectos puesta) así que no voy a decir que lo he mejorado. Lo que sí dice ese número es que estamos en el mismo orden de magnitud, y eso era exactamente lo que quería saber: que el método aguanta fuera del laboratorio.
+Para situarlo: el trabajo de referencia sobre este problema reporta 2,91 mm. No es una comparación de tú a tú (otra guitarra, otro montaje, otro protocolo de evaluación, y ellos además miden con la cadena de efectos puesta) así que no voy a decir que lo he mejorado. Lo que sí dice ese número es que estamos en el mismo orden de magnitud, y eso era exactamente lo que quería saber: que el método aguanta fuera del laboratorio.
 
 Y hay una comprobación que me gusta más que el milímetro. Las $B$ que salieron del ajuste reproducen solas la tabla del artículo de 2022, sin que nadie se las diera: del orden de $10^{-4}$ en la sexta y de $10^{-5}$ en la prima. Eso no se puede ajustar por casualidad.
 
@@ -183,11 +185,11 @@ La prueba de verdad es con ruido:
 
 | anchura real | error en la posición | error en la anchura |
 |---|---|---|
-| 1 mm | 1.6 mm | 9 mm |
-| 5 mm | 1.6 mm | 6 mm |
-| 10 mm | 1.0 mm | 4 mm |
-| 20 mm | 0.7 mm | 2 mm |
-| 40 mm | 1.0 mm | 2 mm |
+| 1 mm | 1,6 mm | 9 mm |
+| 5 mm | 1,6 mm | 6 mm |
+| 10 mm | 1,0 mm | 4 mm |
+| 20 mm | 0,7 mm | 2 mm |
+| 40 mm | 1,0 mm | 2 mm |
 
 Fíjate en la columna de la izquierda: la posición se mantiene alrededor del milímetro pase lo que pase. Y ahora la de la derecha. Con anchuras pequeñas, el error es más grande que la cosa que intento medir.
 
