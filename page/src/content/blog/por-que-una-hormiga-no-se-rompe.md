@@ -130,7 +130,7 @@ $$
 
 Ni llegando a la velocidad máxima se supera lo que aguanta. El techo que pone el aire y el frenado que pone el suelo se cubren mutuamente.
 
-## El fallo que no mordía
+## Los dos números que casi borran esto
 
 Al empezar esto estimé la masa y el área del gato a ojo, como se supone que hay que hacer. Me salió un animal de entre diez y veinte kilos con un área frontal de doscientos centímetros cuadrados.
 

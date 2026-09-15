@@ -72,11 +72,11 @@ Todo el teorema se apoya en dos cosas: que la matriz de acoplamientos sea simét
 
 Con esas dos, si cambias un solo espín la energía varía en menos el cambio del espín por su campo local, que nunca es positivo. Es decir: la energía nunca sube. Es una función de Lyapunov, y por tanto la red no puede vagar eternamente. Tiene que parar.
 
-Lo de la diagonal a cero merece un segundo. Es que si dejas que una neurona se acople consigo misma, cambia de estado por la fuerza de su propio valor actual. Y eso ya no es un recuerdo, es un biestable.
+Lo de la diagonal a cero merece un segundo. Es que si dejas que una neurona se acople consigo misma, cambia de estado por la fuerza de su propio valor actual. Y eso ya no recuerda nada. Un biestable se queda donde está porque tira de sí mismo, no porque le hayan enseñado un patrón.
 
 Y ahora el detalle que no es un detalle: ese argumento exige que las neuronas se actualicen de una en una. Si las actualizas todas a la vez, la garantía se cae. La energía puede subir y aparecen ciclos de periodo dos, con la red oscilando entre dos estados para siempre.
 
-Eso no es un problema de implementación, es física. Por eso en el repo hay dos métodos y no uno, y por eso el test de "la energía nunca sube" no está en el contrato común: exigírselo a los dos métodos sería afirmar algo falso.
+Eso no se arregla programando mejor: la garantía solo vale espín a espín, y actualizar en paralelo es otra dinámica. Por eso en el repo hay dos métodos y no uno, y por eso el test de "la energía nunca sube" no está en el contrato común: exigírselo a los dos métodos sería afirmar algo falso.
 
 ## Los recuerdos que nadie guardó
 
@@ -88,7 +88,7 @@ Luego están las mezclas. El signo de la suma de tres patrones almacenados suele
 
 Y luego está lo que sale cuando lo pruebas de verdad, que fue lo más interesante del experimento. Un tablero de ajedrez sin ninguna relación con nada terminó exactamente sobre el espejo de uno de los recuerdos. Una variante ligeramente distinta de un patrón guardado no recuperó el original: se quedó atascada en un valle cercano que no era ningún recuerdo. Y la mezcla de tres patrones del libro de texto no era estable: se fue rodando hasta uno de ellos.
 
-Pero eso último no es un fallo, es correlación. Mis patrones eran glifos que comparten mucha estructura, y esa estructura le cambia la forma al paisaje. Con patrones sin correlación la mezcla sí es estable, exactamente como dice la teoría, y el mismo script lo comprueba en la misma ejecución para que no me lo tenga que creer nadie.
+Pero eso último lo causé yo al elegir los patrones. Eran glifos que comparten mucha estructura, y esa estructura le cambia la forma al paisaje. Con patrones sin correlación la mezcla sí es estable, exactamente como dice la teoría, y el mismo script lo comprueba en la misma ejecución para que no me lo tenga que creer nadie.
 
 ## Cuánto cabe
 
@@ -108,7 +108,7 @@ Lo que rompe es la energía, que sí depende de la escala. Y por tanto rompe com
 
 Un fallo invisible hasta que haces la única pregunta que lo necesita. De esos hay muchos más de los que parece, y por eso el número que citas tiene que salir del código que has ejecutado.
 
-## A dónde lleva esto
+## Dos cambios más
 
 Súbele la temperatura por encima de cero, para que acepte de vez en cuando un movimiento que sube la energía, y tienes una máquina de Boltzmann.
 

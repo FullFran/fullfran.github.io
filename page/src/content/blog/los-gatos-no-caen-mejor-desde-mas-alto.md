@@ -125,7 +125,7 @@ Quedan tres salidas y sólo una es física: que falle otra cosa que también mej
 
 Las dos últimas serían el sesgo de selección apareciendo por tercera vez, ahora disfrazado de mecanismo.
 
-## A dónde lleva esto
+## Las tres veces, el mismo fallo
 
 Lo que más me ha gustado de todo esto no es haber tumbado un dato bonito. Es que las tres veces que algo se cayó, se cayó por la misma razón: alguien miró un subconjunto y lo tomó por el todo.
 

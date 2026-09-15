@@ -9,7 +9,7 @@ Una pompa de jabón es líquido incoloro y está violentamente coloreada. Un cha
 
 <figure>
   <img src="/img/pompa-de-jabon.jpg" alt="Primer plano de una pompa de jabón cuya superficie muestra bandas de color verdes, rosas y doradas que se curvan siguiendo la esfera." />
-  <figcaption>El color no es un pigmento: es interferencia en una película de unos cientos de nanómetros. Foto de Brocken Inaglory, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>, vía <a href="https://commons.wikimedia.org/wiki/File:Reflection_in_a_soap_bubble_edit.jpg">Wikimedia Commons</a>.</figcaption>
+  <figcaption>Ahí no hay pigmento ninguno: el color sale de la interferencia en una película de unos cientos de nanómetros. Foto de Brocken Inaglory, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>, vía <a href="https://commons.wikimedia.org/wiki/File:Reflection_in_a_soap_bubble_edit.jpg">Wikimedia Commons</a>.</figcaption>
 </figure>
 
 Todas esas cosas son el mismo objeto: unas pocas capas de material transparente, cada una de un espesor que es una fracción de la longitud de onda, apiladas una encima de otra.
@@ -39,11 +39,11 @@ De hecho, de ahí salen las dos cosas que convierten esto en una industria:
 - Veinte interfaces que reflejan un 8% cada una pueden darte un 99,99%.
 - Dos interfaces que reflejan un 2% cada una pueden darte un 0,0%.
 
-Mismas ecuaciones. Lo único que cambia es la fase. Y un modelo que suma potencias no puede producir ninguna de las dos: no es una aproximación peor, es otra situación física.
+Mismas ecuaciones. Lo único que cambia es la fase. Y un modelo que suma potencias no puede producir ninguna de las dos: describe otra situación física, no una versión aproximada de esta.
 
 ## Para qué importa
 
-El vidrio desnudo refleja alrededor de un 4% por cara. Suena despreciable hasta que cuentas caras. Un objetivo de seis lentes tiene doce, y $0{,}9574^{12} = 0{,}59$: se ha ido el 41% de la luz. Y lo peor no es que se haya ido, es que no se ha ido a ninguna parte: está rebotando dentro del barrilete produciendo flare y comiéndose el contraste.
+El vidrio desnudo refleja alrededor de un 4% por cara. Suena despreciable hasta que cuentas caras. Un objetivo de seis lentes tiene doce, y $0{,}9574^{12} = 0{,}59$: se ha ido el 41% de la luz. Y lo peor viene después, porque esa luz no se ha ido a ninguna parte: está rebotando dentro del barrilete produciendo flare y comiéndose el contraste.
 
 El silicio desnudo es peor. Con un índice cercano a 3,9, la cara frontal de una célula solar refleja un 35% antes de que el semiconductor tenga la menor oportunidad. Una sola capa de nitruro de silicio de un cuarto de onda lo deja en un 0,02% a la longitud de onda de diseño. Creo que esa capa sola vale más que casi toda la optimización de proceso que viene después.
 
