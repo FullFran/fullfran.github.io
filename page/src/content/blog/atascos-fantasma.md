@@ -3,7 +3,7 @@ title: "¿Por qué el atasco va hacia atrás?"
 date: 2026-09-25
 lang: es
 description: "Frenas porque frena el de delante y, cinco minutos después, llegas a la zona del atasco: no hay nada, ni accidente ni obras. Con treinta coches en un anillo y una regla de una línea se reproduce el atasco, se mide por qué retrocede, y se pierden dos predicciones firmadas por el camino."
-draft: true
+draft: false
 ---
 
 Vas por la autovía a velocidad constante. De repente frenas, porque frena el de delante. Sigues parando y arrancando durante varios minutos. Cuando por fin llegas a la zona donde esperabas un accidente, unas obras o un carril cerrado, no hay nada. Carretera vacía, los carriles libres.
