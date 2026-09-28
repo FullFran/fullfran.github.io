@@ -18,8 +18,12 @@ Make the fullfran.com home better organised and friendlier while keeping the ter
 ## Tasks
 - [x] T1 Rewrite landing layout and copy (route: delegated writer, trigger: 2 non-trivial files)
 - [x] T2 Build + visual check desktop/mobile, ES/EN
-- [ ] T3 Commit, merge to main, push, confirm deploy workflow
+- [x] T3 Commit, merge to main, push, confirm deploy workflow
 
 ## Evidence
 - T1: LandingPage.tsx rewritten, site.ts copy restructured (`intro` replaced by `about[]`). `npx astro build`: 11 pages, Complete. No em dash in copy.
 - T2: local render at 1440x900 and 390x844, ES and EN: horizontal overflow 0 in all four; sections render in order hero, about+now, blog, contact.
+- T3: commit b9424df fast-forwarded to main and pushed; Pages run 36497824446 success (45s); live www.fullfran.com serves the new copy (whoami, sobre-mi.md, Ver CV).
+
+## Next step
+Next session: decide whether to add a projects section (grouped by domain) and whether headings should read as slugs (`~/sobre-mi`) instead of titles (`~/Sobre mí`).
