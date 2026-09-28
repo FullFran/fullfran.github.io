@@ -2,7 +2,7 @@
 title: "¿Por qué el atasco va hacia atrás?"
 date: 2026-09-25
 lang: es
-description: "Frenas porque frena el de delante y, cinco minutos después, llegas a la zona del atasco: no hay nada, ni accidente ni obras. Con treinta coches en un anillo y una regla de una línea se reproduce el atasco, se mide por qué retrocede, y se pierden dos predicciones firmadas por el camino."
+description: "Frenas porque frena el de delante y, cinco minutos después, llegas a la zona del atasco: no hay nada, ni accidente ni obras. Con treinta coches en un anillo y una regla de una línea se reproduce el atasco, se mide por qué retrocede, y la intuición de que el culpable es reaccionar tarde resulta estar a medias equivocada."
 draft: false
 ---
 
@@ -14,22 +14,15 @@ Lo primero que se piensa es que tiene que haber pasado algo: un cuello de botell
 
 Los coches iban hacia delante. El atasco iba hacia atrás.
 
-¿Bajo qué condiciones un flujo uniforme de coches se vuelve inestable, hasta el punto de que una perturbación minúscula acaba convirtiéndose en un atasco entero? ¿Y qué cambio mínimo en el comportamiento de los conductores lo impediría? Las respondo con un modelo de treinta coches en un anillo, predicción firmada antes de calcular, y dos predicciones mías que fallaron por el camino.
+¿Bajo qué condiciones un flujo uniforme de coches se vuelve inestable, hasta el punto de que una perturbación minúscula acaba convirtiéndose en un atasco entero? ¿Y qué cambio mínimo en el comportamiento de los conductores lo impediría?
 
-## Antes de tocar el código
+## Lo que yo habría apostado
 
-La predicción se sella con fecha y hora, y no se toca después: lo que falla se cataloga aparte, no se corrige. La mía se selló el 25 de septiembre de 2026 a las 14:56. Contexto honesto, porque también cuenta: llevaba ya un rato dándole vueltas al tema y no era mi mejor momento de energía. Se nota en el sello: dejé dos campos en blanco.
+Si me hubieras preguntado antes de hacer ninguna cuenta, te habría dicho tres cosas. Que tiene que haber una densidad crítica: con pocos coches no pasa nada y, a partir de cierto punto, todo se rompe. Que el culpable es el tiempo de reacción: un conductor que tarda 1,5 s en reaccionar tiene que ser mucho peor que uno que tarda 0,2 s, porque cada coche le pasa al de detrás un frenazo más tardío y más acumulado. Y que el atasco, obviamente, va hacia atrás, porque es lo que se ve.
 
-| Pregunta | Lo que predije |
-|---|---|
-| Densidad crítica | «debe haber una densidad crítica... y debe ser calculable» |
-| `τ=0,2 s` frente a `τ=1,5 s` | «la de mayor tiempo, porque hace un retraso mayor y los coches de más atrás encuentran una perturbación acumulada mayor» |
-| Signo de la velocidad del atasco | «hacia atrás (sentido negativo)» |
-| Fermi (1 km, 100 km/h) | «no me veo con ganas de estimarlo…» |
+Parece razonable. Una de las tres es correcta, y las otras dos aciertan en la respuesta y fallan en el porqué.
 
-Cuatro respuestas, una sin arriesgar ningún número, y la hipótesis mínima en blanco. Se guarda tal cual, sin retocar después de verlas fallar o acertar.
-
-Antes de tocar NumPy jugué también a «sigue al de delante» en mi laboratorio web: un coche que sigue a un líder que frena en un instante que no conoces de antemano. Mi resultado: retraso de reacción 0,85 s, distancia mínima 9,65 m, cero sobrecorrección. Al revisar el instrumento encontré dos fallos que inflaban ese número: la primera versión no dibujaba ningún coche, solo cifras, y el coche frenaba solo a 0,6 m/s² sin tocar ningún pedal, algo que el análisis contaba como reacción. Antes de confiar en 0,85 segundos tuve que confiar en que el aparato no se inventaba parte de la señal.
+Para tener una referencia, medí mi propio tiempo de reacción con un pequeño juego de «sigue al de delante»: un coche que sigue a otro que frena cuando no te lo esperas. Me salieron 0,85 segundos. Guárdate ese número, porque luego resulta que no es el que importa.
 
 ## El modelo, en un renglón
 
@@ -50,7 +43,7 @@ Con $\tau=0,5$ s la perturbación se apaga sola: al final los 30 coches vuelven 
   <figcaption>Cada línea es un coche. Donde van rápido, casi horizontales y paralelas; donde un coche está parado, la línea se queda plana un rato. Esas franjas rojas se desplazan hacia la izquierda según pasa el tiempo: eso es el atasco, viajando hacia atrás.</figcaption>
 </figure>
 
-Medida por correlación cruzada del perfil de velocidades (no siguiendo «al coche más lento»: con tres atascos a la vez ese coche cambia de identidad todo el rato), la velocidad de esas franjas es de −11,7 km/h. Negativa, tal como predije en el sello. Con la misma pista, la misma regla y el mismo pinchazo inicial, cambiar solo $\tau$ invierte el resultado entero.
+Medida por correlación cruzada del perfil de velocidades (no siguiendo «al coche más lento»: con tres atascos a la vez ese coche cambia de identidad todo el rato), la velocidad de esas franjas es de −11,7 km/h. Negativa: hacia atrás, como era de esperar. Con la misma pista, la misma regla y el mismo pinchazo inicial, cambiar solo $\tau$ invierte el resultado entero.
 
 ## Por qué un frenazo pequeño se hace más grande
 
@@ -71,7 +64,7 @@ Por debajo de ese producto el equilibrio absorbe la perturbación; por encima, l
 
 La primera pasada dio un acuerdo del 77,8 % con la fórmula, y pensé que el modelo tenía un problema. No lo tenía: el fallo estaba en el criterio de medida. Las pistas que habían chocado acababan con todos los coches a velocidad cero, así que su dispersión también daba cero, y las contaba como estables sin serlo. Contando un choque como inestabilidad, el acuerdo sube al 100 %.
 
-Del barrido salen, además, tres regímenes que no predije. Con poco tráfico (hueco mayor de 20 m) todos van a $v_0$: estable siempre. Con muchísimo tráfico (coches casi pegados) todos van casi parados, también estable, como un aparcamiento. Solo en la densidad intermedia la velocidad depende del hueco, y solo ahí aparece la inestabilidad: hace falta ir lento y nervioso a la vez.
+Y aquí cae la primera de mis apuestas. No hay una densidad a partir de la cual todo se rompe: del barrido salen tres regímenes. Con poco tráfico (hueco mayor de 20 m) todos van a $v_0$: estable siempre. Con muchísimo tráfico (coches casi pegados) todos van casi parados, también estable, como un aparcamiento. Solo en la densidad intermedia la velocidad depende del hueco, y solo ahí aparece la inestabilidad: hace falta ir lento y nervioso a la vez.
 
 ## El cambio mínimo
 
@@ -99,9 +92,9 @@ Con $\tau=0,8$ s y $\lambda=0,3$, el mismo $\tau$ que antes rompía el flujo en 
 
 Cerca del umbral, crecer es extremadamente lento: con $\lambda=0,6$ y $\tau$ solo 0,05 s por encima del umbral, la dispersión apenas se multiplica por 1,07 en 300 segundos. Se llama *enlentecimiento crítico*, y es la razón de fondo por la que Sugiyama tuvo que esperar minutos, no segundos, a que su atasco apareciera.
 
-Y aquí está el giro que de verdad me hizo revisar mi predicción: ningún módulo de este modelo incluye un retraso de reacción explícito, $\tau$ es relajación. Y aun así el atasco aparece, coincide al 100 % con la teoría lineal, y reproduce cuantitativamente el experimento real (lo compruebo abajo). Un retraso de reacción explícito es un mecanismo *suficiente* para producir un atasco así, no es *necesario*: basta con corregir despacio en relación con lo sensible que se es al hueco, $\tau\cdot(V'-\lambda) > 1/2$. Confundir suficiente con necesario es justo el error en el que caí al escribir mi propia predicción.
+Y aquí está el giro, el que tumba mi segunda apuesta: ningún módulo de este modelo incluye un retraso de reacción explícito, $\tau$ es relajación. Y aun así el atasco aparece, coincide al 100 % con la teoría lineal, y reproduce cuantitativamente el experimento real (lo compruebo abajo). Un retraso de reacción explícito es un mecanismo *suficiente* para producir un atasco así, no es *necesario*: basta con corregir despacio en relación con lo sensible que se es al hueco, $\tau\cdot(V'-\lambda) > 1/2$. Confundir suficiente con necesario es justo el error en el que caí al principio. El conductor lento de 1,5 s sí es peor que el de 0,2 s, pero no porque reaccione tarde, sino porque corrige despacio. Mis 0,85 segundos de reacción no pintan nada en esa cuenta.
 
-De las cuatro predicciones firmadas, la del signo ya ha quedado confirmada arriba. Las otras dos las acerté en la respuesta y fallé en el porqué: escribí «retraso» y di por hecho una densidad crítica creciente, y el modelo terminó hablando de relajación y de un producto que deja de crecer con la densidad. Y la de Fermi, en blanco a propósito, no cuenta ni como acierto ni como fallo: a posteriori, con coches separados unos 35 m a 100 km/h y un segundo de propagación por coche, salen unos 30 coches y unos 30 segundos para notar la perturbación un kilómetro más atrás.
+Una cuenta de servilleta para ponerlo en escala: en autovía, a 100 km/h y con coches separados unos 35 m, si cada coche tarda en torno a un segundo en pasarle el frenazo al siguiente, a un kilómetro detrás hay unos 30 coches, y la perturbación llega en unos 30 segundos. Tú todavía no ves nada raro, y el frenazo ya viene hacia ti.
 
 ## Contra el experimento real
 
@@ -133,8 +126,6 @@ Hay uno que sí puedes comprobar mañana sin programar nada: el semáforo se pon
 Vuelve a la autovía del principio. Frenaste porque frenó el de delante, y cinco minutos después llegaste a una carretera vacía. Ahora sabes que no hacía falta ningún accidente: hacía falta, solamente, que en algún punto de la cadena de coches alguien corrigiera un poco despacio en relación con lo sensible que era al hueco que tenía delante. El atasco nunca estuvo en ese conductor. Estuvo en cómo se propagó su frenazo al siguiente.
 
 Con la misma honestidad con la que cuento lo que sí funcionó: la frontera me salió plana porque la $V(s)$ de mi modelo es una rampa recta, con dos esquinas; con una curva suave debería salir una frontera en forma de U, y no lo he comprobado. Y usé coches idénticos en todas las simulaciones: no sé cuánto cambia el umbral si unos conductores son más nerviosos que otros, solo que Sugiyama dio a los suyos la misma instrucción y el atasco apareció igual.
-
-El código está en [el repositorio](https://github.com/FullFran/reto-semanal), carpeta `week-05-phantom-jams`: las cuatro simulaciones, las figuras, y el cuaderno con las predicciones selladas antes de ver ningún resultado.
 
 ### Referencias
 
