@@ -56,7 +56,7 @@ export const site: Record<Locale, SiteCopy> = {
     cvButton: 'Ver CV',
     nowTitle: 'Ahora',
     now: [
-      'Lead AI Engineer en Hagalink: agentes y RAG en producción, y la parte que nadie quiere, que es medir si funcionan.',
+      'En Hagalink: agentes y RAG en producción, y la parte que nadie quiere, que es medir si funcionan.',
       'Doctorado en IA aplicada en la Universidad de Córdoba, con el CIEMAT.',
       'Doy formación de IA a mi equipo, a empresas cliente y a mis alumnos. El material lo escribo yo y está publicado.',
     ],
@@ -83,7 +83,7 @@ export const site: Record<Locale, SiteCopy> = {
     cvButton: 'See CV',
     nowTitle: 'Now',
     now: [
-      'Lead AI Engineer at Hagalink: agents and RAG in production, plus the part nobody wants, which is measuring whether they work.',
+      'At Hagalink: agents and RAG in production, plus the part nobody wants, which is measuring whether they work.',
       'PhD in applied AI at the University of Córdoba, with CIEMAT.',
       'I train my team, client companies and my students. I write the material myself and it is public.',
     ],
