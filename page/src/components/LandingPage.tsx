@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FileText, Github, Linkedin, Mail, Rss, type LucideIcon } from 'lucide-react';
 import { links, name, site, type Locale, type Post } from '../data/site';
 
@@ -68,12 +68,16 @@ const SectionHeading: React.FC<{ id: string; children: React.ReactNode }> = ({ i
   </div>
 );
 
+const POSTS_PAGE_SIZE = 5;
+
 const bandBase = 'w-full py-16 md:py-20';
 const bandAlt = 'bg-white/[0.02] border-y border-[#1c1f2e]';
 const column = 'max-w-3xl mx-auto px-5 sm:px-6';
 
 const LandingPage: React.FC<LandingPageProps> = ({ locale, posts, onEnterTerminal }) => {
   const copy = site[locale];
+  const [visibleCount, setVisibleCount] = useState(POSTS_PAGE_SIZE);
+  const visiblePosts = posts.slice(0, visibleCount);
   const socialLinks = links.filter((l) => l.label in linkIcons);
   const contactLinks = links.filter((l) => ['Email', 'LinkedIn', 'GitHub'].includes(l.label));
 
@@ -182,7 +186,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ locale, posts, onEnterTermina
           <p className="mb-6 text-center text-[#a9b1d6] leading-relaxed">{copy.writingIntro}</p>
 
           <ul className="space-y-3">
-            {posts.map((post) => (
+            {visiblePosts.map((post) => (
               <li key={post.slug}>
                 <a
                   href={`/blog/${post.slug}/`}
@@ -207,6 +211,18 @@ const LandingPage: React.FC<LandingPageProps> = ({ locale, posts, onEnterTermina
               </li>
             ))}
           </ul>
+
+          {visibleCount < posts.length && (
+            <div className="mt-6 text-center">
+              <button
+                type="button"
+                onClick={() => setVisibleCount((n) => n + POSTS_PAGE_SIZE)}
+                className={`rounded-md border border-[#3b4261] px-4 py-2 text-sm text-[#c0caf5] hover:bg-white/[0.05] transition-colors ${focusRing}`}
+              >
+                {copy.showMoreLabel}
+              </button>
+            </div>
+          )}
 
           <div className="mt-8 text-center">
             <a

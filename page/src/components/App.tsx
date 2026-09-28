@@ -41,7 +41,7 @@ const App: React.FC<AppProps> = ({ posts = [] }) => {
       {currentView === 'landing' ? (
         <LandingPage locale={locale} posts={posts} onEnterTerminal={() => setCurrentView('terminal')} />
       ) : (
-        <Portfolio posts={posts} onExitTerminal={() => setCurrentView('landing')} />
+        <Portfolio posts={posts} locale={locale} onExitTerminal={() => setCurrentView('landing')} />
       )}
     </Layout>
   );

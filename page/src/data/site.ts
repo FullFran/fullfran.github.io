@@ -26,6 +26,7 @@ export interface SiteCopy {
   terminalHint: string;
   linksLabel: string;
   allWritingLabel: string;
+  showMoreLabel: string;
 }
 
 export const name = 'Francisco Olmedo';
@@ -65,6 +66,7 @@ export const site: Record<Locale, SiteCopy> = {
     terminalHint: 'pulsa ~ para la terminal',
     linksLabel: 'Enlaces',
     allWritingLabel: 'Ver todo lo que he escrito →',
+    showMoreLabel: 'Ver más',
   },
   en: {
     tagline: 'Physicist. I build AI systems.',
@@ -92,5 +94,6 @@ export const site: Record<Locale, SiteCopy> = {
     terminalHint: 'press ~ for terminal',
     linksLabel: 'Links',
     allWritingLabel: 'See everything I have written →',
+    showMoreLabel: 'Show more',
   },
 };
