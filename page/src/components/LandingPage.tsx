@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FileText, Github, Linkedin, Mail, Rss, type LucideIcon } from 'lucide-react';
-import { links, name, site, type Locale, type Post } from '../data/site';
+import { keyboardHref, links, name, site, type Locale, type Post } from '../data/site';
 
 interface LandingPageProps {
   locale: Locale;
@@ -18,9 +18,20 @@ const linkIcons: Record<string, LucideIcon> = {
 const focusRing =
   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7aa2f7]';
 
-// Render a paragraph: "/cv" becomes a real link and "~" a button that opens the terminal.
+// Render a paragraph: "/cv" and the keyboard mention become real links and "~" a button that opens the terminal.
 const renderParagraph = (text: string, onEnterTerminal: () => void): React.ReactNode =>
-  text.split(/(\/cv|~)/).map((part, i) => {
+  text.split(/(\/cv|~|teclado partido de 34 teclas|34-key split keyboard)/).map((part, i) => {
+    if (part === 'teclado partido de 34 teclas' || part === '34-key split keyboard') {
+      return (
+        <a
+          key={i}
+          href={keyboardHref}
+          className={`text-[#7dcfff] hover:text-white transition-colors underline underline-offset-4 rounded-sm ${focusRing}`}
+        >
+          {part}
+        </a>
+      );
+    }
     if (part === '/cv') {
       return (
         <a

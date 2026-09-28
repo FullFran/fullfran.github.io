@@ -31,6 +31,9 @@ export interface SiteCopy {
 
 export const name = 'Francisco Olmedo';
 
+// Keymap visualizer of the 34-key split keyboard, served from its own repo's Pages.
+export const keyboardHref = '/fifi-keyboard-vial/';
+
 export const links: { label: string; href: string; external: boolean }[] = [
   { label: 'GitHub', href: 'https://github.com/FullFran', external: true },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/francisco-olmedo-cortes/', external: true },
