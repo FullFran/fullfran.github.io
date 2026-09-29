@@ -19,6 +19,7 @@ export interface ViBuffer {
 
 export type Effect =
   | { type: 'openVi'; path: string; buffer: ViBuffer }
+  | { type: 'openNano'; path: string; name: string; lines: string[] }
   | { type: 'navigate'; href: string }
   | { type: 'clear' }
   | { type: 'exit' }
@@ -31,7 +32,7 @@ export interface Result {
 
 export type FsNode =
   | { kind: 'dir'; children: Record<string, FsNode> }
-  | { kind: 'file'; lines: string[]; date?: string; slug?: string; buffer: ViBuffer; runs?: Record<number, string> }
+  | { kind: 'file'; lines: string[]; date?: string; slug?: string; buffer: ViBuffer; runs?: Record<number, string>; raw?: boolean }
   | { kind: 'link'; href: string; note: string };
 
 export interface ShellContext {

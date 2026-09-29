@@ -1,6 +1,7 @@
 import { links, name, site } from '../../data/site';
 import type { Locale } from '../../data/site';
 import { ALIAS_WORDS, closest, fromHome, resolveAlias } from './aliases';
+import { HELP, MAN, MAN_ALIASES, MAN_HEADINGS } from './docs';
 import { contactFile, lookup } from './fs';
 import { parseArgs } from './parse';
 import { displayPath, resolvePath } from './path';
@@ -9,65 +10,12 @@ import type { Effect, FsNode, Line, Result, ShellContext, Span, Style } from './
 export type { ShellContext } from './types';
 
 export const COMMANDS = [
-  'cat', 'cd', 'clear', 'date', 'echo', 'exit', 'grep', 'head', 'help', 'history', 'home', 'less',
-  'ls', 'more', 'neofetch', 'nvim', 'open', 'pwd', 'sudo', 'tail', 'vi', 'vim', 'whoami',
+  'cat', 'cd', 'clear', 'code', 'date', 'echo', 'emacs', 'exit', 'grep', 'head', 'help', 'history', 'home',
+  'less', 'll', 'ls', 'man', 'more', 'nano', 'neofetch', 'notepad', 'nvim', 'open', 'pwd', 'sudo', 'tail',
+  'tree', 'vi', 'vim', 'vscode', 'whoami',
 ];
 
 // --- COPY ---
-interface HelpItem { cmd: string; summary: string; example: (l: Locale) => string }
-interface HelpGroup { title: string; items: HelpItem[] }
-
-const aboutOf = (l: Locale) => site[l].aboutFile;
-
-const HELP: Record<Locale, HelpGroup[]> = {
-  es: [
-    { title: 'Moverse', items: [
-      { cmd: 'ls', summary: 'ver qué hay aquí', example: () => 'ls blog' },
-      { cmd: 'cd', summary: 'entrar en una carpeta', example: () => 'cd blog' },
-      { cmd: 'pwd', summary: 'saber dónde estás', example: () => 'pwd' },
-    ] },
-    { title: 'Leer', items: [
-      { cmd: 'cat', summary: 'leer un fichero', example: (l) => `cat ${aboutOf(l)}` },
-      { cmd: 'head', summary: 'ver solo el principio', example: (l) => `head -n 3 ${aboutOf(l)}` },
-      { cmd: 'grep', summary: 'buscar una palabra en todo', example: () => 'grep teclado' },
-      { cmd: 'whoami', summary: 'quién soy', example: () => 'whoami' },
-    ] },
-    { title: 'Abrir', items: [
-      { cmd: 'vi', summary: 'leer en modo vim', example: (l) => `vi ${aboutOf(l)}` },
-      { cmd: 'open', summary: 'abrir en la web', example: () => 'open cv' },
-    ] },
-    { title: 'Otros', items: [
-      { cmd: 'neofetch', summary: 'mi setup', example: () => 'neofetch' },
-      { cmd: 'history', summary: 'comandos anteriores', example: () => 'history' },
-      { cmd: 'clear', summary: 'limpiar la pantalla', example: () => 'clear' },
-      { cmd: 'exit', summary: 'volver a la web (también :q)', example: () => 'exit' },
-    ] },
-  ],
-  en: [
-    { title: 'Move around', items: [
-      { cmd: 'ls', summary: 'list what is here', example: () => 'ls blog' },
-      { cmd: 'cd', summary: 'enter a folder', example: () => 'cd blog' },
-      { cmd: 'pwd', summary: 'see where you are', example: () => 'pwd' },
-    ] },
-    { title: 'Read', items: [
-      { cmd: 'cat', summary: 'read a file', example: (l) => `cat ${aboutOf(l)}` },
-      { cmd: 'head', summary: 'see only the start', example: (l) => `head -n 3 ${aboutOf(l)}` },
-      { cmd: 'grep', summary: 'search a word everywhere', example: () => 'grep keyboard' },
-      { cmd: 'whoami', summary: 'who I am', example: () => 'whoami' },
-    ] },
-    { title: 'Open', items: [
-      { cmd: 'vi', summary: 'read in vim mode', example: (l) => `vi ${aboutOf(l)}` },
-      { cmd: 'open', summary: 'open on the web', example: () => 'open cv' },
-    ] },
-    { title: 'Other', items: [
-      { cmd: 'neofetch', summary: 'my setup', example: () => 'neofetch' },
-      { cmd: 'history', summary: 'previous commands', example: () => 'history' },
-      { cmd: 'clear', summary: 'clear the screen', example: () => 'clear' },
-      { cmd: 'exit', summary: 'back to the web (also :q)', example: () => 'exit' },
-    ] },
-  ],
-};
-
 const HINT = {
   es: { back: 'volver al blog', web: 'abrir en la web', tapPost: 'toca un post para leerlo', tryLs: 'prueba ' },
   en: { back: 'back to the blog', web: 'open on the web', tapPost: 'tap a post to read it', tryLs: 'try ' },
@@ -93,6 +41,12 @@ const MSG = {
     welcome: '¿No sabes por dónde empezar? Toca un botón de abajo o escribe ayuda.',
     placeholder: 'escribe un comando, por ejemplo: blog',
     didYouMean: '¿Quisiste decir ',
+    manWhich: '¿Qué página del manual quieres? Prueba man ls',
+    manNone: (c: string) => `No hay entrada del manual para ${c}`,
+    dir: 'directorio',
+    dirs: 'directorios',
+    file1: 'fichero',
+    files: 'ficheros',
     tryHelp: 'Prueba ',
     helpWord: 'ayuda',
   },
@@ -115,6 +69,12 @@ const MSG = {
     welcome: 'Not sure where to start? Tap a button below or type help.',
     placeholder: 'type a command, e.g. blog',
     didYouMean: 'Did you mean ',
+    manWhich: 'Which manual page do you want? Try man ls',
+    manNone: (c: string) => `No manual entry for ${c}`,
+    dir: 'directory',
+    dirs: 'directories',
+    file1: 'file',
+    files: 'files',
     tryHelp: 'Try ',
     helpWord: 'help',
   },
@@ -199,12 +159,14 @@ const ls: Handler = (args, ctx) => {
     entries.some(([, e]) => e.kind === 'file' && e.slug) ? [hint('', HINT[ctx.locale].tapPost)] : [];
   const { flags, rest } = partitionArgs(args);
   const long = flags.some((f) => f.includes('l'));
+  const all = flags.some((f) => f.includes('a'));
   const target = rest[0] ?? '.';
   const path = resolvePath(ctx.cwd, target);
   const node = lookup(ctx.fs, path);
   if (!node) return err(MSG[ctx.locale].lsNoEntry(target));
 
-  const entries: [string, FsNode][] = node.kind === 'dir' ? Object.entries(node.children) : [[target, node]];
+  const entries: [string, FsNode][] =
+    node.kind === 'dir' ? Object.entries(node.children).filter(([n]) => all || !n.startsWith('.')) : [[target, node]];
   entries.sort(([a], [b]) => a.localeCompare(b));
   const dirPrefix = node.kind === 'dir' ? rest[0] ?? '' : '';
   const base = dirPrefix && !dirPrefix.endsWith('/') ? `${dirPrefix}/` : dirPrefix;
@@ -300,7 +262,23 @@ const vi: Handler = (args, ctx, cmd) => {
   if (!node) return err(m.noEntry(cmd, rest[0]));
   if (node.kind === 'dir') return err(m.isDir(cmd, rest[0]));
   if (node.kind === 'link') return err(m.isLink(cmd, rest[0]));
+  if (node.raw) return openNano(path, rest[0], node);
   return out([], [{ type: 'openVi', path, buffer: node.buffer }]);
+};
+
+const openNano = (path: string, arg: string, node: Extract<FsNode, { kind: 'file' }>): Result =>
+  out([], [{ type: 'openNano', path, name: arg.split('/').pop() ?? arg, lines: node.lines }]);
+
+const nano: Handler = (args, ctx, cmd) => {
+  const m = MSG[ctx.locale];
+  const { rest } = partitionArgs(args);
+  if (rest.length === 0) return err(m.missing(cmd, m.file));
+  const path = resolvePath(ctx.cwd, rest[0]);
+  const node = lookup(ctx.fs, path);
+  if (!node) return err(m.noEntry(cmd, rest[0]));
+  if (node.kind === 'dir') return err(m.isDir(cmd, rest[0]));
+  if (node.kind === 'link') return err(m.isLink(cmd, rest[0]));
+  return openNano(path, rest[0], node);
 };
 
 const open: Handler = (args, ctx, cmd) => {
@@ -355,6 +333,84 @@ const neofetch: Handler = (_a, ctx) => {
   return out([header, ...rows]);
 };
 
+const man: Handler = (args, ctx) => {
+  const m = MSG[ctx.locale];
+  const asked = args[0];
+  if (!asked) return err(m.manWhich);
+  const key = MAN_ALIASES[asked] ?? asked;
+  const page = MAN[ctx.locale][key];
+  if (!page) return err(m.manNone(asked));
+  const summary = page.summary ?? HELP[ctx.locale].flatMap((g) => g.items).find((i) => i.cmd === key)?.summary ?? '';
+  const h = MAN_HEADINGS[ctx.locale];
+  const about = site[ctx.locale].aboutFile;
+  const heading = (t: string): Line => [{ text: t, style: 'heading' }];
+  const body = (t: string): Line => [{ text: `    ${t}` }];
+  return out([
+    heading(h.name), [{ text: `    ${key} - ${summary}` }], [{ text: '' }],
+    heading(h.synopsis), [{ text: `    ${page.synopsis}`, style: 'accent' }], [{ text: '' }],
+    heading(h.description), body(page.description), [{ text: '' }],
+    heading(h.examples),
+    ...page.examples.map((e): Line => {
+      const example = e.replace('{about}', about);
+      return [{ text: '    ' }, { text: example, style: 'link', run: example }];
+    }),
+  ]);
+};
+
+const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+
+const tree: Handler = (args, ctx, cmd) => {
+  const m = MSG[ctx.locale];
+  const { flags, rest } = partitionArgs(args);
+  const all = flags.some((f) => f.includes('a'));
+  const target = rest[0] ?? '.';
+  const start = lookup(ctx.fs, resolvePath(ctx.cwd, target));
+  if (!start) return err(m.noEntry(cmd, target));
+  const base = rest[0] ? rest[0].replace(/\/$/, '') : '';
+
+  const lines: Line[] = [[{ text: target, style: 'dir', run: `ls ${target}` }]];
+  let dirs = 0;
+  let files = 0;
+  const walk = (node: FsNode, prefix: string, ref: string) => {
+    if (node.kind !== 'dir') return;
+    const kids = Object.entries(node.children)
+      .filter(([n]) => all || !n.startsWith('.'))
+      .sort(([a], [b]) => a.localeCompare(b));
+    kids.forEach(([n, child], i) => {
+      const last = i === kids.length - 1;
+      const childRef = ref ? `${ref}/${n}` : n;
+      const branch = { text: `${prefix}${last ? '└── ' : '├── '}`, style: 'muted' as const };
+      if (child.kind === 'dir') {
+        dirs++;
+        lines.push([branch, { text: n, style: 'dir', run: `ls ${childRef}` }]);
+        walk(child, `${prefix}${last ? '    ' : '│   '}`, childRef);
+      } else if (child.kind === 'link') {
+        files++;
+        lines.push([branch, { text: n, style: 'link', run: `open ${childRef}` }]);
+      } else {
+        files++;
+        lines.push([branch, { text: n, style: 'file', run: `cat ${childRef}` }]);
+      }
+    });
+  };
+  walk(start, '', base);
+  lines.push([{ text: '' }], [{ text: `${plural(dirs, m.dir, m.dirs)}, ${plural(files, m.file1, m.files)}`, style: 'muted' }]);
+  return out(lines);
+};
+
+// Playful replies for other editors; the suggestion words are tappable.
+const editorJoke = (text: (cmd: string, l: Locale) => [string, string, string]): Handler => (_a, ctx, cmd) => {
+  const [before, or, after] = text(cmd, ctx.locale);
+  const about = site[ctx.locale].aboutFile;
+  return out([[
+    { text: before },
+    { text: 'vi', style: 'link', run: `vi ${about}` },
+    { text: or },
+    { text: 'nano', style: 'link', run: `nano ${about}` },
+    { text: after },
+  ]]);
+};
+
 const grep: Handler = (args, ctx, cmd) => {
   const m = MSG[ctx.locale];
   const { rest } = partitionArgs(args);
@@ -392,6 +448,12 @@ const HANDLERS: Record<string, Handler> = {
   help, ls, cd, pwd, cat, head: slicer('head'), tail: slicer('tail'),
   vi, vim: vi, nvim: vi, less: vi, more: vi,
   home: (_a, ctx, cmd) => cd(['~'], ctx, cmd),
+  ll: (a, ctx, cmd) => ls(['-l', ...a], ctx, cmd),
+  nano, man, tree,
+  emacs: editorJoke((c, l) => (l === 'es' ? [`${c}: buen sistema operativo, le falta un buen editor. Prueba `, ' o ', '.'] : [`${c}: a great operating system, it just lacks a good editor. Try `, ' or ', '.'])),
+  code: editorJoke((c, l) => (l === 'es' ? [`${c}: muy buen editor, pero aquí dentro solo hay `, ' y ', '.'] : [`${c}: a fine editor, but in here there is only `, ' and ', '.'])),
+  vscode: editorJoke((c, l) => (l === 'es' ? [`${c}: muy buen editor, pero aquí dentro solo hay `, ' y ', '.'] : [`${c}: a fine editor, but in here there is only `, ' and ', '.'])),
+  notepad: editorJoke((c, l) => (l === 'es' ? [`${c}: eso es de otro sistema. Aquí tienes `, ' o ', '.'] : [`${c}: that belongs to another system. Here you have `, ' or ', '.'])),
   open, whoami, echo, history, date, sudo, neofetch, grep,
   clear: () => out([], [{ type: 'clear' }]),
   exit: () => out([], [{ type: 'exit' }]),

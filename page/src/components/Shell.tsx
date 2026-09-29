@@ -63,9 +63,10 @@ interface ShellProps {
   active?: boolean;
   onExit?: () => void;
   onOpenVi?: (buffer: ViBuffer) => void;
+  onOpenNano?: (file: { name: string; lines: string[] }) => void;
 }
 
-const Shell: React.FC<ShellProps> = ({ posts = [], locale = 'es', active = true, onExit, onOpenVi }) => {
+const Shell: React.FC<ShellProps> = ({ posts = [], locale = 'es', active = true, onExit, onOpenVi, onOpenNano }) => {
   const fs = React.useMemo(() => buildFs(locale, posts), [locale, posts]);
   const [cwd, setCwd] = React.useState('~');
   const [input, setInput] = React.useState('');
@@ -104,6 +105,7 @@ const Shell: React.FC<ShellProps> = ({ posts = [], locale = 'es', active = true,
       else if (effect.type === 'exit') onExit?.();
       else if (effect.type === 'navigate') goTo(effect.href);
       else if (effect.type === 'openVi') onOpenVi?.(effect.buffer);
+      else if (effect.type === 'openNano') onOpenNano?.({ name: effect.name, lines: effect.lines });
     }
   };
 

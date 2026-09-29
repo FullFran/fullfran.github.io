@@ -10,12 +10,14 @@ const T = {
     keyboard: 'teclado: enlace al visualizador del teclado de 34 teclas. Usa "open teclado" para abrirlo.',
     now: 'ahora.txt',
     contact: 'contacto.md',
+    bashrcHint: '# si has llegado hasta aquí, escríbeme: contacto.md',
   },
   en: {
     cv: 'cv: link to /cv (not a text file). Use "open cv" to open it.',
     keyboard: 'teclado: link to the 34-key keyboard visualizer. Use "open teclado" to open it.',
     now: 'now.txt',
     contact: 'contact.md',
+    bashrcHint: '# if you got this far, write to me: contact.md',
   },
 } as const;
 
@@ -60,6 +62,14 @@ export const buildFs = (locale: Locale, posts: Post[]): FsNode => {
         buffer: { tab: 'contact' },
         // Tappable contact lines (they start after title, text and a blank line).
         runs: Object.fromEntries(links.map((l, i) => [3 + i, `open ${l.label.toLowerCase()}`])),
+      },
+      // Hidden easter egg: `ls -a` shows it. `raw` files have no vim buffer, so `vi` falls back to nano.
+      '.bashrc': {
+        kind: 'file',
+        lines: ["alias ll='ls -l'", "alias q='exit'", "alias :q='exit'", '', t.bashrcHint],
+        buffer: { tab: 'about' },
+        raw: true,
+        runs: { 4: `cat ${t.contact}` },
       },
       blog: { kind: 'dir', children: blog },
       cv: { kind: 'link', href: '/cv', note: t.cv },

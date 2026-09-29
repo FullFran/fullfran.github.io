@@ -23,10 +23,11 @@ export const complete = (input: string, cwd: string, fs: FsNode): Completion => 
   const head = input.slice(0, wordStart);
   const token = input.slice(wordStart);
   const first = head.trim() === '';
+  const headWords = parseArgs(head);
 
   let dirPart = '';
   let names: { name: string; dir: boolean }[];
-  if (first) {
+  if (first || (headWords.length === 1 && headWords[0] === 'man')) {
     names = [...new Set([...COMMANDS, ...ALIAS_WORDS])].map((name) => ({ name, dir: false }));
   } else {
     const slash = token.lastIndexOf('/');
@@ -36,6 +37,7 @@ export const complete = (input: string, cwd: string, fs: FsNode): Completion => 
     names =
       dir?.kind === 'dir'
         ? Object.entries(dir.children)
+            .filter(([name]) => token.slice(dirPart.length).startsWith('.') || !name.startsWith('.'))
             .filter(([, n]) => !onlyDirs || n.kind === 'dir')
             .map(([name, n]) => ({ name, dir: n.kind === 'dir' }))
         : [];

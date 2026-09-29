@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LandingPage from './LandingPage';
 import Layout from './Layout';
+import Nano from './Nano';
 import Portfolio from './Portfolio';
 import Shell from './Shell';
 import type { Locale, Post } from '../data/site';
@@ -19,6 +20,8 @@ const App: React.FC<AppProps> = ({ posts = [] }) => {
   const [locale, setLocale] = useState<Locale>('es');
   // Buffer of the vim viewer while `vi <file>` is open on top of the shell.
   const [viBuffer, setViBuffer] = useState<ViBuffer | null>(null);
+  // File shown by the nano view while `nano <file>` is open on top of the shell.
+  const [nanoFile, setNanoFile] = useState<{ name: string; lines: string[] } | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -38,7 +41,7 @@ const App: React.FC<AppProps> = ({ posts = [] }) => {
   return (
     <Layout
       currentView={currentView}
-      onViewChange={(view) => { setViBuffer(null); setCurrentView(view); }}
+      onViewChange={(view) => { setViBuffer(null); setNanoFile(null); setCurrentView(view); }}
       locale={locale}
       onLocaleChange={setLocale}
     >
@@ -49,10 +52,14 @@ const App: React.FC<AppProps> = ({ posts = [] }) => {
           <Shell
             posts={posts}
             locale={locale}
-            active={viBuffer === null}
+            active={viBuffer === null && nanoFile === null}
             onExit={() => setCurrentView('landing')}
             onOpenVi={setViBuffer}
+            onOpenNano={setNanoFile}
           />
+          {nanoFile && (
+            <Nano name={nanoFile.name} lines={nanoFile.lines} locale={locale} onReturnToShell={() => setNanoFile(null)} />
+          )}
           {viBuffer && (
             <Portfolio
               posts={posts}
