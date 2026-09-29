@@ -19,6 +19,8 @@ const T = {
   },
 } as const;
 
+export const contactFile = (locale: Locale) => T[locale].contact;
+
 const postFile = (post: Post): FsNode => ({
   kind: 'file',
   lines: [`# ${post.title}`, post.date.slice(0, 10), '', ...markdownToLines(post.body)],
@@ -56,6 +58,8 @@ export const buildFs = (locale: Locale, posts: Post[]): FsNode => {
           ...links.map((l) => `${l.label.padEnd(9)}${l.href.replace('mailto:', '')}`),
         ],
         buffer: { tab: 'contact' },
+        // Tappable contact lines (they start after title, text and a blank line).
+        runs: Object.fromEntries(links.map((l, i) => [3 + i, `open ${l.label.toLowerCase()}`])),
       },
       blog: { kind: 'dir', children: blog },
       cv: { kind: 'link', href: '/cv', note: t.cv },

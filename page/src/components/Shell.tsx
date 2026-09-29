@@ -2,7 +2,7 @@ import { LogOut } from 'lucide-react';
 import * as React from 'react';
 import type { Locale, Post } from '../data/site';
 import { buildFs, complete, run } from '../lib/shell';
-import { welcomeHint } from '../lib/shell/commands';
+import { placeholder, quickActions, welcomeHint } from '../lib/shell/commands';
 import type { Line, Style, ViBuffer } from '../lib/shell';
 
 // --- THEME (Tokyo Night, same palette as the vim viewer) ---
@@ -18,9 +18,6 @@ const STYLE_CLASS: Record<Style, string> = {
   ok: 'text-[#9ece6a]',
   match: 'text-[#1a1b26] bg-[#e0af68]',
 };
-
-const QUICK_COMMANDS = ['help', 'ls', 'cat sobre-mi.md', 'cd blog', 'ls blog', 'exit'];
-const QUICK_COMMANDS_EN = ['help', 'ls', 'cat about.md', 'cd blog', 'ls blog', 'exit'];
 
 interface Entry {
   id: number;
@@ -163,7 +160,7 @@ const Shell: React.FC<ShellProps> = ({ posts = [], locale = 'es', active = true,
     inputRef.current?.focus();
   };
 
-  const quick = locale === 'en' ? QUICK_COMMANDS_EN : QUICK_COMMANDS;
+  const quick = quickActions(locale, cwd);
 
   return (
     <div className={`${active ? 'flex' : 'hidden'} fixed inset-0 z-[100] items-center justify-center bg-black/60 backdrop-blur-sm p-2 md:p-8`}>
@@ -200,20 +197,22 @@ const Shell: React.FC<ShellProps> = ({ posts = [], locale = 'es', active = true,
               autoComplete="off"
               spellCheck={false}
               enterKeyHint="go"
-              className="flex-grow min-w-0 bg-transparent outline-none border-none text-[#c0caf5] caret-[#c0caf5] font-mono text-sm md:text-base p-0"
+              placeholder={placeholder(locale)}
+              className="flex-grow min-w-0 bg-transparent outline-none border-none text-[#c0caf5] caret-[#c0caf5] placeholder:text-[#565f89] font-mono text-sm md:text-base p-0"
             />
           </label>
         </div>
 
-        <div className="md:hidden flex gap-2 overflow-x-auto no-scrollbar border-t border-[#414868] bg-[#16161e] px-3 py-2">
-          {quick.map((cmd) => (
+        <div className="flex flex-wrap gap-2 border-t border-[#414868] bg-[#16161e] px-3 py-2">
+          {quick.map(({ label, command }) => (
             <button
-              key={cmd}
+              key={label}
               type="button"
-              onClick={() => execute(cmd)}
-              className="shrink-0 rounded-md border border-[#414868] px-3 py-1.5 text-xs text-[#7dcfff] active:bg-[#24283b]"
+              title={command}
+              onClick={() => execute(command)}
+              className="rounded-md border border-[#414868] px-3 py-1.5 text-xs md:text-sm text-[#7dcfff] hover:bg-[#24283b] active:bg-[#24283b]"
             >
-              {cmd}
+              {label}
             </button>
           ))}
         </div>

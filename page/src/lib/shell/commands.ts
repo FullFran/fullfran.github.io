@@ -1,6 +1,7 @@
 import { links, name, site } from '../../data/site';
 import type { Locale } from '../../data/site';
-import { lookup } from './fs';
+import { ALIAS_WORDS, closest, fromHome, resolveAlias } from './aliases';
+import { contactFile, lookup } from './fs';
 import { parseArgs } from './parse';
 import { displayPath, resolvePath } from './path';
 import type { Effect, FsNode, Line, Result, ShellContext, Span, Style } from './types';
@@ -8,45 +9,69 @@ import type { Effect, FsNode, Line, Result, ShellContext, Span, Style } from './
 export type { ShellContext } from './types';
 
 export const COMMANDS = [
-  'cat', 'cd', 'clear', 'date', 'echo', 'exit', 'grep', 'head', 'help', 'history', 'less',
+  'cat', 'cd', 'clear', 'date', 'echo', 'exit', 'grep', 'head', 'help', 'history', 'home', 'less',
   'ls', 'more', 'neofetch', 'nvim', 'open', 'pwd', 'sudo', 'tail', 'vi', 'vim', 'whoami',
 ];
 
 // --- COPY ---
-const HELP: Record<Locale, [string, string][]> = {
+interface HelpItem { cmd: string; summary: string; example: (l: Locale) => string }
+interface HelpGroup { title: string; items: HelpItem[] }
+
+const aboutOf = (l: Locale) => site[l].aboutFile;
+
+const HELP: Record<Locale, HelpGroup[]> = {
   es: [
-    ['help', 'esta ayuda'],
-    ['ls [-l] [ruta]', 'lista ficheros'],
-    ['cd [ruta]', 'cambia de directorio'],
-    ['pwd', 'directorio actual'],
-    ['cat <fichero>', 'muestra un fichero'],
-    ['head / tail [-n N]', 'principio o final de un fichero'],
-    ['grep <texto> [ruta]', 'busca texto en los ficheros'],
-    ['vi <fichero>', 'abre el fichero en el visor tipo vim'],
-    ['open <destino>', 'abre un post, cv, teclado, github...'],
-    ['whoami', 'quién soy'],
-    ['neofetch', 'mi setup'],
-    ['history', 'comandos anteriores'],
-    ['clear', 'limpia la pantalla (Ctrl+L)'],
-    ['exit', 'vuelve a la web'],
+    { title: 'Moverse', items: [
+      { cmd: 'ls', summary: 'ver qué hay aquí', example: () => 'ls blog' },
+      { cmd: 'cd', summary: 'entrar en una carpeta', example: () => 'cd blog' },
+      { cmd: 'pwd', summary: 'saber dónde estás', example: () => 'pwd' },
+    ] },
+    { title: 'Leer', items: [
+      { cmd: 'cat', summary: 'leer un fichero', example: (l) => `cat ${aboutOf(l)}` },
+      { cmd: 'head', summary: 'ver solo el principio', example: (l) => `head -n 3 ${aboutOf(l)}` },
+      { cmd: 'grep', summary: 'buscar una palabra en todo', example: () => 'grep teclado' },
+      { cmd: 'whoami', summary: 'quién soy', example: () => 'whoami' },
+    ] },
+    { title: 'Abrir', items: [
+      { cmd: 'vi', summary: 'leer en modo vim', example: (l) => `vi ${aboutOf(l)}` },
+      { cmd: 'open', summary: 'abrir en la web', example: () => 'open cv' },
+    ] },
+    { title: 'Otros', items: [
+      { cmd: 'neofetch', summary: 'mi setup', example: () => 'neofetch' },
+      { cmd: 'history', summary: 'comandos anteriores', example: () => 'history' },
+      { cmd: 'clear', summary: 'limpiar la pantalla', example: () => 'clear' },
+      { cmd: 'exit', summary: 'volver a la web (también :q)', example: () => 'exit' },
+    ] },
   ],
   en: [
-    ['help', 'this help'],
-    ['ls [-l] [path]', 'list files'],
-    ['cd [path]', 'change directory'],
-    ['pwd', 'current directory'],
-    ['cat <file>', 'print a file'],
-    ['head / tail [-n N]', 'start or end of a file'],
-    ['grep <text> [path]', 'search text in files'],
-    ['vi <file>', 'open the file in the vim-like viewer'],
-    ['open <target>', 'open a post, cv, teclado, github...'],
-    ['whoami', 'who I am'],
-    ['neofetch', 'my setup'],
-    ['history', 'previous commands'],
-    ['clear', 'clear the screen (Ctrl+L)'],
-    ['exit', 'back to the web'],
+    { title: 'Move around', items: [
+      { cmd: 'ls', summary: 'list what is here', example: () => 'ls blog' },
+      { cmd: 'cd', summary: 'enter a folder', example: () => 'cd blog' },
+      { cmd: 'pwd', summary: 'see where you are', example: () => 'pwd' },
+    ] },
+    { title: 'Read', items: [
+      { cmd: 'cat', summary: 'read a file', example: (l) => `cat ${aboutOf(l)}` },
+      { cmd: 'head', summary: 'see only the start', example: (l) => `head -n 3 ${aboutOf(l)}` },
+      { cmd: 'grep', summary: 'search a word everywhere', example: () => 'grep keyboard' },
+      { cmd: 'whoami', summary: 'who I am', example: () => 'whoami' },
+    ] },
+    { title: 'Open', items: [
+      { cmd: 'vi', summary: 'read in vim mode', example: (l) => `vi ${aboutOf(l)}` },
+      { cmd: 'open', summary: 'open on the web', example: () => 'open cv' },
+    ] },
+    { title: 'Other', items: [
+      { cmd: 'neofetch', summary: 'my setup', example: () => 'neofetch' },
+      { cmd: 'history', summary: 'previous commands', example: () => 'history' },
+      { cmd: 'clear', summary: 'clear the screen', example: () => 'clear' },
+      { cmd: 'exit', summary: 'back to the web (also :q)', example: () => 'exit' },
+    ] },
   ],
 };
+
+const HINT = {
+  es: { back: 'volver al blog', web: 'abrir en la web', tapPost: 'toca un post para leerlo', tryLs: 'prueba ' },
+  en: { back: 'back to the blog', web: 'open on the web', tapPost: 'tap a post to read it', tryLs: 'try ' },
+} as const;
 
 const MSG = {
   es: {
@@ -65,7 +90,11 @@ const MSG = {
     keyboardValue: 'partido de 34 teclas',
     lang: 'Idioma',
     dateLocale: 'es-ES',
-    welcome: 'escribe help para empezar',
+    welcome: '¿No sabes por dónde empezar? Toca un botón de abajo o escribe ayuda.',
+    placeholder: 'escribe un comando, por ejemplo: blog',
+    didYouMean: '¿Quisiste decir ',
+    tryHelp: 'Prueba ',
+    helpWord: 'ayuda',
   },
   en: {
     notFound: (c: string) => `${c}: command not found`,
@@ -83,14 +112,42 @@ const MSG = {
     keyboardValue: '34-key split',
     lang: 'Lang',
     dateLocale: 'en-GB',
-    welcome: 'type help to get started',
+    welcome: 'Not sure where to start? Tap a button below or type help.',
+    placeholder: 'type a command, e.g. blog',
+    didYouMean: 'Did you mean ',
+    tryHelp: 'Try ',
+    helpWord: 'help',
   },
 } as const;
 
 export const welcomeHint = (locale: Locale) => MSG[locale].welcome;
+export const placeholder = (locale: Locale) => MSG[locale].placeholder;
+
+const QUICK_LABELS: Record<Locale, string[]> = {
+  es: ['Sobre mí', 'Blog', 'Contacto', 'CV', 'Ayuda', 'Salir'],
+  en: ['About', 'Blog', 'Contact', 'CV', 'Help', 'Exit'],
+};
+
+// Labelled buttons: each one types and runs a real command, so the echoed prompt teaches it.
+export const quickActions = (locale: Locale, cwd = '~'): { label: string; command: string }[] => {
+  const commands = [
+    `cat ${fromHome(cwd, site[locale].aboutFile)}`,
+    `ls ${fromHome(cwd, 'blog')}`,
+    `cat ${fromHome(cwd, contactFile(locale))}`,
+    'open cv',
+    'help',
+    'exit',
+  ];
+  return QUICK_LABELS[locale].map((label, i) => ({ label, command: commands[i] }));
+};
 
 // --- HELPERS ---
 const line = (text: string, style?: Style, run?: string): Line => [{ text, style, run }];
+// Muted next-step line; string parts are plain text, object parts are tappable.
+const hint = (prefix: string, ...parts: (string | { text: string; run: string })[]): Line => [
+  { text: prefix, style: 'muted' },
+  ...parts.map((p): Span => (typeof p === 'string' ? { text: p, style: 'muted' } : { text: p.text, style: 'muted', run: p.run })),
+];
 const err = (text: string): Result => ({ lines: [line(text, 'error')], effects: [] });
 const out = (lines: Line[], effects: Effect[] = []): Result => ({ lines, effects });
 
@@ -118,12 +175,28 @@ const relativeTo = (cwd: string, path: string) => (path.startsWith(`${cwd}/`) ? 
 type Handler = (args: string[], ctx: ShellContext, cmd: string) => Result;
 
 const help: Handler = (_a, ctx) => {
-  const rows = HELP[ctx.locale];
-  const width = Math.max(...rows.map(([c]) => c.length)) + 2;
-  return out(rows.map(([c, d]) => [{ text: c.padEnd(width), style: 'accent' }, { text: d }]));
+  const groups = HELP[ctx.locale];
+  const width = Math.max(...groups.flatMap((g) => g.items.map((i) => i.cmd.length))) + 2;
+  const summaryWidth = Math.max(...groups.flatMap((g) => g.items.map((i) => i.summary.length))) + 2;
+  const lines: Line[] = [];
+  groups.forEach((g, gi) => {
+    if (gi > 0) lines.push([{ text: '' }]);
+    lines.push([{ text: g.title, style: 'heading' }]);
+    for (const item of g.items) {
+      const example = item.example(ctx.locale);
+      lines.push([
+        { text: `  ${item.cmd.padEnd(width)}`, style: 'accent' },
+        { text: item.summary.padEnd(summaryWidth) },
+        { text: example, style: 'link', run: example },
+      ]);
+    }
+  });
+  return out(lines);
 };
 
 const ls: Handler = (args, ctx) => {
+  const postsHint = (entries: [string, FsNode][]): Line[] =>
+    entries.some(([, e]) => e.kind === 'file' && e.slug) ? [hint('', HINT[ctx.locale].tapPost)] : [];
   const { flags, rest } = partitionArgs(args);
   const long = flags.some((f) => f.includes('l'));
   const target = rest[0] ?? '.';
@@ -147,16 +220,17 @@ const ls: Handler = (args, ctx) => {
   if (!long) {
     if (entries.length === 0) return out([]);
     const spans = entries.flatMap(([n, e], i) => (i === 0 ? [span(n, e)] : [{ text: '  ' }, span(n, e)]));
-    return out([spans]);
+    return out([spans, ...postsHint(entries)]);
   }
-  return out(
-    entries.map(([n, e]) => [
+  return out([
+    ...entries.map(([n, e]): Line => [
       { text: `${e.kind === 'dir' ? 'drwxr-xr-x' : e.kind === 'link' ? 'lrwxrwxrwx' : '-rw-r--r--'}  `, style: 'muted' },
       { text: `${String(fileSize(e)).padStart(6)}  `, style: 'muted' },
       { text: `${(e.kind === 'file' && e.date) || '          '}  `, style: 'muted' },
       span(n, e),
     ]),
-  );
+    ...postsHint(entries),
+  ]);
 };
 
 const cd: Handler = (args, ctx, cmd) => {
@@ -165,13 +239,14 @@ const cd: Handler = (args, ctx, cmd) => {
   const node = lookup(ctx.fs, path);
   if (!node) return err(MSG[ctx.locale].noEntry(cmd, target));
   if (node.kind !== 'dir') return err(MSG[ctx.locale].notDir(cmd, target));
-  return out([], [{ type: 'cd', cwd: path }]);
+  return out([hint('↳ ', HINT[ctx.locale].tryLs, { text: 'ls', run: 'ls' })], [{ type: 'cd', cwd: path }]);
 };
 
 const pwd: Handler = (_a, ctx) => out([line(displayPath(ctx.cwd))]);
 
-// Shared by cat/head/tail: resolve each operand and hand its lines to `pick`.
-const readFiles = (args: string[], ctx: ShellContext, cmd: string, pick: (lines: string[]) => string[]): Result => {
+// Shared by cat/head/tail: resolve each operand and hand its line indexes to `pick`.
+type Pick = <T>(items: T[]) => T[];
+const readFiles = (args: string[], ctx: ShellContext, cmd: string, pick: Pick): Result => {
   const m = MSG[ctx.locale];
   const { rest } = partitionArgs(args);
   if (rest.length === 0) return err(m.missing(cmd, m.file));
@@ -181,12 +256,28 @@ const readFiles = (args: string[], ctx: ShellContext, cmd: string, pick: (lines:
     if (!node) lines.push(line(m.noEntry(cmd, arg), 'error'));
     else if (node.kind === 'dir') lines.push(line(m.isDir(cmd, arg), 'error'));
     else if (node.kind === 'link') lines.push(line(node.note, 'muted'));
-    else lines.push(...pick(node.lines).map(styleLine));
+    else {
+      for (const i of pick(node.lines.map((_, idx) => idx))) {
+        const run = node.runs?.[i];
+        lines.push(run ? line(node.lines[i], 'link', run) : styleLine(node.lines[i]));
+      }
+    }
   }
   return out(lines);
 };
 
-const cat: Handler = (args, ctx, cmd) => readFiles(args, ctx, cmd, (l) => l);
+const cat: Handler = (args, ctx, cmd) => {
+  const result = readFiles(args, ctx, cmd, (l) => l);
+  const { rest } = partitionArgs(args);
+  const node = rest.length === 1 ? lookup(ctx.fs, resolvePath(ctx.cwd, rest[0])) : undefined;
+  if (node?.kind !== 'file' || !node.slug) return result;
+  const h = HINT[ctx.locale];
+  const blogPath = ctx.cwd === '~' ? 'blog' : '~/blog';
+  return out([
+    ...result.lines,
+    hint('↩ ', { text: h.back, run: `ls ${blogPath}` }, ' · ', { text: h.web, run: `open ${rest[0]}` }, ' · ', { text: `vi ${rest[0]}`, run: `vi ${rest[0]}` }),
+  ]);
+};
 
 // head/tail: `-n N` (or `-N`) picks the count, default 10.
 const slicer = (from: 'head' | 'tail'): Handler => (args, ctx, cmd) => {
@@ -281,7 +372,7 @@ const grep: Handler = (args, ctx, cmd) => {
     } else if (node.kind === 'file') {
       for (const text of node.lines) {
         if (!text.toLowerCase().includes(needle)) continue;
-        const spans: Span[] = [{ text: relativeTo(ctx.cwd, path), style: 'accent' }, { text: ': ' }];
+        const spans: Span[] = [{ text: relativeTo(ctx.cwd, path), style: 'accent', run: `cat ${relativeTo(ctx.cwd, path)}` }, { text: ': ' }];
         let from = 0;
         for (let at = text.toLowerCase().indexOf(needle); at !== -1; at = text.toLowerCase().indexOf(needle, from)) {
           if (at > from) spans.push({ text: text.slice(from, at) });
@@ -300,15 +391,30 @@ const grep: Handler = (args, ctx, cmd) => {
 const HANDLERS: Record<string, Handler> = {
   help, ls, cd, pwd, cat, head: slicer('head'), tail: slicer('tail'),
   vi, vim: vi, nvim: vi, less: vi, more: vi,
+  home: (_a, ctx, cmd) => cd(['~'], ctx, cmd),
   open, whoami, echo, history, date, sudo, neofetch, grep,
   clear: () => out([], [{ type: 'clear' }]),
   exit: () => out([], [{ type: 'exit' }]),
 };
 
+// Every word the "did you mean" search may suggest.
+const SUGGESTIONS = [...new Set([...COMMANDS, ...ALIAS_WORDS.filter((w) => w.length > 2)])];
+
+const notFound = (cmd: string, ctx: ShellContext): Result => {
+  const m = MSG[ctx.locale];
+  const guess = closest(cmd, SUGGESTIONS);
+  const next: Line = guess
+    ? [{ text: m.didYouMean }, { text: guess, style: 'link', run: guess }, { text: '?' }]
+    : [{ text: m.tryHelp }, { text: m.helpWord, style: 'link', run: 'help' }];
+  return out([line(m.notFound(cmd), 'error'), next]);
+};
+
 export const run = (input: string, ctx: ShellContext): Result => {
+  const alias = resolveAlias(input, ctx.locale, ctx.cwd);
+  if (alias) return run(alias, ctx);
   const [cmd, ...args] = parseArgs(input);
   if (!cmd) return out([]);
   const handler = HANDLERS[cmd];
-  if (!handler) return err(MSG[ctx.locale].notFound(cmd));
+  if (!handler) return notFound(cmd, ctx);
   return handler(args, ctx, cmd);
 };

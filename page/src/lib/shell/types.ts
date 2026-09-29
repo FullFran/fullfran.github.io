@@ -31,7 +31,7 @@ export interface Result {
 
 export type FsNode =
   | { kind: 'dir'; children: Record<string, FsNode> }
-  | { kind: 'file'; lines: string[]; date?: string; slug?: string; buffer: ViBuffer }
+  | { kind: 'file'; lines: string[]; date?: string; slug?: string; buffer: ViBuffer; runs?: Record<number, string> }
   | { kind: 'link'; href: string; note: string };
 
 export interface ShellContext {

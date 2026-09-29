@@ -1,3 +1,4 @@
+import { ALIAS_WORDS } from './aliases';
 import { COMMANDS } from './commands';
 import { lookup } from './fs';
 import { parseArgs } from './parse';
@@ -26,7 +27,7 @@ export const complete = (input: string, cwd: string, fs: FsNode): Completion => 
   let dirPart = '';
   let names: { name: string; dir: boolean }[];
   if (first) {
-    names = COMMANDS.map((name) => ({ name, dir: false }));
+    names = [...new Set([...COMMANDS, ...ALIAS_WORDS])].map((name) => ({ name, dir: false }));
   } else {
     const slash = token.lastIndexOf('/');
     dirPart = token.slice(0, slash + 1);
