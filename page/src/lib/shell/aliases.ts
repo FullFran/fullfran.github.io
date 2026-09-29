@@ -66,7 +66,13 @@ export const closest = (word: string, pool: string[]): string | undefined => {
   let bestDist = max + 1;
   for (const cand of pool) {
     const dist = editDistance(w, cand);
-    if (dist < bestDist) { best = cand; bestDist = dist; }
+    // On a tie, a word the input starts with wins (an extra keystroke is the
+    // usual typo: "lss" means "ls", not "less"); otherwise pool order decides.
+    const extraKey = w.startsWith(cand) && !(best !== undefined && w.startsWith(best));
+    if (dist < bestDist || (dist === bestDist && extraKey)) {
+      best = cand;
+      bestDist = dist;
+    }
   }
   return best;
 };

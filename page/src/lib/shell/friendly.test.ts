@@ -68,6 +68,9 @@ describe('did you mean', () => {
   it('is localized', () => {
     expect(text('hlep', en())).toContain('Did you mean help?');
   });
+  it('prefers the shorter word on a tie (lss -> ls, not less)', () => {
+    expect(text('lss')).toContain('¿Quisiste decir ls?');
+  });
   it('suggests aliases too', () => {
     expect(text('contacot')).toContain('¿Quisiste decir contacto?');
   });
