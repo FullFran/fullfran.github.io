@@ -2,6 +2,8 @@ import { FileText, Folder, GitBranch, HelpCircle, Keyboard, LogOut, Undo2, User,
 import * as React from 'react';
 import { links, site } from '../data/site';
 import type { Locale, Post } from '../data/site';
+import { markdownToLines } from '../lib/shell/markdown';
+import type { ViBuffer } from '../lib/shell/types';
 
 // --- TYPES ---
 type TabId = 'about' | 'blog' | 'contact' | 'help';
@@ -78,20 +80,6 @@ const UI: Record<Locale, { blogIntro: string; blogHint: string; empty: string; w
 };
 
 // --- BUFFER BUILDERS ---
-const stripFrontmatter = (body: string) => body.replace(/^\s*---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
-
-// Turn raw markdown into terminal lines: no frontmatter, blank runs collapsed, math kept raw.
-const markdownToLines = (body: string): string[] => {
-  const out: string[] = [];
-  for (const raw of stripFrontmatter(body).split('\n')) {
-    const line = raw.replace(/\s+$/, '');
-    if (line === '' && (out.length === 0 || out[out.length - 1] === '')) continue;
-    out.push(line);
-  }
-  while (out.length && out[out.length - 1] === '') out.pop();
-  return out;
-};
-
 const buildAbout = (locale: Locale): Buffer => {
   const copy = site[locale];
   const lines = [`# ${copy.aboutTitle}`, '', ...copy.about.flatMap((p) => [p, '']), copy.nowCommand, ...copy.now.map((n) => `- ${n}`)];
@@ -240,17 +228,20 @@ interface PortfolioProps {
   posts?: Post[];
   locale?: Locale;
   onExitTerminal?: () => void;
+  // Opened from the shell with `vi <file>`: show this buffer first and make q / :q return to the shell.
+  initialBuffer?: ViBuffer;
+  onReturnToShell?: () => void;
 }
 
 const TABS_ORDER: TabId[] = ['about', 'blog', 'contact', 'help'];
 
-const App: React.FC<PortfolioProps> = ({ posts = [], locale = 'es', onExitTerminal }) => {
-  const [activeTab, setActiveTab] = React.useState<TabId>('about');
+const App: React.FC<PortfolioProps> = ({ posts = [], locale = 'es', onExitTerminal, initialBuffer, onReturnToShell }) => {
+  const [activeTab, setActiveTab] = React.useState<TabId>(initialBuffer?.tab ?? 'about');
   const [mode, setMode] = React.useState<'NORMAL'|'VISUAL'|'COMMAND'>('NORMAL');
   const [commandBuffer, setCommandBuffer] = React.useState('');
   const [cursor, setCursor] = React.useState<[number, number]>([0, 0]);
   const [visual, setVisual] = React.useState<[[number,number],[number,number]] | null>(null);
-  const [openSlug, setOpenSlug] = React.useState<string | null>(null);
+  const [openSlug, setOpenSlug] = React.useState<string | null>(initialBuffer?.slug ?? null);
   const [count, setCount] = React.useState('');
   const [gBuffer, setGBuffer] = React.useState(false); // Separate buffer for 'gg' command
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -273,7 +264,7 @@ const App: React.FC<PortfolioProps> = ({ posts = [], locale = 'es', onExitTermin
     switchTab(TABS_ORDER[(i + direction + TABS_ORDER.length) % TABS_ORDER.length]);
   };
   const goBack = () => setOpenSlug(null);
-  const exitTerminal = () => { if (onExitTerminal) onExitTerminal(); };
+  const exitTerminal = () => { if (onReturnToShell) onReturnToShell(); else if (onExitTerminal) onExitTerminal(); };
   const goTo = (href: string) => {
     if (href.startsWith('/')) window.location.href = href;
     else window.open(href, '_blank', 'noopener,noreferrer');
@@ -364,7 +355,7 @@ const App: React.FC<PortfolioProps> = ({ posts = [], locale = 'es', onExitTermin
         case 'v': if (mode === 'NORMAL') { setMode('VISUAL'); setVisual([cursor, cursor]); } else { setMode('NORMAL'); setVisual(null); } break;
         case 'Enter': activateLine(cursor[0]); break;
         case 'Backspace': if (reading) goBack(); break;
-        case 'q': if (reading) goBack(); break;
+        case 'q': if (onReturnToShell) onReturnToShell(); else if (reading) goBack(); break;
         case ':': setMode('COMMAND'); setCommandBuffer(':'); break;
       }
     };
@@ -376,7 +367,8 @@ const App: React.FC<PortfolioProps> = ({ posts = [], locale = 'es', onExitTermin
     const [command, ...args] = cmd.replace(':', '').trim().split(' ');
     switch(command) {
         case 'q': case 'quit':
-          if (reading) goBack();
+          if (onReturnToShell) onReturnToShell();
+          else if (reading) goBack();
           else exitTerminal();
           break;
         case 'e': case 'edit': case 'open': openByQuery(args.join(' ')); break;
