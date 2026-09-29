@@ -49,7 +49,7 @@ export const site: Record<Locale, SiteCopy> = {
     aboutFile: 'sobre-mi.md',
     about: [
       'Soy Fran. Estudié Física y empecé usando IA y simulaciones para resolver problemas de física. Por el camino me aficioné a construir IA que aguanta el mundo real (tráfico real, datos reales, usuarios reales), y ahí sigo.',
-      'Antes fundé una empresa y sus clientes se vinieron conmigo. Hoy llevo la IA en Hagalink, sigo con el doctorado y enseño lo que voy aprendiendo. El detalle está en el /cv; aquí escribo de lo que me apetece.',
+      'Hoy llevo la IA en Hagalink, sigo con el doctorado y enseño lo que voy aprendiendo. El detalle está en el /cv; aquí escribo de lo que me apetece.',
       'Fuera del trabajo vivo en la terminal: Pop!_OS con ventanas en mosaico, Neovim y un teclado partido de 34 teclas. Si te pica la curiosidad, pulsa ~.',
     ],
     nowCommand: '$ cat ahora.txt',
@@ -77,7 +77,7 @@ export const site: Record<Locale, SiteCopy> = {
     aboutFile: 'about.md',
     about: [
       "I'm Fran. I studied physics and started using AI and simulations to solve physics problems. Along the way I got hooked on building AI that survives the real world (real traffic, real data, real users), and I'm still at it.",
-      'Before this I founded a company, and its clients came with me. Now I lead the AI side of Hagalink, keep going with my PhD and teach what I learn along the way. The details live in the /cv; here I write about whatever I feel like.',
+      'Now I run the AI side at Hagalink, keep going with my PhD and teach what I learn along the way. The details live in the /cv; here I write about whatever I feel like.',
       "Outside work I live in the terminal: Pop!_OS with tiling windows, Neovim and a 34-key split keyboard. If you're curious, press ~.",
     ],
     nowCommand: '$ cat now.txt',
