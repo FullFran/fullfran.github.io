@@ -21,6 +21,18 @@ const homeLabel = lang === 'en' ? 'Home' : 'Inicio';
 const skipLabel = lang === 'en' ? 'Skip to content' : 'Saltar al contenido';
 const navLabel = lang === 'en' ? 'Site' : 'Sitio';
 const isArchive = path === '/blog/';
+
+// Article pages tell search engines what they are, who wrote them and when.
+const articleLd = published && {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title.replace(` — ${name}`, ''),
+  description,
+  url: canonical,
+  datePublished: published,
+  inLanguage: lang,
+  author: { '@type': 'Person', '@id': 'https://www.fullfran.com/#person', name, url: 'https://www.fullfran.com/' },
+};
 ---
 
 <!doctype html>
@@ -42,6 +54,8 @@ const isArchive = path === '/blog/';
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={name} />
     {published && <meta property="article:published_time" content={published} />}
+    {articleLd && <script type="application/ld+json" set:html={JSON.stringify(articleLd)} />}
+    <meta property="og:locale" content={lang === 'en' ? 'en_GB' : 'es_ES'} />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
     {description && <meta name="twitter:description" content={description} />}

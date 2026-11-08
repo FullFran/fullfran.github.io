@@ -3,6 +3,7 @@ import '../styles/global.css';
 import '../styles/premium.css';
 import App from '../components/App';
 import { getCollection } from 'astro:content';
+import { links, name } from '../data/site';
 
 const posts = (await getCollection('blog'))
   .filter((entry) => !entry.data.draft)
@@ -15,6 +16,46 @@ const posts = (await getCollection('blog'))
     description: entry.data.description ?? '',
     body: entry.body ?? '',
   }));
+
+const description =
+  'Físico que construye sistemas de IA. Escribo sobre IA y física: atascos, gatos que caen, imanes con memoria y máquinas que demuestran teoremas.';
+
+// Who this site is about, for search engines and the assistants that read them.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': 'https://www.fullfran.com/#person',
+      name,
+      alternateName: 'FullFran',
+      url: 'https://www.fullfran.com/',
+      jobTitle: 'Físico e ingeniero de IA',
+      sameAs: links.filter((l) => l.href.startsWith('https://')).map((l) => l.href),
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://www.fullfran.com/#website',
+      url: 'https://www.fullfran.com/',
+      name,
+      inLanguage: 'es',
+      author: { '@id': 'https://www.fullfran.com/#person' },
+    },
+    {
+      '@type': 'Blog',
+      url: 'https://www.fullfran.com/blog/',
+      name: `${name} — Blog`,
+      inLanguage: 'es',
+      author: { '@id': 'https://www.fullfran.com/#person' },
+      blogPost: posts.slice(0, 10).map((p) => ({
+        '@type': 'BlogPosting',
+        headline: p.title,
+        url: `https://www.fullfran.com/blog/${p.slug}/`,
+        datePublished: p.date,
+      })),
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -24,23 +65,26 @@ const posts = (await getCollection('blog'))
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content="Physicist building AI. Notes on AI, physics and keyboards." />
-		<meta name="keywords" content="AI, Machine Learning, Physics, Physicist, LLMs, RAG, keyboards" />
+		<meta name="description" content={description} />
+		<meta name="keywords" content="IA, física, inteligencia artificial, LLM, RAG, blog de física, Francisco Olmedo" />
 		<link rel="canonical" href="https://www.fullfran.com/" />
 		<link rel="alternate" type="application/rss+xml" title="Francisco Olmedo — Writing" href="/rss.xml" />
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content="Francisco Olmedo" />
-		<meta property="og:description" content="Physicist building AI. Notes on AI, physics and keyboards." />
+		<meta property="og:description" content={description} />
+		<meta property="og:locale" content="es_ES" />
+		<meta property="og:site_name" content={name} />
 		<meta property="og:url" content="https://www.fullfran.com/" />
 
 		<!-- Twitter -->
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content="Francisco Olmedo" />
-		<meta name="twitter:description" content="Physicist building AI. Notes on AI, physics and keyboards." />
+		<meta name="twitter:description" content={description} />
 
-		<title>Francisco Olmedo — Physicist. I build AI systems.</title>
+		<title>Francisco Olmedo — Físico. Construyo sistemas de IA.</title>
+		<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 	</head>
 	<body>
 		<App client:load posts={posts} />

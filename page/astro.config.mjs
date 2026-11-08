@@ -5,6 +5,17 @@ import tailwindcss from '@tailwindcss/vite';
 
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import { readdirSync, readFileSync } from 'node:fs';
+
+// Publication date of every live post, so the sitemap tells crawlers what is new.
+const postDates = new Map();
+for (const file of readdirSync('./src/content/blog')) {
+  if (!file.endsWith('.md')) continue;
+  const front = readFileSync(`./src/content/blog/${file}`, 'utf8').split('---')[1] ?? '';
+  const date = front.match(/^date:\s*(\S+)/m)?.[1];
+  if (date && !/^draft:\s*true/m.test(front)) postDates.set(`/blog/${file.replace(/\.md$/, '')}/`, new Date(date));
+}
+const newestPost = new Date(Math.max(...[...postDates.values()].map((d) => d.valueOf())));
 
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
@@ -57,5 +68,14 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [react(), sitemap()]
+  integrations: [
+    react(),
+    sitemap({
+      serialize(item) {
+        const path = new URL(item.url).pathname;
+        const date = postDates.get(path) ?? (path === '/' || path === '/blog/' ? newestPost : undefined);
+        return date ? { ...item, lastmod: date.toISOString() } : item;
+      },
+    }),
+  ]
 });
