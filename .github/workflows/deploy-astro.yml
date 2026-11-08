@@ -32,3 +32,20 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      # Tell Bing (and the engines sharing IndexNow, which ChatGPT search leans on)
+      # that every page may have changed, so new posts do not wait for a recrawl.
+      - name: Ping IndexNow
+        continue-on-error: true
+        env:
+          HOST: www.fullfran.com
+          KEY: 4d97642f6f49242596650ad40ac7bf12
+        run: |
+          sleep 30
+          urls=$(curl -fsS "https://$HOST/sitemap-0.xml" | grep -o '<loc>[^<]*' | sed 's/<loc>//' | jq -R . | jq -sc .)
+          echo "Submitting $(echo "$urls" | jq length) URLs"
+          body=$(jq -nc --arg host "$HOST" --arg key "$KEY" --argjson urls "$urls" \
+            '{host: $host, key: $key, keyLocation: "https://\($host)/\($key).txt", urlList: $urls}')
+          code=$(curl -sS -o /dev/null -w '%{http_code}' -X POST https://api.indexnow.org/indexnow \
+            -H 'Content-Type: application/json; charset=utf-8' -d "$body")
+          echo "IndexNow answered $code"
+          [ "$code" = 200 ] || [ "$code" = 202 ]
