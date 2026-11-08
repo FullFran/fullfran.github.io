@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FileText, Github, Linkedin, Mail, Rss, type LucideIcon } from 'lucide-react';
-import { keyboardHref, links, name, site, type Locale, type Post } from '../data/site';
+import { gameHref, keyboardHref, links, name, site, type Locale, type Post } from '../data/site';
 
 interface LandingPageProps {
   locale: Locale;
@@ -18,9 +18,20 @@ const linkIcons: Record<string, LucideIcon> = {
 const focusRing =
   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7aa2f7]';
 
-// Render a paragraph: "/cv" and the keyboard mention become real links and "~" a button that opens the terminal.
+// Render a paragraph: "/cv", the keyboard and the game become real links and "~" a button that opens the terminal.
 const renderParagraph = (text: string, onEnterTerminal: () => void): React.ReactNode =>
-  text.split(/(\/cv|~|teclado partido de 34 teclas|34-key split keyboard)/).map((part, i) => {
+  text.split(/(\/cv|~|teclado partido de 34 teclas|34-key split keyboard|Mazmorra Sombría|Shadow Dungeon)/).map((part, i) => {
+    if (part === 'Mazmorra Sombría' || part === 'Shadow Dungeon') {
+      return (
+        <a
+          key={i}
+          href={gameHref}
+          className={`text-[#7dcfff] hover:text-white transition-colors underline underline-offset-4 rounded-sm ${focusRing}`}
+        >
+          {part}
+        </a>
+      );
+    }
     if (part === 'teclado partido de 34 teclas' || part === '34-key split keyboard') {
       return (
         <a
@@ -180,13 +191,39 @@ const LandingPage: React.FC<LandingPageProps> = ({ locale, posts, onEnterTermina
                       <span className="text-[#9ece6a] select-none" aria-hidden="true">
                         &#9657;
                       </span>
-                      <span>{line}</span>
+                      <span>{renderParagraph(line, onEnterTerminal)}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             </div>
           </div>
+
+          {/* Shameless plug for the game */}
+          <a
+            href={gameHref}
+            className={`group mt-8 flex items-center gap-5 rounded-xl border border-[#3b2230] bg-gradient-to-r from-[#1f1520] via-[#16161e] to-[#16161e] p-4 sm:p-5 shadow-lg transition-colors hover:border-[#f7768e] ${focusRing}`}
+          >
+            <img
+              src="/img/shadow-dungeon-icon.png"
+              alt=""
+              width={96}
+              height={96}
+              loading="lazy"
+              className="h-20 w-20 sm:h-24 sm:w-24 shrink-0 rounded-lg shadow-[0_0_24px_rgba(247,118,142,0.35)] [image-rendering:pixelated] transition-transform group-hover:scale-105"
+            />
+            <div className="min-w-0 flex-1">
+              <p className="font-mono text-xs uppercase tracking-wider text-[#f7768e]">{copy.gameKicker}</p>
+              <p className="mt-1 font-mono text-lg sm:text-xl font-bold text-white">{copy.gameTitle}</p>
+              <p className="mt-1 text-sm sm:text-base leading-relaxed text-[#a9b1d6]">{copy.gameText}</p>
+            </div>
+            <span
+              className="hidden sm:inline-flex shrink-0 items-center rounded-lg border border-[#f7768e] px-4 py-2 font-mono text-sm font-bold text-[#f7768e] transition-colors group-hover:bg-[#f7768e] group-hover:text-[#1a1b26]"
+              aria-hidden="true"
+            >
+              {copy.gameButton} →
+            </span>
+          </a>
         </div>
       </section>
 

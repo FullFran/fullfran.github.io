@@ -5,7 +5,7 @@ import { posts } from './fixtures';
 describe('buildFs', () => {
   it('has the Spanish files', () => {
     const fs = buildFs('es', posts);
-    for (const p of ['~/sobre-mi.md', '~/ahora.txt', '~/contacto.md', '~/blog', '~/cv', '~/teclado']) {
+    for (const p of ['~/sobre-mi.md', '~/ahora.txt', '~/contacto.md', '~/blog', '~/cv', '~/juego', '~/teclado']) {
       expect(lookup(fs, p), p).toBeDefined();
     }
     expect(lookup(fs, '~/about.md')).toBeUndefined();
@@ -25,6 +25,7 @@ describe('buildFs', () => {
     const fs = buildFs('es', posts);
     expect(lookup(fs, '~/cv')).toMatchObject({ kind: 'link', href: '/cv' });
     expect(lookup(fs, '~/teclado')).toMatchObject({ kind: 'link', href: '/fifi-keyboard-vial/' });
+    expect(lookup(fs, '~/juego')).toMatchObject({ kind: 'link', href: '/shadow-dungeon/' });
   });
   it('looks up home and rejects missing paths', () => {
     const fs = buildFs('es', posts);

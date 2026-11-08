@@ -27,12 +27,19 @@ export interface SiteCopy {
   linksLabel: string;
   allWritingLabel: string;
   showMoreLabel: string;
+  gameKicker: string;
+  gameTitle: string;
+  gameText: string;
+  gameButton: string;
 }
 
 export const name = 'Francisco Olmedo';
 
 // Keymap visualizer of the 34-key split keyboard, served from its own repo's Pages.
 export const keyboardHref = '/fifi-keyboard-vial/';
+
+// The game I made, served from its own repo's Pages.
+export const gameHref = '/shadow-dungeon/';
 
 export const links: { label: string; href: string; external: boolean }[] = [
   { label: 'GitHub', href: 'https://github.com/FullFran', external: true },
@@ -63,6 +70,7 @@ export const site: Record<Locale, SiteCopy> = {
       'En Hagalink: agentes y RAG en producción, y la parte que nadie quiere, que es medir si funcionan.',
       'Doctorado en IA aplicada en la Universidad de Córdoba, con el CIEMAT.',
       'Doy formación de IA a mi equipo y a empresas cliente.',
+      'Me he hecho un jueguito, Mazmorra Sombría: un roguelite de mazmorras que se juega en el navegador. Pruébalo y me dices.',
     ],
     writingTitle: 'Escribo',
     writingIntro: 'Notas sobre IA, física, teclados y lo que se cruce.',
@@ -70,6 +78,10 @@ export const site: Record<Locale, SiteCopy> = {
     linksLabel: 'Enlaces',
     allWritingLabel: 'Ver todo lo que he escrito →',
     showMoreLabel: 'Ver más',
+    gameKicker: 'He hecho un jueguito',
+    gameTitle: 'Mazmorra Sombría',
+    gameText: 'Un roguelite de mazmorras con combate exigente y partidas en línea. Se juega en el navegador, sin instalar nada. Pruébalo y me dices.',
+    gameButton: 'Jugar',
   },
   en: {
     tagline: 'Physicist. I build AI systems.',
@@ -91,6 +103,7 @@ export const site: Record<Locale, SiteCopy> = {
       'At Hagalink: agents and RAG in production, plus the part nobody wants, which is measuring whether they work.',
       'PhD in applied AI at the University of Córdoba, with CIEMAT.',
       'I train my team and client companies.',
+      'I made a little game, Shadow Dungeon: a dungeon roguelite you play in the browser. Give it a go and tell me what you think.',
     ],
     writingTitle: 'Writing',
     writingIntro: 'Notes on AI, physics, keyboards, and whatever else comes up.',
@@ -98,5 +111,9 @@ export const site: Record<Locale, SiteCopy> = {
     linksLabel: 'Links',
     allWritingLabel: 'See everything I have written →',
     showMoreLabel: 'Show more',
+    gameKicker: 'I made a little game',
+    gameTitle: 'Shadow Dungeon',
+    gameText: 'A dungeon roguelite with demanding combat and online runs. It plays in the browser, nothing to install. Give it a go and tell me what you think.',
+    gameButton: 'Play',
   },
 };

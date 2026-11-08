@@ -156,6 +156,7 @@ describe('run: vi / open', () => {
   it('open navigates to links and posts', () => {
     expect(run('open cv', ctx()).effects).toEqual([{ type: 'navigate', href: '/cv' }]);
     expect(run('open teclado', ctx()).effects).toEqual([{ type: 'navigate', href: '/fifi-keyboard-vial/' }]);
+    expect(run('open juego', ctx()).effects).toEqual([{ type: 'navigate', href: '/shadow-dungeon/' }]);
     expect(run('open blog/mi-teclado-de-34-teclas.md', ctx()).effects).toEqual([
       { type: 'navigate', href: '/blog/mi-teclado-de-34-teclas/' },
     ]);

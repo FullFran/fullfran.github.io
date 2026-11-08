@@ -78,7 +78,7 @@ describe('tree', () => {
     expect(out).toContain('│   └── mi-teclado-de-34-teclas.md');
     expect(out).toContain('└── teclado');
     expect(out).not.toContain('.bashrc');
-    expect(out).toContain('1 directorio, 7 ficheros');
+    expect(out).toContain('1 directorio, 8 ficheros');
   });
   it('takes a path and shows it as root', () => {
     const out = text('tree blog');
@@ -98,7 +98,7 @@ describe('tree', () => {
   });
   it('errors on missing paths and localizes the summary', () => {
     expect(text('tree nada')).toContain('no existe');
-    expect(text('tree', en())).toContain('1 directory, 7 files');
+    expect(text('tree', en())).toContain('1 directory, 8 files');
   });
 });
 

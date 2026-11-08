@@ -1,4 +1,4 @@
-import { keyboardHref, links, site } from '../../data/site';
+import { gameHref, keyboardHref, links, site } from '../../data/site';
 import type { Locale, Post } from '../../data/site';
 import { markdownToLines } from './markdown';
 import { segmentsOf } from './path';
@@ -8,6 +8,7 @@ const T = {
   es: {
     cv: 'cv: enlace a /cv (no es un fichero de texto). Usa "open cv" para abrirlo.',
     keyboard: 'teclado: enlace al visualizador del teclado de 34 teclas. Usa "open teclado" para abrirlo.',
+    game: 'juego: enlace a Mazmorra Sombría, el juego que he hecho. Usa "open juego" para jugar.',
     now: 'ahora.txt',
     contact: 'contacto.md',
     bashrcHint: '# si has llegado hasta aquí, escríbeme: contacto.md',
@@ -15,6 +16,7 @@ const T = {
   en: {
     cv: 'cv: link to /cv (not a text file). Use "open cv" to open it.',
     keyboard: 'teclado: link to the 34-key keyboard visualizer. Use "open teclado" to open it.',
+    game: 'juego: link to Shadow Dungeon, the game I made. Use "open juego" to play.',
     now: 'now.txt',
     contact: 'contact.md',
     bashrcHint: '# if you got this far, write to me: contact.md',
@@ -73,6 +75,7 @@ export const buildFs = (locale: Locale, posts: Post[]): FsNode => {
       },
       blog: { kind: 'dir', children: blog },
       cv: { kind: 'link', href: '/cv', note: t.cv },
+      juego: { kind: 'link', href: gameHref, note: t.game },
       teclado: { kind: 'link', href: keyboardHref, note: t.keyboard },
     },
   };
