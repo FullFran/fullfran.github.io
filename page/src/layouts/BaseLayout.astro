@@ -60,7 +60,7 @@ const isArchive = path === '/blog/';
     <header class="site-header">
       <div class="shell">
         <a href="/" class="brand" aria-label={`${name} — ${homeLabel}`}>
-          <span class="brand-mark" aria-hidden="true">F</span>
+          <img class="brand-mark" src="/favicon.svg" alt="" width="36" height="36" />
           <span class="brand-name">FullFran</span>
         </a>
         <nav aria-label={navLabel}>
@@ -172,19 +172,14 @@ const isArchive = path === '/blog/';
   .brand-mark {
     width: 2.25rem;
     height: 2.25rem;
-    display: grid;
-    place-items: center;
-    border-radius: 0.5rem;
-    background: linear-gradient(135deg, #3b82f6, #22d3ee);
-    box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
-    color: #fff;
-    font-weight: 900;
-    font-size: 1.05rem;
+    display: block;
+    border-radius: 0.6rem;
+    box-shadow: 0 0 18px rgba(158, 206, 106, 0.25);
     transition: box-shadow 0.2s;
   }
 
   .site-header .brand:hover .brand-mark {
-    box-shadow: 0 0 30px rgba(37, 99, 235, 0.6);
+    box-shadow: 0 0 26px rgba(158, 206, 106, 0.45);
   }
 
   .brand-name {

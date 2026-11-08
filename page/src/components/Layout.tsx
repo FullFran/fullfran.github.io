@@ -63,11 +63,16 @@ const Layout: React.FC<LayoutProps> = ({
             <div className="flex items-center gap-3 sm:gap-5 min-w-0">
               <button
                 onClick={() => onViewChange('landing')}
+                aria-label="FullFran"
                 className="flex items-center space-x-3 group cursor-pointer shrink-0"
               >
-                <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] group-hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all">
-                  <span className="text-white font-black text-lg">F</span>
-                </div>
+                <img
+                  src="/favicon.svg"
+                  alt=""
+                  width={36}
+                  height={36}
+                  className="w-9 h-9 rounded-[0.6rem] shadow-[0_0_18px_rgba(158,206,106,0.25)] group-hover:shadow-[0_0_26px_rgba(158,206,106,0.45)] transition-all"
+                />
                 <span className="hidden sm:inline text-white font-bold text-lg tracking-tight">FullFran</span>
               </button>
 
