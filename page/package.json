@@ -10,12 +10,13 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@astrojs/react": "^4.4.2",
+    "@astrojs/markdown-remark": "^7.3.6",
+    "@astrojs/react": "^7.1.4",
     "@astrojs/rss": "^4.0.19",
     "@tailwindcss/vite": "^4.1.17",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "astro": "^5.16.1",
+    "astro": "^7.4.7",
     "katex": "^0.16.47",
     "lucide-react": "^0.555.0",
     "react": "^19.2.0",
