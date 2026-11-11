@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { FileText, Github, Linkedin, Mail, Rss, type LucideIcon } from 'lucide-react';
-import { gameHref, keyboardHref, links, name, site, type Locale, type Post } from '../data/site';
+import { gameHref, keyboardHref, links, name, site, type Locale, type PostMeta } from '../data/site';
 
 interface LandingPageProps {
   locale: Locale;
-  posts: Post[];
+  posts: PostMeta[];
   onEnterTerminal: () => void;
 }
 

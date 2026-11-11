@@ -3,6 +3,7 @@ import '../styles/global.css';
 import '../styles/prose.css';
 import 'katex/dist/katex.min.css';
 import { name } from '../data/site';
+import { ogImage, OG_HEIGHT, OG_WIDTH } from '../lib/og/card';
 
 interface Props {
   title: string;
@@ -12,10 +13,15 @@ interface Props {
   path: string;
   /** ISO date, set on article pages so the card shows a publication time. */
   published?: string;
+  /** Path of the share image (Open Graph / Twitter). Defaults to the home card. */
+  image?: string;
+  /** What the share image shows, for og:image:alt. */
+  imageAlt?: string;
 }
 
-const { title, description = '', lang = 'es', path, published } = Astro.props;
+const { title, description = '', lang = 'es', path, published, image = ogImage.home, imageAlt = name } = Astro.props;
 const canonical = new URL(path, Astro.site).href;
+const imageUrl = new URL(image, Astro.site).href;
 const backLabel = lang === 'en' ? 'Writing' : 'Escribo';
 const homeLabel = lang === 'en' ? 'Home' : 'Inicio';
 const skipLabel = lang === 'en' ? 'Skip to content' : 'Saltar al contenido';
@@ -46,7 +52,7 @@ const articleLd = published && {
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" type="application/rss+xml" title={`${name} — Writing`} href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${name} · Blog`} href="/rss.xml" />
 
     <meta property="og:type" content={published ? 'article' : 'website'} />
     <meta property="og:title" content={title} />
@@ -56,9 +62,16 @@ const articleLd = published && {
     {published && <meta property="article:published_time" content={published} />}
     {articleLd && <script type="application/ld+json" set:html={JSON.stringify(articleLd)} />}
     <meta property="og:locale" content={lang === 'en' ? 'en_GB' : 'es_ES'} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content={String(OG_WIDTH)} />
+    <meta property="og:image:height" content={String(OG_HEIGHT)} />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

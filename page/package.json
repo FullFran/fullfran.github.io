@@ -18,12 +18,14 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "astro": "^7.4.7",
+    "fontkitten": "^1.0.3",
     "katex": "^0.16.47",
     "lucide-react": "^0.555.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {

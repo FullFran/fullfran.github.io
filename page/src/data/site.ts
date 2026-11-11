@@ -1,11 +1,16 @@
 export type Locale = 'es' | 'en';
 
-export interface Post {
+/** What the home page ships for every post: enough to list it. */
+export interface PostMeta {
   slug: string;
   title: string;
   date: string;
   lang: Locale;
   description: string;
+}
+
+/** A post with its markdown, loaded by the terminal when it opens. */
+export interface Post extends PostMeta {
   body: string;
 }
 
@@ -70,7 +75,6 @@ export const site: Record<Locale, SiteCopy> = {
       'En Hagalink: agentes y RAG en producción, y la parte que nadie quiere, que es medir si funcionan.',
       'Doctorado en IA aplicada en la Universidad de Córdoba, con el CIEMAT.',
       'Doy formación de IA a mi equipo y a empresas cliente.',
-      'Me he hecho un jueguito, Mazmorra Sombría: un roguelite de mazmorras que se juega en el navegador. Pruébalo y me dices.',
     ],
     writingTitle: 'Escribo',
     writingIntro: 'Notas sobre IA, física, teclados y lo que se cruce.',
@@ -103,7 +107,6 @@ export const site: Record<Locale, SiteCopy> = {
       'At Hagalink: agents and RAG in production, plus the part nobody wants, which is measuring whether they work.',
       'PhD in applied AI at the University of Córdoba, with CIEMAT.',
       'I train my team and client companies.',
-      'I made a little game, Shadow Dungeon: a dungeon roguelite you play in the browser. Give it a go and tell me what you think.',
     ],
     writingTitle: 'Writing',
     writingIntro: 'Notes on AI, physics, keyboards, and whatever else comes up.',

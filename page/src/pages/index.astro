@@ -3,7 +3,8 @@ import '../styles/global.css';
 import '../styles/premium.css';
 import App from '../components/App';
 import { getCollection } from 'astro:content';
-import { links, name } from '../data/site';
+import { links, name, site } from '../data/site';
+import { cardAlt, ogImage, OG_HEIGHT, OG_WIDTH } from '../lib/og/card';
 
 const posts = (await getCollection('blog'))
   .filter((entry) => !entry.data.draft)
@@ -14,8 +15,10 @@ const posts = (await getCollection('blog'))
     date: entry.data.date.toISOString(),
     lang: entry.data.lang,
     description: entry.data.description ?? '',
-    body: entry.body ?? '',
   }));
+
+const image = new URL(ogImage.home, Astro.site).href;
+const imageAlt = cardAlt({ kind: 'home', name, tagline: site.es.tagline });
 
 const description =
   'Físico que construye sistemas de IA. Escribo sobre IA y física: atascos, gatos que caen, imanes con memoria y máquinas que demuestran teoremas.';
@@ -66,9 +69,8 @@ const jsonLd = {
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
-		<meta name="keywords" content="IA, física, inteligencia artificial, LLM, RAG, blog de física, Francisco Olmedo" />
 		<link rel="canonical" href="https://www.fullfran.com/" />
-		<link rel="alternate" type="application/rss+xml" title="Francisco Olmedo — Writing" href="/rss.xml" />
+		<link rel="alternate" type="application/rss+xml" title={`${name} · Blog`} href="/rss.xml" />
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
@@ -77,11 +79,18 @@ const jsonLd = {
 		<meta property="og:locale" content="es_ES" />
 		<meta property="og:site_name" content={name} />
 		<meta property="og:url" content="https://www.fullfran.com/" />
+		<meta property="og:image" content={image} />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content={String(OG_WIDTH)} />
+		<meta property="og:image:height" content={String(OG_HEIGHT)} />
+		<meta property="og:image:alt" content={imageAlt} />
 
 		<!-- Twitter -->
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content="Francisco Olmedo" />
 		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={image} />
+		<meta name="twitter:image:alt" content={imageAlt} />
 
 		<title>Francisco Olmedo — Físico. Construyo sistemas de IA.</title>
 		<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

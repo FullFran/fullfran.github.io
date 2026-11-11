@@ -7,8 +7,8 @@ export async function GET(context) {
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
   return rss({
-    title: 'Francisco Olmedo — Writing',
-    description: 'Notes on AI, physics, keyboards, and whatever else comes up.',
+    title: 'Francisco Olmedo · Blog',
+    description: 'Notas sobre IA, física, teclados y lo que se cruce.',
     site: context.site,
     items: posts.map((post) => ({
       title: post.data.title,

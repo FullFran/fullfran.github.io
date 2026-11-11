@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { name, site } from '../../data/site';
+import { cardAlt, ogImage } from '../../lib/og/card';
 
 const posts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
@@ -19,12 +20,15 @@ const years = Object.keys(byYear)
   .sort((a, b) => b - a);
 
 const copy = site.es;
+const imageAlt = cardAlt({ kind: 'archive', title: copy.writingTitle, intro: copy.writingIntro });
 ---
 
 <BaseLayout
   title={`${copy.writingTitle} — ${name}`}
   description={copy.writingIntro}
   path="/blog/"
+  image={ogImage.archive}
+  imageAlt={imageAlt}
 >
   <header class="index-head">
     <h1>{copy.writingTitle}</h1>

@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { name } from '../../data/site';
+import { cardAlt, ogImage } from '../../lib/og/card';
 
 export async function getStaticPaths() {
   const posts = (await getCollection('blog'))
@@ -42,6 +43,8 @@ const dateLabel = post.data.date.toLocaleDateString(lang === 'en' ? 'en-GB' : 'e
   lang={lang}
   path={`/blog/${post.id}/`}
   published={post.data.date.toISOString()}
+  image={ogImage.post(post.id)}
+  imageAlt={cardAlt({ kind: 'post', slug: post.id, title: post.data.title, date: post.data.date.toISOString() })}
 >
   <article>
     <header class="post-head">
